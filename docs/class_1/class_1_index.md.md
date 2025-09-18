@@ -1,6 +1,6 @@
 ---
 title: "Class 1: Syllabus & Introduction"
-nav_order: 2
+nav_order: 3
 has_children: true
 ---
 
