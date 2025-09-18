@@ -6,7 +6,11 @@ $primary: #295376;    // Gator Blue
 $secondary: #c97a29;  // UF Orange
 
 // Sidebar background
-$sidebar-color: $primary;
+.sidebar, 
+.sidebar-wrapper {
+  background-color: $primary !important;
+  color: #ffffff;  // optional: make default text white
+}
 
 // Parent links
 $nav-list-link-color: $primary;          
@@ -33,9 +37,3 @@ $site-title-color: $primary;
 
 // Expand/collapse arrows
 $nav-list-expander-color: $primary;
-
-.site-header__logo {
-  font-size: 1.25rem;   // adjust smaller as needed
-  font-weight: 700;      // optional: bold
-  color: #ffffff;        // keep white
-}
