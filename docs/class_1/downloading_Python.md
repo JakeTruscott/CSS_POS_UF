@@ -1,6 +1,6 @@
 ---
 title: "Downloading Python"
-parent: "Week 1: Syllabus & Introduction"
+parent: "Class 1: Syllabus & Introduction"
 nav_order: 4
 ---
 
