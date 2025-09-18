@@ -1,0 +1,23 @@
+---
+---
+
+// Override Just the Docs variables
+
+// Gator Blue & UF Orange
+$link-color: #0021A5;    // Gator Blue
+$nav-link-color: #0021A5;
+$btn-primary-color: #FA4616; // UF Orange
+$body-heading-color: #0021A5;
+
+// Example background / accents
+$sidebar-color: #0021A5;
+$sidebar-active-color: #FA4616;
+$site-title-color: #FA4616;
+
+// You can also define new custom utility classes
+.uf-orange {
+  color: #FA4616;
+}
+.uf-blue {
+  color: #0021A5;
+}
