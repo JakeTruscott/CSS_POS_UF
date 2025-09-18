@@ -1,4 +1,4 @@
-// Optional: inherit dark mode if you want
+// Optional: inherit dark mode
 // @import "./color_schemes/dark";
 
 // UF brand colors
@@ -8,14 +8,19 @@ $secondary: #FA4616;  // UF Orange
 // Sidebar background
 $sidebar-color: $primary;
 
-// Sidebar text and links
-$link-color: #ffffff;                // force links (sidebar nav items) to white
-$nav-list-link-color: #ffffff;       // nav links default
-//$nav-list-link-hover-color: $secondary; // hover = UF orange
-//nav-list-link-active-color: $secondary; // active = UF orange
+// Sidebar links
+$link-color: #ffffff;                   // global links
+$nav-list-link-color: #ffffff;          // parent links
+$nav-list-link-hover-color: $secondary; // hover = UF Orange
+$nav-list-link-active-color: $secondary; // active = UF Orange
 
-// Site title (at top of sidebar)
+// Children links (nested pages)
+$nav-list-children-link-color: #ffffff;          // normal child link color
+$nav-list-children-link-hover-color: $secondary; // hover child link color
+$nav-list-children-link-active-color: $secondary; // active child link color
+
+// Site title at top of sidebar
 $site-title-color: #ffffff;
 
-// Expand/collapse arrows in sidebar
+// Expand/collapse arrows
 $nav-list-expander-color: #ffffff;
