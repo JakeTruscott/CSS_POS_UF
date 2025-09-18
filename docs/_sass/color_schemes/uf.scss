@@ -5,68 +5,50 @@ $primary: #295376;    // Gator Blue
 $secondary: #c97a29;  // UF Orange
 
 // ----------------------------
-// Sidebar background
+// Sidebar background & default text
 // ----------------------------
 .sidebar,
 .sidebar-wrapper {
-  background-color: $primary !important; // keep blue background
-  color: $secondary !important;         // all text orange by default
+  background-color: $primary !important;  // sidebar blue background
+  color: $secondary !important;           // default text UF Orange
 }
 
 // ----------------------------
-// Parent links
+// Parent and child links (all orange)
 // ----------------------------
-.sidebar .nav-list > li > .nav-list-link,
-.sidebar .nav-list > li > .nav-list-link:visited {
-  color: $secondary !important;         // always orange
+.sidebar .nav-list li > a,
+.sidebar .nav-list--children li > a,
+.sidebar .nav-list li > a:visited,
+.sidebar .nav-list--children li > a:visited {
+  color: $secondary !important;           // always UF Orange
+  background-color: transparent !important; // remove default highlights
+  text-decoration: none;                  // optional: remove underline
 }
 
-.sidebar .nav-list > li > .nav-list-link:hover {
-  color: lighten($secondary, 10%) !important; // slightly lighter on hover
+.sidebar .nav-list li > a:hover,
+.sidebar .nav-list--children li > a:hover {
+  color: lighten($secondary, 10%) !important; // slightly lighter orange on hover
 }
 
-.sidebar .nav-list > li > .nav-list-link--active {
-  background-color: darken($primary, 5%) !important; // slightly darker background
-  color: $secondary !important;                       // text stays orange
-}
-
-// ----------------------------
-// Child links
-// ----------------------------
-.sidebar .nav-list--children li > .nav-list-link,
-.sidebar .nav-list--children li > .nav-list-link:visited {
-  color: $secondary !important;         // always orange
-}
-
-.sidebar .nav-list--children li > .nav-list-link:hover {
-  color: lighten($secondary, 10%) !important; // slightly lighter on hover
-}
-
-.sidebar .nav-list--children li > .nav-list-link--active {
-  background-color: darken($primary, 5%) !important; // darker background for active child
-  color: $secondary !important;                       // text stays orange
+.sidebar .nav-list li > a.nav-list-link--active,
+.sidebar .nav-list--children li > a.nav-list-link--active {
+  color: $secondary !important;           // keep text orange
+  background-color: darken($primary, 5%) !important; // slightly darker blue for active
 }
 
 // ----------------------------
 // Expand/collapse arrows
 // ----------------------------
 .nav-list-expander {
-  color: $secondary !important;          // orange arrows
+  color: $secondary !important;           // orange arrows
 }
 
 // ----------------------------
 // Site title (top-left home link)
 // ----------------------------
 .site-header__logo {
-  font-size: 1.25rem;  // smaller title
+  font-size: 1.25rem;                      // smaller title
   font-weight: 700;
-  color: $secondary !important; // site title orange
+  color: $secondary !important;            // site title orange
   text-decoration: none;
-}
-
-// ----------------------------
-// Remove default active highlight globally
-// ----------------------------
-.nav-list-link--active {
-  background-color: transparent !important; // optional, overrides other defaults
 }
