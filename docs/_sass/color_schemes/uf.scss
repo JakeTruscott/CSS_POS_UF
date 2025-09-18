@@ -1,36 +1,39 @@
+// ----------------------------
 // UF brand colors
+// ----------------------------
 $primary: #295376;    // Gator Blue
 $secondary: #c97a29;  // UF Orange
 
 // ----------------------------
 // Sidebar
 // ----------------------------
-// Sidebar background and text
 .sidebar,
 .sidebar-wrapper {
   background-color: $primary !important; // sidebar background
 }
 
 // Parent links
-.nav-list > .nav-list-item > .nav-list-link {
-  color: $primary !important;           // blue text for parent links
-  &:hover {
-    color: $secondary !important;       // UF orange on hover
-  }
+.sidebar .nav-list > .nav-list-item > .nav-list-link {
+  color: $primary !important;            // parent link text blue
+}
+
+.sidebar .nav-list > .nav-list-item > .nav-list-link:hover {
+  color: $secondary !important;          // hover orange
 }
 
 // Active parent link
-.nav-list > .nav-list-item > .nav-list-link--active {
-  background-color: $primary !important; // same as sidebar
-  color: $secondary !important;          // active link in orange
+.sidebar .nav-list > .nav-list-item > .nav-list-link--active {
+  background-color: $primary !important; // match sidebar
+  color: $secondary !important;          // active text orange
 }
 
-// Nested/child links
-.nav-list--children .nav-list-link {
-  color: $primary !important;            // blue text for child links
-  &:hover {
-    color: $secondary !important;        // UF orange on hover
-  }
+// Child links
+.sidebar .nav-list--children .nav-list-link {
+  color: $primary !important;            // child link text blue
+}
+
+.sidebar .nav-list--children .nav-list-link:hover {
+  color: $secondary !important;          // hover orange
 }
 
 // Expand/collapse arrows
@@ -38,10 +41,20 @@ $secondary: #c97a29;  // UF Orange
   color: $secondary !important;
 }
 
-// Top-left site title
+// ----------------------------
+// Site title (top-left home link)
+// ----------------------------
 .site-header__logo {
-  font-size: 1.25rem;
+  font-size: 1.25rem;  // smaller title
   font-weight: 700;
   color: #ffffff;
   text-decoration: none;
+}
+
+// ----------------------------
+// Optional global overrides
+// ----------------------------
+// Remove default highlight on active links if needed
+.nav-list-link--active {
+  background-color: transparent !important;
 }
