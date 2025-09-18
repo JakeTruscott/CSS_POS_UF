@@ -9,8 +9,8 @@ $secondary: #c97a29;  // UF Orange
 // ----------------------------
 .sidebar,
 .sidebar-wrapper {
-  background-color: $primary !important;
-  color: #ffffff; // default text color for headings/non-links
+  background-color: $primary !important; // keep blue background
+  color: $secondary !important;         // all text orange by default
 }
 
 // ----------------------------
@@ -18,16 +18,16 @@ $secondary: #c97a29;  // UF Orange
 // ----------------------------
 .sidebar .nav-list > li > .nav-list-link,
 .sidebar .nav-list > li > .nav-list-link:visited {
-  color: $primary !important; // default blue
+  color: $secondary !important;         // always orange
 }
 
 .sidebar .nav-list > li > .nav-list-link:hover {
-  color: $secondary !important; // hover orange
+  color: lighten($secondary, 10%) !important; // slightly lighter on hover
 }
 
 .sidebar .nav-list > li > .nav-list-link--active {
-  background-color: $primary !important;
-  color: $secondary !important; // active text orange
+  background-color: darken($primary, 5%) !important; // slightly darker background
+  color: $secondary !important;                       // text stays orange
 }
 
 // ----------------------------
@@ -35,38 +35,38 @@ $secondary: #c97a29;  // UF Orange
 // ----------------------------
 .sidebar .nav-list--children li > .nav-list-link,
 .sidebar .nav-list--children li > .nav-list-link:visited {
-  color: $primary !important; // default blue
+  color: $secondary !important;         // always orange
 }
 
 .sidebar .nav-list--children li > .nav-list-link:hover {
-  color: $secondary !important; // hover orange
+  color: lighten($secondary, 10%) !important; // slightly lighter on hover
 }
 
 .sidebar .nav-list--children li > .nav-list-link--active {
-  background-color: $primary !important;
-  color: $secondary !important; // active text orange
+  background-color: darken($primary, 5%) !important; // darker background for active child
+  color: $secondary !important;                       // text stays orange
 }
 
 // ----------------------------
 // Expand/collapse arrows
 // ----------------------------
 .nav-list-expander {
-  color: $secondary !important;
+  color: $secondary !important;          // orange arrows
 }
 
 // ----------------------------
 // Site title (top-left home link)
 // ----------------------------
 .site-header__logo {
-  font-size: 1.25rem; // smaller title
+  font-size: 1.25rem;  // smaller title
   font-weight: 700;
-  color: #ffffff;
+  color: $secondary !important; // site title orange
   text-decoration: none;
 }
 
 // ----------------------------
-// Optional global overrides
+// Remove default active highlight globally
 // ----------------------------
 .nav-list-link--active {
-  background-color: transparent !important; // remove default highlight if needed
+  background-color: transparent !important; // optional, overrides other defaults
 }
