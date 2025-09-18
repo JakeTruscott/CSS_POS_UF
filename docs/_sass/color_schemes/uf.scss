@@ -34,8 +34,8 @@ $site-title-color: $primary;
 // Expand/collapse arrows
 $nav-list-expander-color: $primary;
 
-.site-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #ffffff;
+.site-header__logo {
+  font-size: 1.25rem;   // adjust smaller as needed
+  font-weight: 700;      // optional: bold
+  color: #ffffff;        // keep white
 }
