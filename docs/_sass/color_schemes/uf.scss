@@ -1,35 +1,72 @@
-// Optional: inherit dark mode
-// @import "./color_schemes/dark";
-
+// ----------------------------
 // UF brand colors
-$primary: #0021A5; // Gator Blue 
-$secondary: #FA4616; // UF Orange
+// ----------------------------
+$primary: #295376;    // Gator Blue
+$secondary: #c97a29;  // UF Orange
 
+// ----------------------------
 // Sidebar background
-// $sidebar-color: $primary;
+// ----------------------------
+.sidebar,
+.sidebar-wrapper {
+  background-color: $primary !important;
+  color: #ffffff; // default text color for headings/non-links
+}
 
+// ----------------------------
 // Parent links
-$nav-list-link-color: $secondary;          
-$nav-list-link-hover-color: $secondary; 
-$nav-list-link-active-color: $secondary; 
-
-// Nested/child links
-$nav-list-children-link-color: $primary;
-$nav-list-children-link-hover-color: $secondary;
-$nav-list-children-link-active-color: $secondary;
-
-// Additional CSS overrides for stubborn elements
-.nav-list--children .nav-list-link {
-  color: #ffffff !important;           // force white for child links
+// ----------------------------
+.sidebar .nav-list > li > .nav-list-link,
+.sidebar .nav-list > li > .nav-list-link:visited {
+  color: $primary !important; // default blue
 }
 
-.nav-list-link--active {
-  background-color: transparent !important; // remove highlight for active page
-  color: #ffffff !important;                // ensure active page text stays white
+.sidebar .nav-list > li > .nav-list-link:hover {
+  color: $secondary !important; // hover orange
 }
 
-// Site title
-$site-title-color: $primary;
+.sidebar .nav-list > li > .nav-list-link--active {
+  background-color: $primary !important;
+  color: $secondary !important; // active text orange
+}
 
+// ----------------------------
+// Child links
+// ----------------------------
+.sidebar .nav-list--children li > .nav-list-link,
+.sidebar .nav-list--children li > .nav-list-link:visited {
+  color: $primary !important; // default blue
+}
+
+.sidebar .nav-list--children li > .nav-list-link:hover {
+  color: $secondary !important; // hover orange
+}
+
+.sidebar .nav-list--children li > .nav-list-link--active {
+  background-color: $primary !important;
+  color: $secondary !important; // active text orange
+}
+
+// ----------------------------
 // Expand/collapse arrows
-$nav-list-expander-color: $primary;
+// ----------------------------
+.nav-list-expander {
+  color: $secondary !important;
+}
+
+// ----------------------------
+// Site title (top-left home link)
+// ----------------------------
+.site-header__logo {
+  font-size: 1.25rem; // smaller title
+  font-weight: 700;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+// ----------------------------
+// Optional global overrides
+// ----------------------------
+.nav-list-link--active {
+  background-color: transparent !important; // remove default highlight if needed
+}
