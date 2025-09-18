@@ -11,6 +11,10 @@ has_children: true
 
 - TBD
 
+## Homewrok
+
+- Practice Set (Class 2)
+
 # Class Two Learning Objectives: 
 
 - Write and use custom <code>R</code> functions to automate tasks.
