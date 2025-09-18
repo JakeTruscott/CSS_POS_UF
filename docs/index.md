@@ -4,10 +4,11 @@ nav_order: 1
 has_children: true
 ---
 
-# POS6933: Computational Social Science (Data Analysis & Text as Data)
+# POS6933: Computational Social Science 
+## (Data Analysis  & Text as Data)
 
 <div style="text-align: center;">
-  <img src="{{ site.baseurl }}/assets/images/CSS_POLS_UF_Logo.png" alt="Truscott CSS Course" width="300"/>
+  <img src="{{ site.baseurl }}/assets/images/CSS_POLS_UF_Logo.png" alt="Truscott CSS Course Logo" width="500"/>
 </div>
 
 ---
