@@ -1,39 +1,56 @@
-// Optional: inherit dark mode
-// @import "./color_schemes/dark";
-
 // UF brand colors
 $primary: #295376;    // Gator Blue
 $secondary: #c97a29;  // UF Orange
 
-// Sidebar background
-.sidebar, 
+// ----------------------------
+// Sidebar
+// ----------------------------
+.sidebar,
 .sidebar-wrapper {
-  background-color: $primary !important;
-  color: #ffffff;  // optional: make default text white
+  background-color: $primary !important; // sidebar background
+  color: #ffffff;                        // default text color
 }
 
 // Parent links
-$nav-list-link-color: $primary;          
-$nav-list-link-hover-color: $primary; 
-$nav-list-link-active-color: $primary; 
+.nav-list-link {
+  color: #ffffff;              // white text for parent links
+  &:hover {
+    color: $secondary;         // UF orange on hover
+  }
+}
+
+// Active parent link
+.nav-list-link--active {
+  background-color: $primary !important; // keep active link background same as sidebar
+  color: $secondary !important;          // active text in orange
+}
 
 // Nested/child links
-$nav-list-children-link-color: $primary;
-$nav-list-children-link-hover-color: $primary;
-$nav-list-children-link-active-color: $primary;
-
-// Additional CSS overrides for stubborn elements
 .nav-list--children .nav-list-link {
-  color: #ffffff !important;           // force white for child links
+  color: #ffffff !important;           // white child links
+  &:hover {
+    color: $secondary !important;      // UF orange on hover
+  }
 }
-
-.nav-list-link--active {
-  background-color: transparent !important; // remove highlight for active page
-  color: #ffffff !important;                // ensure active page text stays white
-}
-
-// Site title
-$site-title-color: $primary;
 
 // Expand/collapse arrows
-$nav-list-expander-color: $primary;
+.nav-list-expander {
+  color: $secondary;                   // orange arrows
+}
+
+// ----------------------------
+// Site title (top-left home link)
+// ----------------------------
+.site-header__logo {
+  font-size: 1.25rem;  // smaller title
+  font-weight: 700;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+// ----------------------------
+// Optional: other global overrides
+// ----------------------------
+.nav-list-link--active {
+  background-color: transparent !important; // remove default highlight if desired
+}
