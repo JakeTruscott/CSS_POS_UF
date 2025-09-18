@@ -7,9 +7,10 @@ $secondary: #c97a29;  // UF Orange
 // ----------------------------
 .sidebar,
 .sidebar-wrapper {
-  //background-color: $primary !important; // sidebar background
-  color: #295376;;                        // default text color
+  background-color: $primary !important; // sidebar background
+  color: #ffffff;                        // sidebar text white
 }
+
 
 // Parent links
 .nav-list-link {
