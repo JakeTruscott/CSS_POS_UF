@@ -3,5 +3,5 @@ Github repository for POS6933: Computational Social Science (Data Analysis and T
 Instructor: Jake S. Truscott, PhD. (University of Florida)
 
 <div style="text-align: center; margin-bottom: 20px;">
-  <img src="/assets/images/CSS_POLS_UF_Logo.png" alt="Truscott CSS Course Logo" width="500"/>
+  <img src="/docs/assets/images/CSS_POLS_UF_Logo.png" alt="Truscott CSS Course Logo" width="500"/>
 </div>
