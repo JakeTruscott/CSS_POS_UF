@@ -8,18 +8,27 @@ $secondary: #FA4616;  // UF Orange
 // Sidebar background
 $sidebar-color: $primary;
 
-// Sidebar links
-$link-color: #ffffff;                   // global links
-$nav-list-link-color: #ffffff;          // parent links
-$nav-list-link-hover-color: $secondary; // hover = UF Orange
-$nav-list-link-active-color: $secondary; // active = UF Orange
+// Parent links
+$nav-list-link-color: #ffffff;          
+$nav-list-link-hover-color: $secondary; 
+$nav-list-link-active-color: $secondary; 
 
-// Children links (nested pages)
-$nav-list-children-link-color: #ffffff;          // normal child link color
-$nav-list-children-link-hover-color: $secondary; // hover child link color
-$nav-list-children-link-active-color: $secondary; // active child link color
+// Nested/child links
+$nav-list-children-link-color: #ffffff;
+$nav-list-children-link-hover-color: $secondary;
+$nav-list-children-link-active-color: $secondary;
 
-// Site title at top of sidebar
+// Additional CSS overrides for stubborn elements
+.nav-list--children .nav-list-link {
+  color: #ffffff !important;           // force white for child links
+}
+
+.nav-list-link--active {
+  background-color: transparent !important; // remove highlight for active page
+  color: #ffffff !important;                // ensure active page text stays white
+}
+
+// Site title
 $site-title-color: #ffffff;
 
 // Expand/collapse arrows
