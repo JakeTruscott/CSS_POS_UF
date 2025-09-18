@@ -1,6 +1,6 @@
 ---
 title: "Downloading R & RStudio"
-parent: "1: Syllabus & Introduction"
+parent: "Syllabus & Introduction"
 nav_order: 3
 ---
 
