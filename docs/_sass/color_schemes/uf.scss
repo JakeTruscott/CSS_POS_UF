@@ -5,53 +5,43 @@ $secondary: #c97a29;  // UF Orange
 // ----------------------------
 // Sidebar
 // ----------------------------
+// Sidebar background and text
 .sidebar,
 .sidebar-wrapper {
   background-color: $primary !important; // sidebar background
-  color: #ffffff;                        // sidebar text white
 }
 
-
 // Parent links
-.nav-list-link {
-  color: #ffffff;              // white text for parent links
+.nav-list > .nav-list-item > .nav-list-link {
+  color: $primary !important;           // blue text for parent links
   &:hover {
-    color: $secondary;         // UF orange on hover
+    color: $secondary !important;       // UF orange on hover
   }
 }
 
 // Active parent link
-.nav-list-link--active {
-  background-color: $primary !important; // keep active link background same as sidebar
-  color: $secondary !important;          // active text in orange
+.nav-list > .nav-list-item > .nav-list-link--active {
+  background-color: $primary !important; // same as sidebar
+  color: $secondary !important;          // active link in orange
 }
 
 // Nested/child links
 .nav-list--children .nav-list-link {
-  color: #ffffff !important;           // white child links
+  color: $primary !important;            // blue text for child links
   &:hover {
-    color: $secondary !important;      // UF orange on hover
+    color: $secondary !important;        // UF orange on hover
   }
 }
 
 // Expand/collapse arrows
 .nav-list-expander {
-  color: $secondary;                   // orange arrows
+  color: $secondary !important;
 }
 
-// ----------------------------
-// Site title (top-left home link)
-// ----------------------------
+// Top-left site title
 .site-header__logo {
-  font-size: 1.25rem;  // smaller title
+  font-size: 1.25rem;
   font-weight: 700;
   color: #ffffff;
   text-decoration: none;
-}
-
-// ----------------------------
-// Optional: other global overrides
-// ----------------------------
-.nav-list-link--active {
-  background-color: transparent !important; // remove default highlight if desired
 }
