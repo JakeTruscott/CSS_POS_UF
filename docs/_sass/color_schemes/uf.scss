@@ -1,21 +1,21 @@
-// Base your scheme on light (or dark if you prefer). 
+// Base (optional: uncomment if you want to start from dark)
 // @import "./color_schemes/dark";
 
-// University of Florida custom scheme
+// UF colors
 $primary: #0021A5;   // Gator Blue
 $secondary: #FA4616; // UF Orange
 
 // Sidebar background
 $sidebar-color: $primary;
 
-// Sidebar text
+// Sidebar text & links
 $sidebar-text-color: #ffffff;
+$nav-list-link-color: #ffffff;         // normal link
+$nav-list-link-hover-color: $secondary; // hover (orange)
+$nav-list-link-active-color: $secondary; // active (orange)
 
-// Active link in sidebar (optional: make orange)
-$sidebar-active-color: $secondary;
-
-// Title (site title at top of sidebar)
+// Site title (at the top of sidebar)
 $site-title-color: #ffffff;
 
-// Headings inside sidebar (optional)
-$nav-list-link-color: #ffffff;
+// Optional: headings inside sidebar stay white too
+$nav-list-expander-color: #ffffff;
