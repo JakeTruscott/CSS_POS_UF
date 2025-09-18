@@ -1,8 +1,9 @@
 ---
-title: Week 1: Syllabus & Introduction 
+title: "Week 1: Syllabus & Introduction"
 nav_order: 2
 has_children: true
 ---
+
 
 # Week One Checklist 
 
