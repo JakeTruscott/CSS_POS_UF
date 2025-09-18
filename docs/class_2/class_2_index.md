@@ -1,5 +1,5 @@
 ---
-title: "Class 2: Intermediate Programming in R"
+title: "2: Intermediate Programming in R"
 nav_order: 4
 has_children: true
 ---

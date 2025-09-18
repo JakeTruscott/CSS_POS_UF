@@ -1,5 +1,5 @@
 ---
-title: "Class 1: Syllabus & Introduction"
+title: "1: Syllabus & Introduction"
 nav_order: 3
 has_children: true
 ---
