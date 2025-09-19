@@ -9,9 +9,10 @@ has_children: true
 
 ## Readings
 
-- TBD
+- <code>R</code> Cheat Sheets (<code>R</code> Functions and Packages or Political Science Analysis)
 
-## Homewrok
+
+## Homework
 
 - Practice Set (Class 2)
 

@@ -6,7 +6,6 @@ nav_order: 4
 
 # Downloading <code>Python</code> to <code>Windows</code>
 
-
 <div style="text-align: center; margin-bottom: 20px; margin-top: 20px;">
   <img src="{{ site.baseurl }}/assets/images/Python_logo.png" alt="Python Logo" width="400"/>
 </div>
