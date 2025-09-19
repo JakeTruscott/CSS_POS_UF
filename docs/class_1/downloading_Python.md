@@ -4,11 +4,15 @@ parent: "Syllabus & Introduction"
 nav_order: 4
 ---
 
-# What is <code>Python</code>?
+# Downloading <code>Python</code> to <code>Windows</code>
+
+
+<div style="text-align: center; margin-bottom: 20px; margin-top: 20px;">
+  <img src="{{ site.baseurl }}/assets/images/Python_logo.png" alt="Python Logo" width="400"/>
+</div>
+
 
 <code>Python</code> is a high-level, general-purpose programming language known for its simplicity and readability. It is widely used in data science, web development, automation, machine learning, and many other areas. Its large standard library and extensive ecosystem of third-party packages make it flexible and powerful for both beginners and advanced users.
-
-# Downloading <code>Python</code> to <code>Windows</code>
 
 <ol>
 <li> Go to the official Python website <a href= "https://www.python.org/downloads/">HERE</a>.</li>

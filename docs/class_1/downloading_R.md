@@ -9,7 +9,7 @@ nav_order: 3
 
 
 <div style="text-align: center; margin-bottom: 20px; margin-top: 20px;">
-  <img src="{{ site.baseurl }}/assets/images/R_logo.png" alt="Truscott CSS Course Logo" width="400"/>
+  <img src="{{ site.baseurl }}/assets/images/R_logo.png" alt="R Logo" width="400"/>
 </div>
 
 <code>R</code> is maintained by an international team of developers who make the language available through the web page of <a href="https://cran.r-project.org/">The Comprehensive R Archive Network (CRAN)</a>. 
