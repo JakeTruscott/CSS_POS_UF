@@ -17,11 +17,11 @@ nav_order: 4
 # <code>dplyr::()</code> (<code>tidyverse R</code>)
 
 <div style="text-align: center; margin-bottom: 20px; margin-top: 20px;">
-  <img src="{{ site.baseurl }}/assets/replication_materials/class_2/supplemental_materials/cheat_sheet_dplyr_1.jpg" alt="Dplyr Cheat Sheet" width="800"/>
+  <img src="{{ site.baseurl }}/assets/replication_materials/class_2/supplemental_materials/cheat_sheet_base_dplyr_1.jpg" alt="Dplyr Cheat Sheet" width="800"/>
 </div>
 
 <div style="text-align: center; margin-bottom: 20px; margin-top: 20px;">
-  <img src="{{ site.baseurl }}/assets/replication_materials/class_2/supplemental_materials/cheat_sheet_dplyr_2.jpg" alt="Dplyr Cheat Sheet (2)" width="800"/>
+  <img src="{{ site.baseurl }}/assets/replication_materials/class_2/supplemental_materials/cheat_sheet_base_dplyr_2.jpg" alt="Dplyr Cheat Sheet (2)" width="800"/>
 </div>
 
 
