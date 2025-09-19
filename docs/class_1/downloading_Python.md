@@ -6,7 +6,7 @@ nav_order: 4
 
 # What is <code>Python</code>?
 
-Python is a high-level, general-purpose programming language known for its simplicity and readability. It is widely used in data science, web development, automation, machine learning, and many other areas. Python’s large standard library and extensive ecosystem of third-party packages make it flexible and powerful for both beginners and advanced users.
+<code>Python</code> is a high-level, general-purpose programming language known for its simplicity and readability. It is widely used in data science, web development, automation, machine learning, and many other areas. Its large standard library and extensive ecosystem of third-party packages make it flexible and powerful for both beginners and advanced users.
 
 # Downloading <code>Python</code> to <code>Windows</code>
 
