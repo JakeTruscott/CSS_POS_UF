@@ -1,7 +1,7 @@
 ---
 title: Home
 nav_order: 1
-has_children: true
+has_children: false
 ---
 
 <div style="text-align: center; font-size: 28px; font-weight: bold; margin-bottom: 20px;">
