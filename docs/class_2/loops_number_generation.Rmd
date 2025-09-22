@@ -11,6 +11,7 @@ library(dplyr); library(ggplot2)
 
 ```
 
+---
 
 ## Number Generation
 
@@ -54,7 +55,7 @@ summary(students_t)
 
 <b> Note:</b> In <code>R</code>, random number generation isn't truly random. Rather, they’re pseudo-random, meaning they use a deterministic algorithm to produce a sequence of numbers that appear random. A <code>seed</code> is the starting point for that algorithm. When you call <code>set.seed(1234)</code>, you are initializing the random number generator with a specific value. This ensures that every time you use the same seed, the sequence of "random" numbers <code>R</code> produces will be exactly the same -- perfect for reproducibility! 
 
-
+---
 
 ## Loops
 
