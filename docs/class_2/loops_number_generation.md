@@ -6,14 +6,8 @@ nav_order: 5
 
 <iframe 
   id="pset-frame"
-  src="{{ site.baseurl }}/assets/replication_materials/class_2/code/loops_number_generation.html" 
+  src="{{ site.baseurl }}/assets/replication_materials/class_2/code/loops_number_generation.html"
   width="100%" 
+  height="80vh"
   style="border:none; overflow:auto;">
 </iframe>
-
-<script>
-  const iframe = document.getElementById('pset-frame');
-  iframe.onload = function() {
-    iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
-  };
-</script>
