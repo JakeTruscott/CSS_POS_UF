@@ -296,5 +296,4 @@ data.frame(remaining_funds = games) %>%
 
 ```
 
-
-
+<simulate the numbers>
