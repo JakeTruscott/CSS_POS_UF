@@ -3,7 +3,7 @@
     "path": "C:/Users/jaketruscott/Github/CSS_POLS_UF/docs/assets/replication_materials/class_2/code/loops_number_generation.Rmd",
     "project_path": "class_2/code/loops_number_generation.Rmd",
     "type": "r_markdown",
-    "hash": "0",
+    "hash": "2025329214",
     "contents": "",
     "dirty": false,
     "created": 1758561635078.0,
@@ -18,11 +18,11 @@
         "last_setup_crc32": "24d0ae58e73514d9"
     },
     "folds": "171|15|233|0|\n178|27|208|0|\n244|27|273|0|\n",
-    "lastKnownWriteTime": 1758570392,
+    "lastKnownWriteTime": 1758570788,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1758570392332,
+    "last_content_update": 1758570788626,
     "read_only": false,
     "read_only_alternatives": []
 }
