@@ -72,13 +72,29 @@ for (i in 1:5){
 ```
 The syntax of these loops are fairly straightforward.Here, <code>i</code> takes on the value associated with each iteration. During the first pass, it will assume the value of 1. On the second pass, it will assume the value 2 -- so on and so forth until it reaches the terminal value of 5. 
 
-<code>R</code> is able to assume various syntax for assuming ranges of values. Here's just a few examples: 
+<code>R</code> is able to assume various syntax for assuming ranges of alphanumeric values. Here's just a few examples: 
 
 ```{R range_syntax}
 
+values <- seq(10, 100, by = 10) # Values 10 to 100 by 10
+print(values)
 
+values <- c(10:20) # Values 10 to 20 (Inclusive)
+print(values)
 
+values <- seq(1, 100, by = 1) # All Values 1 to 100 (Inclusive)
 
+for (i in values){
+  if (i %% 10 == 0){
+    print(i)
+  }
+} # For Each Value in `values', if i is neatly divisible by 10, print i
+
+values <- c('a', 'b', 'c', 'd', 'f') 
+
+for (i in 1:length(values)){
+  print(values[i])
+} # For Each Value in Values, Print the Value Indexed values[i]
 
 ```
 
