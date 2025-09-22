@@ -284,6 +284,9 @@ for (i in 1:length(values)){
 ## [1] &quot;c&quot;
 ## [1] &quot;d&quot;
 ## [1] &quot;f&quot;</code></pre>
+<p><br></p>
+<div id="simulating-normal-distribution" class="section level3">
+<h3>Simulating Normal Distribution</h3>
 <p>I could even bake the syntax of <code>for</code> loops into random
 number generation to significantly increase my efficiency in modeling
 distributions. Let’s imagine I want to visualize the capacity for
@@ -299,7 +302,7 @@ for (i in 1:length(samples)){
   temp_sample_size &lt;- samples[i] # Recovers the i-th value of the samples vector
   temp_run &lt;- rnorm(temp_sample_size, mean = 50, sd = 5) # Run 
   temp_run &lt;- data.frame(sample_size = temp_sample_size, 
-                         value = temp_run) # Create Temporary 2 x i dataframe indicating size of samples and values from rbinom()
+                         value = temp_run) # Create Temporary dataframe indicating size of samples and values from rbinom()
   results &lt;- bind_rows(results, temp_run) # Export to &#39;results&#39; data.frame
   
 }
@@ -335,6 +338,149 @@ summary(results) # Print Summary</code></pre>
         legend.position = &#39;none&#39;, 
         plot.caption = element_text(hjust = 0.5)) </code></pre>
 <p><img src="loops_number_generation_files/figure-html/for_loops_sampling-1.png" width="672" /></p>
+<p><br></p>
+</div>
+<div id="games-of-chance-example" class="section level3">
+<h3>Games of Chance Example</h3>
+I could even use <code>for</code> loops to simulate games of chance. For
+example, a standard American roulette wheel has 38 slots:
+<ul>
+<li style="color: red;">
+18 Red
+</li>
+<li style="color: black;">
+18 Black
+</li>
+<li style="color: green;">
+2 Green
+</li>
+</ul>
+<p>Let’s say I played 50 times, each time selecting from among the three
+color options. I only have one rule: <b> If I win, I place the same bet
+as before. If I lose, I play a different color</b>.</p>
+<p>If I begin with $500 and bet the table minimum ($10), what might I be
+expected to finish with if I visit 100 times and play 50 spins each
+time?</p>
+<pre class="r"><code>set.seed(1234) # Set Initial Seed
+seeds &lt;-  sample(1:1000, size = 100, replace = FALSE) # Random Seeds
+roulette_values &lt;- c(rep(&quot;red&quot;, 18), rep(&quot;black&quot;, 18), rep(&quot;green&quot;, 2)) # Roulette Wheel
+games &lt;- c() # Empty Vector to Store Winnings (Losses...)
+
+for (i in 1:length(seeds)){
+  
+  temp_seed &lt;- seeds[i] # Recover Temporary Seed
+  set.seed(temp_seed) # Set Temporary Seed
+  
+  available_colors &lt;- c(&#39;red&#39;, &#39;black&#39;, &#39;green&#39;) # Roulette Colors
+  remaining_funds &lt;- 500 # Starting Money
+  current_color &lt;- &#39;red&#39; # Starting with Red
+  
+  for (spin in 1:100){
+    
+    temp_spin &lt;- sample(roulette_values, size = 1, replace = T) # Spin!
+    
+    if (temp_spin == current_color){
+      remaining_funds &lt;- remaining_funds + 10 # Win :D 
+      current_color = current_color # Keep Color
+
+    } else {
+      remaining_funds &lt;- remaining_funds - 10 # Loss :(
+      current_color = sample(available_colors[which(!available_colors == current_color)], size = 1, replace = T)
+
+      # If Loss -- Remove $10 and Change Color to Other from Remaining Options
+      
+    }
+    
+    
+  }
+  
+  games &lt;- c(games, remaining_funds) # Export Remaining Funds
+  
+}
+
+
+data.frame(remaining_funds = games) %&gt;%
+  ggplot(aes(x = remaining_funds)) + 
+  geom_histogram(fill = &#39;skyblue4&#39;, colour = &#39;black&#39;, alpha = 1/3, bins = 20) + 
+  labs(x = &#39;\nRemaining Funds\n&#39;,
+       y = &#39;Count\n&#39;, 
+       fill = &#39;Sample Size&#39;, 
+       caption = paste0(
+      &quot;Dashed Black Line = Average Remaining Funds Each Day ($&quot;, round(mean(games), 0), &quot;)\n&quot;,
+      &quot;Dashed Red Line = Starting Funds ($500)&quot;
+    )) + 
+  geom_vline(xintercept = 500, linetype = 2, colour = &#39;red&#39;) + 
+  geom_vline(xintercept = mean(games), linetype = 2, colour = &#39;black&#39;) + 
+  geom_hline(yintercept = 0) +
+  theme_minimal() + 
+  theme(panel.border = element_rect(linewidth = 1, colour = &#39;black&#39;, fill = NA), 
+        axis.text = element_text(size = 12, colour = &#39;black&#39;), 
+        axis.title = element_text(size = 14, colour = &#39;black&#39;), 
+        strip.background = element_rect(linewidth = 1, colour = &#39;black&#39;, fill = &#39;grey75&#39;),
+        strip.text = element_text(size = 12, colour = &#39;black&#39;), 
+        legend.position = &#39;none&#39;, 
+        plot.caption = element_text(hjust = 0, size = 10)) </code></pre>
+<p><img src="loops_number_generation_files/figure-html/roulette-1.png" width="672" /></p>
+<p>Now what if I changed the rules such that instead of restarting with
+$500 each day, I assume the value of the day before?</p>
+<pre class="r"><code>set.seed(1234) # Set Initial Seed
+seeds &lt;-  sample(1:1000, size = 100, replace = FALSE) # Random Seeds
+roulette_values &lt;- c(rep(&quot;red&quot;, 18), rep(&quot;black&quot;, 18), rep(&quot;green&quot;, 2)) # Roulette Wheel
+games &lt;- c() # Empty Vector to Store Winnings (Losses...)
+
+for (i in 1:length(seeds)){
+  
+  temp_seed &lt;- seeds[i] # Recover Temporary Seed
+  set.seed(temp_seed) # Set Temporary Seed
+  
+  available_colors &lt;- c(&#39;red&#39;, &#39;black&#39;, &#39;green&#39;) # Roulette Colors
+  remaining_funds &lt;- ifelse(i == 1, 500, games[i-1])  # Starting Money (500 or Previous Start if i &gt; 1)
+  current_color &lt;- &#39;red&#39; # Starting with Red
+  
+  for (spin in 1:100){
+    
+    temp_spin &lt;- sample(roulette_values, size = 1, replace = T) # Spin!
+    
+    if (temp_spin == current_color){
+      remaining_funds &lt;- remaining_funds + 10 # Win :D 
+      current_color = current_color # Keep Color
+    } else {
+      remaining_funds &lt;- remaining_funds - 10 # Loss :(
+      current_color = sample(available_colors[which(!available_colors == current_color)], size = 1, replace = T)
+
+      # If Loss -- Remove $10 and Change Color to Other from Remaining Options
+      
+    }
+    
+    
+  }
+  
+  games &lt;- c(games, remaining_funds) # Export Remaining Funds
+  
+}
+
+
+data.frame(remaining_funds = games) %&gt;%
+  ggplot(aes(x = remaining_funds)) + 
+  geom_histogram(fill = &#39;skyblue4&#39;, colour = &#39;black&#39;, alpha = 1/3, bins = 50) + 
+  labs(x = &#39;\nRemaining Funds\n&#39;,
+       y = &#39;Count\n&#39;, 
+       fill = &#39;Sample Size&#39;, 
+       caption = paste0(
+      &quot;Dashed Black Line = Average Remaining Funds Each Day ($&quot;, round(mean(games), 0), &#39;)&#39;
+    )) + 
+  geom_vline(xintercept = mean(games), linetype = 2, colour = &#39;black&#39;) + 
+  geom_hline(yintercept = 0) +
+  theme_minimal() + 
+  theme(panel.border = element_rect(linewidth = 1, colour = &#39;black&#39;, fill = NA), 
+        axis.text = element_text(size = 12, colour = &#39;black&#39;), 
+        axis.title = element_text(size = 14, colour = &#39;black&#39;), 
+        strip.background = element_rect(linewidth = 1, colour = &#39;black&#39;, fill = &#39;grey75&#39;),
+        strip.text = element_text(size = 12, colour = &#39;black&#39;), 
+        legend.position = &#39;none&#39;, 
+        plot.caption = element_text(hjust = 0, size = 10)) </code></pre>
+<p><img src="loops_number_generation_files/figure-html/roulette_inherit_money-1.png" width="672" /></p>
+</div>
 </div>
 
 

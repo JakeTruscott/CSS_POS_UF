@@ -13,16 +13,16 @@
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "11,34",
-        "scrollLine": "0",
+        "cursorPosition": "275,0",
+        "scrollLine": "169",
         "last_setup_crc32": "24d0ae58e73514d9"
     },
-    "folds": "",
-    "lastKnownWriteTime": 1758567724,
+    "folds": "171|15|233|0|\n178|27|208|0|\n244|27|273|0|\n",
+    "lastKnownWriteTime": 1758570298,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1758567724888,
+    "last_content_update": 1758570298535,
     "read_only": false,
     "read_only_alternatives": []
 }
