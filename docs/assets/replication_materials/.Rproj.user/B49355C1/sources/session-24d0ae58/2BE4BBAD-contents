@@ -154,20 +154,19 @@ results %>%
 
 <br> 
 
-### Games of Chance Example
+### Games of Chance Example (Roulette)
 
 
 I could even use <code>for</code> loops to simulate games of chance. For example, a standard American roulette wheel has 38 slots: 
 <ul>
-  <li style="color: red;">18 Red</li>
-  <li style="color: black;">18 Black</li>
-  <li style="color: green;">2 Green</li>
+  <li style="color: red;"><b>18 Red</b></li>
+  <li style="color: black;"><b>18 Black</b></li>
+  <li style="color: green;"><b>2 Green</b></li>
 </ul>
 
-Let's say I played 50 times, each time selecting from among the three color options. I only have one rule: <b> If I win, I place the same bet as before. If I lose, I play a different color</b>. 
+However, to only play the colors at a 1-1 payout (i.e., doubling your bet) means I can only select <b>Black</b> or <span style="color:red;">Red</span>, each of which have a 0.47\% (<sup>18</sup>&frasl;<sub>38</sub>) probability of being selected for any independent spin. 
 
-If I begin with \$500 and bet the table minimum (\$10), what might I be expected to finish with if I visit 100 times and play 50 spins each time?
-
+Let's say I played 50 times, each time selecting from among <b>Black</b> or <span style="color:red;">Red</span>. I only have one rule: <b> If I win, I place the same bet as before. If I lose, I play the other color</b>. If I begin with \$500 and bet the table minimum (\$10), what might I be expected to finish with if I visit 100 times and play 50 spins each time? 
 
 ```{r roulette}
 
@@ -181,7 +180,7 @@ for (i in 1:length(seeds)){
   temp_seed <- seeds[i] # Recover Temporary Seed
   set.seed(temp_seed) # Set Temporary Seed
   
-  available_colors <- c('red', 'black', 'green') # Roulette Colors
+  available_colors <- c('red', 'black') # Available Roulette Colors
   remaining_funds <- 500 # Starting Money
   current_color <- 'red' # Starting with Red
   
@@ -192,28 +191,23 @@ for (i in 1:length(seeds)){
     if (temp_spin == current_color){
       remaining_funds <- remaining_funds + 10 # Win :D 
       current_color = current_color # Keep Color
-
     } else {
       remaining_funds <- remaining_funds - 10 # Loss :(
       current_color = sample(available_colors[which(!available_colors == current_color)], size = 1, replace = T)
-
       # If Loss -- Remove $10 and Change Color to Other from Remaining Options
-      
     }
-    
-    
   }
-  
   games <- c(games, remaining_funds) # Export Remaining Funds
-  
 }
 
 
 data.frame(remaining_funds = games) %>%
   ggplot(aes(x = remaining_funds)) + 
-  geom_histogram(fill = 'skyblue4', colour = 'black', alpha = 1/3, bins = 20) + 
+    geom_histogram(aes(y = after_stat(density)),  
+                 fill = 'skyblue4', colour = 'black', alpha = 1/3, bins = 20) + 
+  geom_density(colour = 'red', linetype = 2, linewidth = 1) + 
   labs(x = '\nRemaining Funds\n',
-       y = 'Count\n', 
+       y = 'Density\n', 
        fill = 'Sample Size', 
        caption = paste0(
       "Dashed Black Line = Average Remaining Funds Each Day ($", round(mean(games), 0), ")\n",
@@ -235,7 +229,7 @@ data.frame(remaining_funds = games) %>%
 
 Now what if I changed the rules such that instead of restarting with \$500 each day, I assume the value of the day before? 
 
-```{r roulette_inherit_money}
+```{r roulette_inherit_money, echo=FALSE}
 
 set.seed(1234) # Set Initial Seed
 seeds <-  sample(1:1000, size = 100, replace = FALSE) # Random Seeds
@@ -247,7 +241,7 @@ for (i in 1:length(seeds)){
   temp_seed <- seeds[i] # Recover Temporary Seed
   set.seed(temp_seed) # Set Temporary Seed
   
-  available_colors <- c('red', 'black', 'green') # Roulette Colors
+  available_colors <- c('red', 'black') # Roulette Colors
   remaining_funds <- ifelse(i == 1, 500, games[i-1])  # Starting Money (500 or Previous Start if i > 1)
   current_color <- 'red' # Starting with Red
   
@@ -261,28 +255,25 @@ for (i in 1:length(seeds)){
     } else {
       remaining_funds <- remaining_funds - 10 # Loss :(
       current_color = sample(available_colors[which(!available_colors == current_color)], size = 1, replace = T)
-
       # If Loss -- Remove $10 and Change Color to Other from Remaining Options
-      
     }
-    
-    
   }
-  
   games <- c(games, remaining_funds) # Export Remaining Funds
-  
 }
 
 
 data.frame(remaining_funds = games) %>%
   ggplot(aes(x = remaining_funds)) + 
-  geom_histogram(fill = 'skyblue4', colour = 'black', alpha = 1/3, bins = 50) + 
+    geom_histogram(aes(y = after_stat(density)),  
+                 fill = 'skyblue4', colour = 'black', alpha = 1/3, bins = 15) + 
+  geom_density(colour = 'red', linetype = 2, size = 1) + 
   labs(x = '\nRemaining Funds\n',
-       y = 'Count\n', 
+       y = 'Density\n', 
        fill = 'Sample Size', 
        caption = paste0(
-      "Dashed Black Line = Average Remaining Funds Each Day ($", round(mean(games), 0), ')'
+      "Dashed Black Line = Average Remaining Funds Each Day ($", round(mean(games), 0), ")"
     )) + 
+  geom_vline(xintercept = 500, linetype = 2, colour = 'red') + 
   geom_vline(xintercept = mean(games), linetype = 2, colour = 'black') + 
   geom_hline(yintercept = 0) +
   theme_minimal() + 
