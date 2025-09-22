@@ -1,0 +1,10 @@
+/* Center and resize the title */
+h1.title {
+  text-align: center;
+  font-size: 1.5em;
+}
+
+/* Center author and date */
+h4.author, h4.date {
+  text-align: center;
+}
