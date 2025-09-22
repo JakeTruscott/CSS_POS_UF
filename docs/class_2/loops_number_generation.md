@@ -7,6 +7,6 @@ nav_order: 5
 
 <iframe 
   src="{{ site.baseurl }}/assets/replication_materials/class_2/code/loops_number_generation.html"
-  width="100%" height = "1200px"
+  width="100%" height = "1500px"
   style="border:none; overflow:auto;">
 </iframe>
