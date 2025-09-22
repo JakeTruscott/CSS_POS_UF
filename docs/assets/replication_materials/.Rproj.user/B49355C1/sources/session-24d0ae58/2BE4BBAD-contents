@@ -1,0 +1,130 @@
+---
+title: "Number Generation and Loops"
+subtitle: "POS6933: Computational Social Science"
+author: "Truscott (Spring 2026)"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr); library(ggplot2)
+
+```
+
+
+## Number Generation
+
+<code>R</code> provides remarkable flexibility for randomly generating integers across a variety of distributions. Assuming I want to generate 1000 values at random, I can use many of <code>R's</code> built-in functionality to do so: 
+
+
+
+```{r distributions}
+
+set.seed(1234) # Random Seed 
+
+uniform <- runif(1000, min = 0, max = 10) # Uniform Distribution
+summary(uniform)
+
+normal <- rnorm(1000, mean = 0, sd = 1) # Standard Normal (Mean = 0, SD = 1)
+summary(normal)
+
+exponential <- rexp(1000, rate = 1) # Exponential Distribution (Rate = 1)
+summary(exponential)
+
+poisson <- rpois(1000, lambda = 3) # Poisson Distribution (Count)
+summary(poisson)
+
+binomial <- rbinom(1000, size = 10, prob = 0.5) # Bernoulli Distribution
+summary(binomial)
+
+geometric <- rgeom(1000, prob = 0.3) # Geometric Distribution
+summary(geometric)
+
+negative_binomial <- rnbinom(1000, size = 5, prob = 0.4) # Negative Binomial
+summary(negative_binomial)
+
+chi_sq <- rchisq(1000, df = 4) # Chi-Square Distribution (4 Degrees of Freedom)
+summary(chi_sq)
+
+students_t <- rt(1000, df = 5) # Students T (5 DF)
+summary(students_t)
+
+```
+
+
+<b> Note:</b> In <code>R</code>, random number generation isn't truly random. Rather, they’re pseudo-random, meaning they use a deterministic algorithm to produce a sequence of numbers that appear random. A <code>seed</code> is the starting point for that algorithm. When you call <code>set.seed(1234)</code>, you are initializing the random number generator with a specific value. This ensures that every time you use the same seed, the sequence of "random" numbers <code>R</code> produces will be exactly the same -- perfect for reproducibility! 
+
+
+
+## Loops
+
+
+In R, a for loop is a control structure used to repeat a block of code a fixed number of times, iterating over a sequence of values. The basic syntax is <code>for(variable in sequence) { code }</code>, where <code>variable</code> takes on each value in sequence one at a time, and the code inside the curly braces executes for each iteration. 
+
+<code>for</code> loops are useful when you need to perform repetitive tasks, such as computing multiple summaries, filling a vector, or generating plots for several datasets. For example, imagine I wanted to print the squared integer of every value between 1 and 5. Rather than individually entering <code>{value}^5</code> to the console, I could simply iterate for each value:  
+
+```{r for_loops}
+
+for (i in 1:5){
+  print(i^2) 
+}
+
+```
+The syntax of these loops are fairly straightforward.Here, <code>i</code> takes on the value associated with each iteration. During the first pass, it will assume the value of 1. On the second pass, it will assume the value 2 -- so on and so forth until it reaches the terminal value of 5. 
+
+<code>R</code> is able to assume various syntax for assuming ranges of values. Here's just a few examples: 
+
+```{R range_syntax}
+
+
+
+
+
+```
+
+
+I could even bake the syntax of <code>for</code> loops into random number generation to significantly increase my efficiency in modeling distributions. Let's imagine I want to visualize the capacity for repeated sampling to best mimic a standard normal distribution where $\mu$ = 50 and $\sigma$ = 5. Using a <code>for</code> loop, I can cycle different sampling rates to answer this question: 
+
+```{r for_loops_sampling}
+
+results <- data.frame() # Empty Dataframe to Store Output
+samples <- c(10, 100, 1000, 10000) # Vector of Integers
+
+for (i in 1:length(samples)){
+  
+  temp_sample_size <- samples[i] # Recovers the i-th value of the samples vector
+  temp_run <- rnorm(temp_sample_size, mean = 50, sd = 5) # Run 
+  temp_run <- data.frame(sample_size = temp_sample_size, 
+                         value = temp_run) # Create Temporary 2 x i dataframe indicating size of samples and values from rbinom()
+  results <- bind_rows(results, temp_run) # Export to 'results' data.frame
+  
+}
+
+summary(results) # Print Summary
+
+
+results %>%
+  mutate(sample_size = factor(sample_size)) %>%
+  ggplot(aes(x = value)) + 
+  geom_density(aes(fill = sample_size), alpha = 1/3) + 
+  stat_function(fun = dnorm, args = list(mean = 50, sd = 5), 
+                color = "red", linewidth = 1.2) + 
+  labs(x = '\nValue',
+       y = 'Density\n', 
+       fill = 'Sample Size', 
+       caption = 'Note: Red Line Indicates Normal Distribution (μ = 50, σ = 5)') + 
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 50, linetype = 2) + 
+  facet_wrap(~paste0(sample_size, ' Samples')) + 
+  scale_x_continuous(breaks = seq(35, 65, 5)) + 
+  theme_minimal() + 
+  theme(panel.border = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+        axis.text = element_text(size = 12, colour = 'black'), 
+        axis.title = element_text(size = 14, colour = 'black'), 
+        strip.background = element_rect(linewidth = 1, colour = 'black', fill = 'grey75'),
+        strip.text = element_text(size = 12, colour = 'black'), 
+        legend.position = 'none', 
+        plot.caption = element_text(hjust = 0.5)) 
+
+```
+

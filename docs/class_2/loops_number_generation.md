@@ -4,6 +4,16 @@ parent: "Intermediate Programming in R"
 nav_order: 5
 ---
 
-# Random Number Generation in <code>R</code>
+<iframe 
+  id="pset-frame"
+  src="{{ site.baseurl }}/docs/class_2/loops_number_generation.html" 
+  width="100%" 
+  style="border:none; overflow:auto;">
+</iframe>
 
-# Loops and Conditional Statements 
+<script>
+  const iframe = document.getElementById('pset-frame');
+  iframe.onload = function() {
+    iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
+  };
+</script>
