@@ -6,7 +6,7 @@ nav_order: 5
 
 <iframe 
   id="pset-frame"
-  src="{{ site.baseurl }}/class_2/loops_number_generation.html" 
+  src="{{ site.baseurl }}/assets/replication_materials/class_2/code/loops_number_generation.html" 
   width="100%" 
   style="border:none; overflow:auto;">
 </iframe>

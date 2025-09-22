@@ -1,7 +1,7 @@
 {
     "id": "2BE4BBAD",
-    "path": "C:/Users/jaketruscott/Github/CSS_POLS_UF/docs/class_2/loops_number_generation.Rmd",
-    "project_path": null,
+    "path": "C:/Users/jaketruscott/Github/CSS_POLS_UF/docs/assets/replication_materials/class_2/code/loops_number_generation.Rmd",
+    "project_path": "class_2/code/loops_number_generation.Rmd",
     "type": "r_markdown",
     "hash": "0",
     "contents": "",
@@ -13,16 +13,16 @@
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "4,8",
+        "cursorPosition": "9,32",
         "scrollLine": "0",
         "last_setup_crc32": "24d0ae58e73514d9"
     },
     "folds": "",
-    "lastKnownWriteTime": 1758565765,
+    "lastKnownWriteTime": 1758566752,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1758565765936,
+    "last_content_update": 1758566752866,
     "read_only": false,
     "read_only_alternatives": []
 }
