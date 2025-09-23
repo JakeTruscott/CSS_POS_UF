@@ -226,7 +226,7 @@ I could even use <code>for</code> loops to simulate games of chance. For example
 
 <br>
 
-<img src="{{ site.baseurl }}/assets/images/roulette_wheel.jpg" alt="Standard American Roulette Wheel" width="600">
+<img src="/assets/images/roulette_wheel.jpg" alt="Standard American Roulette Wheel" width="600">
 
 <br>
 
