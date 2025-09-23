@@ -10,9 +10,12 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(warning = FALSE)
+
 library(dplyr); library(ggplot2)
 
 ```
+
 
 ---
 
@@ -271,7 +274,7 @@ data.frame(remaining_funds = games) %>%
        y = 'Density\n', 
        fill = 'Sample Size', 
        caption = paste0(
-      "Dashed Black Line = Average Remaining Funds Each Day ($", round(mean(games), 0), ")"
+      "Dashed Black Line = Average Remaining Funds After 100 Days $(", round(mean(games), 0), ")"
     )) + 
   geom_vline(xintercept = 500, linetype = 2, colour = 'red') + 
   geom_vline(xintercept = mean(games), linetype = 2, colour = 'black') + 
