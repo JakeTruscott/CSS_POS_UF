@@ -1,0 +1,10 @@
+"0","bond_payouts <- data.frame(
+  number = bond_wins, # Numbers
+  bet = bets, # Bet Values
+  payout = payouts,  # Associated Payouts
+  stringsAsFactors = F
+) # Dataframe to Return Payouts for Winning Numbers
+"
+"2","Error in data.frame(number = bond_wins, bet = bets, payout = payouts,  : 
+  arguments imply differing number of rows: 26, 25
+"
