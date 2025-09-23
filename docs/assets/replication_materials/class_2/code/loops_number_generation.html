@@ -365,7 +365,7 @@ independent spin.</p>
 rule: <b> If I win, I place the same bet as before. If I lose, I play
 the other color</b>. If I begin with $500 and bet the table minimum
 ($10), what might I be expected to finish with if I visit 100 times and
-play 50 spins each time?</p>
+play 100 spins each time?</p>
 <pre class="r"><code>set.seed(1234) # Set Initial Seed
 seeds &lt;-  sample(1:1000, size = 100, replace = FALSE) # Random Seeds
 roulette_values &lt;- c(rep(&quot;red&quot;, 18), rep(&quot;black&quot;, 18), rep(&quot;green&quot;, 2)) # Roulette Wheel
@@ -405,10 +405,8 @@ data.frame(remaining_funds = games) %&gt;%
   labs(x = &#39;\nRemaining Funds\n&#39;,
        y = &#39;Density\n&#39;, 
        fill = &#39;Sample Size&#39;, 
-       caption = paste0(
-      &quot;Dashed Black Line = Average Remaining Funds Each Day ($&quot;, round(mean(games), 0), &quot;)\n&quot;,
-      &quot;Dashed Red Line = Starting Funds ($500)&quot;
-    )) + 
+       caption = paste0( &quot;Dashed Black Line = Average Remaining Funds Each Day ($&quot;, round(mean(games), 0), &quot;)\n&quot;,
+                         &quot;Dashed Red Line = Starting Funds ($500)&quot; )) + 
   geom_vline(xintercept = 500, linetype = 2, colour = &#39;red&#39;) + 
   geom_vline(xintercept = mean(games), linetype = 2, colour = &#39;black&#39;) + 
   geom_hline(yintercept = 0) +

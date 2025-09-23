@@ -12,7 +12,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(warning = FALSE)
 
-library(dplyr); library(ggplot2)
+library(dplyr); library(ggplot2); library(ggtext)
 
 ```
 
@@ -169,7 +169,7 @@ I could even use <code>for</code> loops to simulate games of chance. For example
 
 However, to only play the colors at a 1-1 payout (i.e., doubling your bet) means I can only select <b>Black</b> or <span style="color:red;">Red</span>, each of which have a 0.47\% (<sup>18</sup>&frasl;<sub>38</sub>) probability of being selected for any independent spin. 
 
-Let's say I played 50 times, each time selecting from among <b>Black</b> or <span style="color:red;">Red</span>. I only have one rule: <b> If I win, I place the same bet as before. If I lose, I play the other color</b>. If I begin with \$500 and bet the table minimum (\$10), what might I be expected to finish with if I visit 100 times and play 50 spins each time? 
+Let's say I played 50 times, each time selecting from among <b>Black</b> or <span style="color:red;">Red</span>. I only have one rule: <b> If I win, I place the same bet as before. If I lose, I play the other color</b>. If I begin with \$500 and bet the table minimum (\$10), what might I be expected to finish with if I visit 100 times and play 100 spins each time? 
 
 ```{r roulette}
 
@@ -212,10 +212,8 @@ data.frame(remaining_funds = games) %>%
   labs(x = '\nRemaining Funds\n',
        y = 'Density\n', 
        fill = 'Sample Size', 
-       caption = paste0(
-      "Dashed Black Line = Average Remaining Funds Each Day ($", round(mean(games), 0), ")\n",
-      "Dashed Red Line = Starting Funds ($500)"
-    )) + 
+       caption = paste0( "Dashed Black Line = Average Remaining Funds Each Day ($", round(mean(games), 0), ")\n",
+                         "Dashed Red Line = Starting Funds ($500)" )) + 
   geom_vline(xintercept = 500, linetype = 2, colour = 'red') + 
   geom_vline(xintercept = mean(games), linetype = 2, colour = 'black') + 
   geom_hline(yintercept = 0) +
