@@ -12,7 +12,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(warning = FALSE)
 
-library(dplyr); library(ggplot2); library(ggtext)
+library(dplyr); library(ggplot2); library(ggtext); library(cowplot)
 
 ```
 
@@ -30,43 +30,100 @@ library(dplyr); library(ggplot2); library(ggtext)
 set.seed(1234) # Random Seed 
 
 uniform <- runif(1000, min = 0, max = 10) # Uniform Distribution
-summary(uniform)
 
 normal <- rnorm(1000, mean = 0, sd = 1) # Standard Normal (Mean = 0, SD = 1)
-summary(normal)
 
 exponential <- rexp(1000, rate = 1) # Exponential Distribution (Rate = 1)
-summary(exponential)
 
 poisson <- rpois(1000, lambda = 3) # Poisson Distribution (Count)
-summary(poisson)
 
 binomial <- rbinom(1000, size = 10, prob = 0.5) # Bernoulli Distribution
-summary(binomial)
 
 geometric <- rgeom(1000, prob = 0.3) # Geometric Distribution
-summary(geometric)
 
 negative_binomial <- rnbinom(1000, size = 5, prob = 0.4) # Negative Binomial
-summary(negative_binomial)
 
 chi_sq <- rchisq(1000, df = 4) # Chi-Square Distribution (4 Degrees of Freedom)
-summary(chi_sq)
 
 students_t <- rt(1000, df = 5) # Students T (5 DF)
-summary(students_t)
 
 ```
 
+```{r distribution_plots, echo=FALSE}
 
-<b> Note:</b> In <code>R</code>, random number generation isn't truly random. Rather, they’re pseudo-random, meaning they use a deterministic algorithm to produce a sequence of numbers that appear random. A <code>seed</code> is the starting point for that algorithm. When you call <code>set.seed(1234)</code>, you are initializing the random number generator with a specific value. This ensures that every time you use the same seed, the sequence of "random" numbers <code>R</code> produces will be exactly the same -- perfect for reproducibility! 
+plot_continuous <- function(data, dist_fun, dist_args, title, bins = 30, from = min(data), to = max(data)) {
+  ggplot(data.frame(x = data), aes(x)) +
+    geom_histogram(aes(y = after_stat(density)), bins = bins,
+                   fill = "skyblue4", color = "black", alpha = 0.4) +
+    stat_function(fun = dist_fun, args = dist_args, color = "red", size = 1.2) +
+    labs(title = title, x = '\n', y = 'Density\n') +
+    theme_minimal() + 
+    theme(panel.border = element_rect(linewidth = 1 , colour = 'black', fill = NA), 
+          axis.title = element_text(size = 10, colour = 'black'), 
+          axis.text = element_text(size = 8, colour = 'black'), 
+          plot.title = element_text(size = 12, colour = 'black', vjust = 0.5, hjust = 0.5))
+}
+
+plot_discrete <- function(data, dist_fun, dist_args, title) {
+  df <- data.frame(x = data)
+  probs <- tibble::tibble(x = min(df$x):max(df$x),
+                          p = dist_fun(min(df$x):max(df$x), !!!dist_args))
+  ggplot(df, aes(x)) +
+    geom_bar(aes(y = after_stat(prop)), fill = "skyblue4", color = "black", alpha = 0.6) +
+    geom_point(data = probs, aes(x, p), color = "red", size = 1) +
+    geom_line(data = probs, aes(x, p), color = "red", size = 1) +
+    labs(title = title, x = '\n', y = "Probability\n", ) +
+    theme_minimal() + 
+     theme(panel.border = element_rect(linewidth =1 , colour = 'black', fill = NA), 
+          axis.title = element_text(size = 10, colour = 'black'), 
+          axis.text = element_text(size = 8, colour = 'black'), 
+          plot.title = element_text(size = 12, colour = 'black', vjust = 0.5, hjust = 0.5))
+}
+
+p1 <- plot_continuous(uniform, dunif, list(min = 0, max = 10), "Uniform(0,10)")
+p2 <- plot_continuous(normal, dnorm, list(mean = 0, sd = 1), "Normal(0,1)")
+p3 <- plot_continuous(exponential, dexp, list(rate = 1), "Exponential(1)")
+p4 <- plot_discrete(poisson, dpois, list(lambda = 3), "Poisson(3)")
+p5 <- plot_discrete(binomial, dbinom, list(size = 10, prob = 0.5), "Binomial(10,0.5)")
+p6 <- plot_discrete(geometric, dgeom, list(prob = 0.3), "Geometric(0.3)")
+p7 <- plot_discrete(negative_binomial, dnbinom, list(size = 5, prob = 0.4), "Neg. Binomial(5,0.4)")
+p8 <- plot_continuous(chi_sq, dchisq, list(df = 4), "Chi-Sq(4)")
+p9 <- plot_continuous(students_t, dt, list(df = 5), "Student-t(5)")
+
+final_plot <- plot_grid(p1, p2, p3,
+                        p4, p5, p6,
+                        p7, p8, p9,
+                        ncol = 3, align = "v")
+
+
+print(final_plot)
+
+
+```
+<br>
+<b> Note:</b> Red lines illustrate theoretical distribution given parameters. 
+<br>
+
+<b>Additional Note Re: <i>Random</i> Number Generation</b>
+
+In <code>R</code>, random number generation isn't truly random. Rather, they’re pseudo-random, meaning they use a deterministic algorithm to produce a sequence of numbers that appear random. A <code>seed</code> is the starting point for that algorithm. When you call <code>set.seed(1234)</code>, you are initializing the random number generator with a specific value. This ensures that every time you use the same seed, the sequence of "random" numbers <code>R</code> produces will be exactly the same -- perfect for reproducibility! 
 
 ---
 
 ## Loops
 
 
-In R, a for loop is a control structure used to repeat a block of code a fixed number of times, iterating over a sequence of values. The basic syntax is <code>for(variable in sequence) { code }</code>, where <code>variable</code> takes on each value in sequence one at a time, and the code inside the curly braces executes for each iteration. 
+In R, a <code>for</code> loop is a control structure used to repeat a block of code a fixed number of times, iterating over a sequence of values. The basic syntax is:
+
+```{r for_loop_syntax, eval=FALSE, include=TRUE}
+
+for (variable in sequence){
+  repeating code routine
+}
+
+```
+
+where <code>variable</code> takes on each value in sequence one at a time, and the code inside the curly braces executes for each iteration. 
 
 <code>for</code> loops are useful when you need to perform repetitive tasks, such as computing multiple summaries, filling a vector, or generating plots for several datasets. For example, imagine I wanted to print the squared integer of every value between 1 and 5. Rather than individually entering <code>{value}^5</code> to the console, I could simply iterate for each value:  
 
@@ -79,7 +136,7 @@ for (i in 1:5){
 ```
 The syntax of these loops are fairly straightforward.Here, <code>i</code> takes on the value associated with each iteration. During the first pass, it will assume the value of 1. On the second pass, it will assume the value 2 -- so on and so forth until it reaches the terminal value of 5. 
 
-<code>R</code> is able to assume various syntax for assuming ranges of alphanumeric values. Here's just a few examples: 
+<code>R</code> is also able to assume various syntax for assuming ranges of alphanumeric values. Here's just a few examples: 
 
 ```{R range_syntax}
 
@@ -167,9 +224,13 @@ I could even use <code>for</code> loops to simulate games of chance. For example
   <li style="color: green;"><b>2 Green</b></li>
 </ul>
 
-However, to only play the colors at a 1-1 payout (i.e., doubling your bet) means I can only select <b>Black</b> or <span style="color:red;">Red</span>, each of which have a 0.47\% (<sup>18</sup>&frasl;<sub>38</sub>) probability of being selected for any independent spin. 
+<br>
 
-Let's say I played 50 times, each time selecting from among <b>Black</b> or <span style="color:red;">Red</span>. I only have one rule: <b> If I win, I place the same bet as before. If I lose, I play the other color</b>. If I begin with \$500 and bet the table minimum (\$10), what might I be expected to finish with if I visit 100 times and play 100 spins each time? 
+<img src="{{ site.baseurl }}/assets/images/roulette_wheel.jpg" alt="Standard American Roulette Wheel" width="600">
+
+<br>
+
+However, to only play the colors at a 1-1 payout (i.e., receiving a payout equal to your initial bet) means I can only select <b>Black</b> or <span style="color:red;">Red</span>, each of which have a 0.47\% (<sup>18</sup>&frasl;<sub>38</sub>) probability of being selected for any independent spin. Let's say I played 50 times, each time selecting from among <b>Black</b> or <span style="color:red;">Red</span>. I only have one rule: <b> If I win, I place the same bet as before. If I lose, I play the other color</b>. If I begin with \$500 and bet the table minimum (\$10), what might I be expected to finish with if I visit 100 times and play 100 spins each time? 
 
 ```{r roulette}
 

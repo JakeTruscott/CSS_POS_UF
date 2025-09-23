@@ -178,43 +178,28 @@ built-in functionality to do so:</p>
 <pre class="r"><code>set.seed(1234) # Random Seed 
 
 uniform &lt;- runif(1000, min = 0, max = 10) # Uniform Distribution
-summary(uniform)</code></pre>
-<pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-## 0.003418 2.581589 5.101924 5.072735 7.584385 9.993030</code></pre>
-<pre class="r"><code>normal &lt;- rnorm(1000, mean = 0, sd = 1) # Standard Normal (Mean = 0, SD = 1)
-summary(normal)</code></pre>
-<pre><code>##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
-## -2.930482 -0.632234  0.004943 -0.011677  0.621630  2.705775</code></pre>
-<pre class="r"><code>exponential &lt;- rexp(1000, rate = 1) # Exponential Distribution (Rate = 1)
-summary(exponential)</code></pre>
-<pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-## 0.001928 0.289260 0.696139 1.019630 1.367232 7.461648</code></pre>
-<pre class="r"><code>poisson &lt;- rpois(1000, lambda = 3) # Poisson Distribution (Count)
-summary(poisson)</code></pre>
-<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   0.000   2.000   3.000   2.988   4.000  10.000</code></pre>
-<pre class="r"><code>binomial &lt;- rbinom(1000, size = 10, prob = 0.5) # Bernoulli Distribution
-summary(binomial)</code></pre>
-<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   1.000   4.000   5.000   5.028   6.000   9.000</code></pre>
-<pre class="r"><code>geometric &lt;- rgeom(1000, prob = 0.3) # Geometric Distribution
-summary(geometric)</code></pre>
-<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##    0.00    0.00    1.00    2.25    3.00   17.00</code></pre>
-<pre class="r"><code>negative_binomial &lt;- rnbinom(1000, size = 5, prob = 0.4) # Negative Binomial
-summary(negative_binomial)</code></pre>
-<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   0.000   4.000   7.000   7.665  10.000  30.000</code></pre>
-<pre class="r"><code>chi_sq &lt;- rchisq(1000, df = 4) # Chi-Square Distribution (4 Degrees of Freedom)
-summary(chi_sq)</code></pre>
-<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  0.1051  2.0353  3.3665  3.9717  5.0553 21.2402</code></pre>
-<pre class="r"><code>students_t &lt;- rt(1000, df = 5) # Students T (5 DF)
-summary(students_t)</code></pre>
-<pre><code>##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
-## -5.539075 -0.723940  0.017377 -0.006287  0.678332  5.884219</code></pre>
-<p><b> Note:</b> In <code>R</code>, random number generation isn’t truly
-random. Rather, they’re pseudo-random, meaning they use a deterministic
+
+normal &lt;- rnorm(1000, mean = 0, sd = 1) # Standard Normal (Mean = 0, SD = 1)
+
+exponential &lt;- rexp(1000, rate = 1) # Exponential Distribution (Rate = 1)
+
+poisson &lt;- rpois(1000, lambda = 3) # Poisson Distribution (Count)
+
+binomial &lt;- rbinom(1000, size = 10, prob = 0.5) # Bernoulli Distribution
+
+geometric &lt;- rgeom(1000, prob = 0.3) # Geometric Distribution
+
+negative_binomial &lt;- rnbinom(1000, size = 5, prob = 0.4) # Negative Binomial
+
+chi_sq &lt;- rchisq(1000, df = 4) # Chi-Square Distribution (4 Degrees of Freedom)
+
+students_t &lt;- rt(1000, df = 5) # Students T (5 DF)</code></pre>
+<p><img src="loops_number_generation_files/figure-html/distribution_plots-1.png" width="672" />
+<br> <b> Note:</b> Red lines illustrate theoretical distribution given
+parameters. <br></p>
+<p><b>Additional Note Re: <i>Random</i> Number Generation</b></p>
+<p>In <code>R</code>, random number generation isn’t truly random.
+Rather, they’re pseudo-random, meaning they use a deterministic
 algorithm to produce a sequence of numbers that appear random. A
 <code>seed</code> is the starting point for that algorithm. When you
 call <code>set.seed(1234)</code>, you are initializing the random number
@@ -225,11 +210,15 @@ will be exactly the same – perfect for reproducibility!</p>
 </div>
 <div id="loops" class="section level2">
 <h2>Loops</h2>
-<p>In R, a for loop is a control structure used to repeat a block of
-code a fixed number of times, iterating over a sequence of values. The
-basic syntax is <code>for(variable in sequence) { code }</code>, where
-<code>variable</code> takes on each value in sequence one at a time, and
-the code inside the curly braces executes for each iteration.</p>
+<p>In R, a <code>for</code> loop is a control structure used to repeat a
+block of code a fixed number of times, iterating over a sequence of
+values. The basic syntax is:</p>
+<pre class="r"><code>for (variable in sequence){
+  repeating code routine
+}</code></pre>
+<p>where <code>variable</code> takes on each value in sequence one at a
+time, and the code inside the curly braces executes for each
+iteration.</p>
 <p><code>for</code> loops are useful when you need to perform repetitive
 tasks, such as computing multiple summaries, filling a vector, or
 generating plots for several datasets. For example, imagine I wanted to
@@ -249,8 +238,8 @@ simply iterate for each value:</p>
 the first pass, it will assume the value of 1. On the second pass, it
 will assume the value 2 – so on and so forth until it reaches the
 terminal value of 5.</p>
-<p><code>R</code> is able to assume various syntax for assuming ranges
-of alphanumeric values. Here’s just a few examples:</p>
+<p><code>R</code> is also able to assume various syntax for assuming
+ranges of alphanumeric values. Here’s just a few examples:</p>
 <pre class="r"><code>values &lt;- seq(10, 100, by = 10) # Values 10 to 100 by 10
 print(values)</code></pre>
 <pre><code>##  [1]  10  20  30  40  50  60  70  80  90 100</code></pre>
@@ -355,15 +344,17 @@ example, a standard American roulette wheel has 38 slots:
 <b>2 Green</b>
 </li>
 </ul>
-<p>However, to only play the colors at a 1-1 payout (i.e., doubling your
-bet) means I can only select <b>Black</b> or <span
-style="color:red;">Red</span>, each of which have a 0.47%
+<p><br></p>
+<p><img src="{{ site.baseurl }}/assets/images/roulette_wheel.jpg" alt="Standard American Roulette Wheel" width="600"></p>
+<p><br></p>
+<p>However, to only play the colors at a 1-1 payout (i.e., receiving a
+payout equal to your initial bet) means I can only select <b>Black</b>
+or <span style="color:red;">Red</span>, each of which have a 0.47%
 (<sup>18</sup>⁄<sub>38</sub>) probability of being selected for any
-independent spin.</p>
-<p>Let’s say I played 50 times, each time selecting from among
-<b>Black</b> or <span style="color:red;">Red</span>. I only have one
-rule: <b> If I win, I place the same bet as before. If I lose, I play
-the other color</b>. If I begin with $500 and bet the table minimum
+independent spin. Let’s say I played 50 times, each time selecting from
+among <b>Black</b> or <span style="color:red;">Red</span>. I only have
+one rule: <b> If I win, I place the same bet as before. If I lose, I
+play the other color</b>. If I begin with $500 and bet the table minimum
 ($10), what might I be expected to finish with if I visit 100 times and
 play 100 spins each time?</p>
 <pre class="r"><code>set.seed(1234) # Set Initial Seed
