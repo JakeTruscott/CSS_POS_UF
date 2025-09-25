@@ -217,13 +217,12 @@ values. The basic syntax is:</p>
   repeating code routine
 }</code></pre>
 <p>where <code>variable</code> takes on each value in sequence one at a
-time, and the code inside the curly braces executes for each
-iteration.</p>
-<p><code>for</code> loops are useful when you need to perform repetitive
+time, and the code inside the curly braces executes for each iteration.
+<code>for</code> loops are useful when you need to perform repetitive
 tasks, such as computing multiple summaries, filling a vector, or
 generating plots for several datasets. For example, imagine I wanted to
 print the squared integer of every value between 1 and 5. Rather than
-individually entering <code>{value}^5</code> to the console, I could
+individually entering <code>{value}^2</code> to the console, I could
 simply iterate for each value:</p>
 <pre class="r"><code>for (i in 1:5){
   print(i^2) 
@@ -331,9 +330,6 @@ summary(results) # Print Summary</code></pre>
 </div>
 <div id="games-of-chance-example-roulette" class="section level3">
 <h3>Games of Chance Example (Roulette)</h3>
-<div id="roulette-over-time-with-funds-replacement"
-class="section level4">
-<h4>Roulette Over Time (With Funds Replacement)</h4>
 I could even use <code>for</code> loops to simulate games of chance. For
 example, a standard American roulette wheel has 38 slots:
 <ul>
@@ -358,8 +354,8 @@ independent spin. Let’s say I played 50 times, each time selecting from
 among <b>Black</b> or <span style="color:red;">Red</span>. I only have
 one rule: <b> If I win, I place the same bet as before. If I lose, I
 play the other color</b>. If I begin with $500 and bet the table minimum
-($10), what might I be expected to finish with if I visit 100 times and
-play 100 spins each time?</p>
+($10), what might I be expected to finish with if I play 50 times each
+over 100 visits to the table?</p>
 <pre class="r"><code>set.seed(1234) # Set Initial Seed
 seeds &lt;-  sample(1:1000, size = 100, replace = FALSE) # Random Seeds
 roulette_values &lt;- c(rep(&quot;red&quot;, 18), rep(&quot;black&quot;, 18), rep(&quot;green&quot;, 2)) # Roulette Wheel
@@ -390,7 +386,6 @@ for (i in 1:length(seeds)){
   games &lt;- c(games, remaining_funds) # Export Remaining Funds
 }</code></pre>
 <p><img src="loops_number_generation_files/figure-html/roulette_figure-1.png" width="672" /></p>
-</div>
 <div id="roulette-over-time-no-funds-replacement"
 class="section level4">
 <h4>Roulette Over Time (No Funds Replacement)</h4>
