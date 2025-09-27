@@ -175,3 +175,50 @@ data.frame(value = normal) %>%
 
 ### Generating Distributions (Standard Normal)
 - \textbf{Your Turn}: Generate 1000 draws from a standard normal distribution where $\mu$ = 25 and $\sigma$ = 10. 
+
+
+### Generating Distributions (Standard Normal -- Ex)
+```{r normal_distribution_ex, echo=TRUE, tidy=TRUE}
+normal <- rnorm(1000, mean = 25, sd = 10) 
+```
+```{r normal_distribution_ex_figure, echo=FALSE, tidy=TRUE, fig.height=2.25, fig.width=3.25}
+
+data.frame(value = normal) %>%
+  ggplot(aes(x = value)) + 
+  geom_histogram(aes(y = after_stat(count)), fill = 'skyblue4', colour = 'black', bins = 30, alpha = 1/2) + 
+  geom_vline(xintercept = 25, linetype = 2, colour = 'black', linewidth = 1) + 
+  stat_function(fun = function(x) dnorm(x, mean = 25, sd = 10) * length(normal) * diff(range(normal))/30, 
+                color = "red", size = 1) + 
+  geom_hline(yintercept = 0) + 
+  labs(x = ' ', y = ' ') + 
+  scale_y_continuous(breaks = seq(25, 100, 25)) + 
+  scale_x_continuous(breaks = seq(-5, 55, 10)) + 
+  default_ggplot_theme + 
+  theme(axis.text.y = element_blank())
+
+```
+
+### Generating Distributions (Exponential -- Ex)
+- \textbf{Your Turn}: Generate 1000 draws from an exponential distribution where \texttt{rate} = 2 
+
+### Generating Distributions (Exponential -- Ex)
+```{r rexp_ex, echo=TRUE, tidy=TRUE}
+exp <- rexp(1000, rate = 2)
+```
+```{r rexp_ex_figure, echo=FALSE, tidy=TRUE, fig.height=2.25, fig.width=3.25}
+
+data.frame(value = exp) %>%
+  ggplot(aes(x = value)) + 
+  geom_histogram(aes(y = after_stat(density)), fill = 'skyblue4', colour = 'black', bins = 30, alpha = 1/2) +
+  stat_function(fun = function(x) dexp(x, rate = 2), 
+                color = "red", size = 1) + 
+  geom_hline(yintercept = 0) + 
+  labs(x = ' ', y = ' ') + 
+  default_ggplot_theme + 
+  theme(axis.text.y = element_blank())
+
+```
+
+
+
+# Loops

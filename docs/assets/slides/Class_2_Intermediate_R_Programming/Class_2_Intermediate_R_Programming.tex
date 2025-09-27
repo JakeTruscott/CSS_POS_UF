@@ -318,4 +318,38 @@ Q of Clubs
 \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]{Generating Distributions (Standard Normal -- Ex)}
+\phantomsection\label{generating-distributions-standard-normal-ex}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{normal }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{1000}\NormalTok{, }\AttributeTok{mean =} \DecValTok{25}\NormalTok{, }\AttributeTok{sd =} \DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/normal_distribution_ex_figure-1} \end{center}
+\end{frame}
+
+\begin{frame}{Generating Distributions (Exponential -- Ex)}
+\phantomsection\label{generating-distributions-exponential-ex}
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Your Turn}: Generate 1000 draws from an exponential
+  distribution where \texttt{rate} = 2
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Generating Distributions (Exponential -- Ex)}
+\phantomsection\label{generating-distributions-exponential-ex-1}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{exp }\OtherTok{\textless{}{-}} \FunctionTok{rexp}\NormalTok{(}\DecValTok{1000}\NormalTok{, }\AttributeTok{rate =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/rexp_ex_figure-1} \end{center}
+\end{frame}
+
+\section{Loops}\label{loops}
+
 \end{document}
