@@ -99,11 +99,6 @@ models) \par \vspace{1.5mm}
   - Produce replicable coding routines using compilation suites in R, Python, and LaTex(Beamer) \par \vspace{1.5mm} 
 
 
-
-
-
-# Materials and Evaluation
-
 ### Materials and Evaluation -- Textbooks and Readings
 
 \begin{columns}[T] % top-aligned columns
@@ -214,17 +209,11 @@ Expectations are fairly simple: \par \vspace{5mm}
 - Fun Fact or Hot Take \par \vspace{2.5mm}
 
 
-# Break
+# Downloading \texttt{R} & \texttt{Python}
 
+### Downloading \texttt{R} \hspace{1.5mm} \includegraphics[width=5mm]{../../images/R_logo.png}
 
-# Downloading \texttt{R}
-
-### Downloading \texttt{R}
-
-\begin{columns}[T] % top-aligned columns
-  \begin{column}{0.65\textwidth}
-  \par \vspace{2.5mm}
-  \begin{itemize}
+\begin{itemize}
   
   \item \texttt{R} is a programming language and environment for statistical computing and data analysis. \par \vspace{2.5mm}
   
@@ -232,40 +221,23 @@ Expectations are fairly simple: \par \vspace{5mm}
   
   \item \textbf{Why \texttt{R} and not \texttt{Stata} or \texttt{Python}} (exclusively)? \par \vspace{2.5mm}
   
-  \item \texttt{R} is incredibly flexible, more intuitive, easily accessible, and free! 
+  \begin{itemize}
+    \item \texttt{R} is incredibly flexible, intuitive, easily accessible, and free! 
+  \end{itemize}
   
   \end{itemize}
-  \end{column}
-
-  \begin{column}{0.5\textwidth}
-    \centering
-    \vspace{2.5mm}
-    \includegraphics[width=0.75\linewidth]{../../images/R_logo.png}
-    \vfill
-
-  \end{column}
-\end{columns}
 
 
 
 
 
+### Downloading \texttt{R} (Cont.) \hspace{1.5mm} \includegraphics[width=5mm]{../../images/R_logo.png}
 
+- We will use \texttt{R} for just about everything in this course. \par \vspace{2.5mm}
 
+- Even when we shift to tools better suited for \texttt{Python}, I will show you how can implement through \texttt{R} \par \vspace{2.5mm}
 
-
-
-
-
-
-
-### Downloading \texttt{R} (Cont.)
-
-- We will use \texttt{R} for just about everything in this course. \par \vspace{1.5mm}
-
-- Even when we shift to tools better suited for \texttt{Python}, I will show you how can implement through \texttt{R} \par \vspace{1.5mm}
-
-- To download \texttt{R} and its companion IDE \texttt{RStudio}, visit: \url{https://jaketruscott.github.io/CSS_POS_UF/class_1/downloading_R.html} \par \vspace{1.5mm}
+- To download \texttt{R} and its companion IDE \texttt{RStudio}, visit: \url{https://jaketruscott.github.io/CSS_POS_UF/class_1/downloading_R.html} \par \vspace{2.5mm}
 
 
 
@@ -281,33 +253,24 @@ Expectations are fairly simple: \par \vspace{5mm}
 
 
 
-# Downloading \texttt{Python}
 
-### Downloading \texttt{Python}
 
-\begin{columns}[T] % top-aligned columns
-  \begin{column}{0.65\textwidth}
-  \par \vspace{2.5mm}
+
+### Downloading \texttt{Python} \hspace{1.5mm} \includegraphics[width=5mm]{../../images/Python_logo.png}
+  
   \begin{itemize}
   
-  \item \texttt{Python} is a versatile, general-purpose programming language – it can be used for web development, data analysis, automation, machine learning, and more. \par \vspace{1.5mm}
+  \item \texttt{Python} is a versatile, general-purpose programming language – it can be used for web development, data analysis, automation, machine learning, and more. \par \vspace{2.5mm}
   
-  \item Many of you may already have exposure to \texttt{Python} from Dr. Arfi's classes -- You are welcome to use more \texttt{Python} if you so choose, though I will be teaching \texttt{R} primarily.  \par \vspace{1.5mm}
+  \item Many of you may already have exposure to \texttt{Python} from Dr. Arfi's classes -- You are welcome to use more \texttt{Python} if you so choose, though I will be teaching \texttt{R} primarily.  \par \vspace{2.5mm}
   
-  \item To download \texttt{R} and its companion IDE \texttt{RStudio}, visit: \url{https://jaketruscott.github.io/CSS_POS_UF/class_1/downloading_Python.html} \par \vspace{1.5mm}
+  \item To download \texttt{R} and its companion IDE \texttt{RStudio}, visit: \url{https://jaketruscott.github.io/CSS_POS_UF/class_1/downloading_Python.html} \par \vspace{2.5mm}
 
   
   \end{itemize}
-  \end{column}
 
-  \begin{column}{0.5\textwidth}
-    \centering
-    \vspace{2.5mm}
-    \includegraphics[width=0.75\linewidth]{../../images/Python_logo.png}
-    \vfill
 
-  \end{column}
-\end{columns}
+
 
 
 
@@ -326,3 +289,56 @@ Expectations are fairly simple: \par \vspace{5mm}
 
 
 # Data Storage and Organization
+
+### Data Storage and Organization
+
+- It is imperative that you put yourself in the best position to succeed. \par \vspace{2.5mm}
+
+- Part of that entails a system for organizing your data and \texttt{R}/\texttt{Python} scripts. \par \vspace{2.5mm}
+
+- I am going to require everything you complete for this course -- both during our classroom meetings and as homework -- be completed using \texttt{RMarkdown}. 
+
+
+### Data Storage and Organization (Cont.)
+
+\begin{itemize}
+
+\item We are going to create a directory (folder) to house all of your data, code, and other materials. \par \vspace{2.5mm}
+
+\item \texttt{R} is able to create localized project directories and provides the ability to load or export from a relative path -- i.e., you do \underline{not} need to include the full path to a file.  \par \vspace{2.5mm}
+
+\item Ex: Assuming \texttt{R} Project is Located in \footnotesize{\textbf{"C:/Users/JakeTruscott/Folder"}}
+
+\end{itemize}
+
+\footnotesize
+```{r path_example, echo=TRUE, eval=F, tidy=T}
+
+load('C:/Users/JakeTruscott/Folder/SubFolder/File.rdata') 
+# Full Path
+
+load('SubFolder/File.rdata') 
+# Relative Path
+
+```
+
+
+
+
+### Data Storage and Organization (Cont.)
+
+\begin{enumerate}
+
+\item Create a new folder -- somewhere obvious and unlikely to be accidentally deleted. \par \vspace{1.5mm}
+
+\item Open \texttt{RStudio} \par \vspace{2.5mm}
+
+\item Navigate to \texttt{File} $\rightarrow$ \texttt{New Project...} \par \vspace{1.5mm}
+
+\item Select \texttt{Existing Directory} \par \vspace{1.5mm}
+
+\item Navigate to and Select the folder you created in Step 1 \par \vspace{1.5mm}
+
+\item Check \texttt{Open in New Session} and Select \texttt{Open} \par \vspace{1.5mm}
+
+\end{enumerate}

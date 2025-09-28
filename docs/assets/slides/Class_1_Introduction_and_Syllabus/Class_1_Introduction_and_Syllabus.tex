@@ -76,6 +76,46 @@
 \makeatother
 \usepackage{xcolor}
 \newif\ifbibliography
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -235,8 +275,6 @@ University of Florida \newline Spring 2026 \newline \newline \newline
 \end{itemize}
 \end{frame}
 
-\section{Materials and Evaluation}\label{materials-and-evaluation}
-
 \begin{frame}{Materials and Evaluation -- Textbooks and Readings}
 \phantomsection\label{materials-and-evaluation-textbooks-and-readings}
 \begin{columns}[T] % top-aligned columns
@@ -386,17 +424,13 @@ Expectations are fairly simple:
 \end{itemize}
 \end{frame}
 
-\section{Break}\label{break}
+\section{\texorpdfstring{Downloading \texttt{R} \&
+\texttt{Python}}{Downloading  \& }}\label{downloading}
 
-\section{\texorpdfstring{Downloading
-\texttt{R}}{Downloading }}\label{downloading}
-
-\begin{frame}{Downloading \texttt{R}}
+\begin{frame}{Downloading \texttt{R} \hspace{1.5mm}
+\includegraphics[width=5mm]{../../images/R_logo.png}}
 \phantomsection\label{downloading-1}
-\begin{columns}[T] % top-aligned columns
-  \begin{column}{0.65\textwidth}
-  \par \vspace{2.5mm}
-  \begin{itemize}
+\begin{itemize}
   
   \item \texttt{R} is a programming language and environment for statistical computing and data analysis. \par \vspace{2.5mm}
   
@@ -404,73 +438,116 @@ Expectations are fairly simple:
   
   \item \textbf{Why \texttt{R} and not \texttt{Stata} or \texttt{Python}} (exclusively)? \par \vspace{2.5mm}
   
-  \item \texttt{R} is incredibly flexible, more intuitive, easily accessible, and free! 
+  \begin{itemize}
+    \item \texttt{R} is incredibly flexible, intuitive, easily accessible, and free! 
+  \end{itemize}
   
   \end{itemize}
-  \end{column}
-
-  \begin{column}{0.5\textwidth}
-    \centering
-    \vspace{2.5mm}
-    \includegraphics[width=0.75\linewidth]{../../images/R_logo.png}
-    \vfill
-
-  \end{column}
-\end{columns}
 \end{frame}
 
-\begin{frame}{Downloading \texttt{R} (Cont.)}
+\begin{frame}{Downloading \texttt{R} (Cont.) \hspace{1.5mm}
+\includegraphics[width=5mm]{../../images/R_logo.png}}
 \phantomsection\label{downloading-cont.}
 \begin{itemize}
 \tightlist
 \item
   We will use \texttt{R} for just about everything in this course.
 
-  \par \vspace{1.5mm}
+  \par \vspace{2.5mm}
 \item
   Even when we shift to tools better suited for \texttt{Python}, I will
   show you how can implement through \texttt{R}
 
-  \par \vspace{1.5mm}
+  \par \vspace{2.5mm}
 \item
   To download \texttt{R} and its companion IDE \texttt{RStudio}, visit:
   \url{https://jaketruscott.github.io/CSS_POS_UF/class_1/downloading_R.html}
 
-  \par \vspace{1.5mm}
+  \par \vspace{2.5mm}
 \end{itemize}
 \end{frame}
 
-\section{\texorpdfstring{Downloading
-\texttt{Python}}{Downloading }}\label{downloading-2}
-
-\begin{frame}{Downloading \texttt{Python}}
-\phantomsection\label{downloading-3}
-\begin{columns}[T] % top-aligned columns
-  \begin{column}{0.65\textwidth}
-  \par \vspace{2.5mm}
-  \begin{itemize}
+\begin{frame}{Downloading \texttt{Python} \hspace{1.5mm}
+\includegraphics[width=5mm]{../../images/Python_logo.png}}
+\phantomsection\label{downloading-2}
+\begin{itemize}
   
-  \item \texttt{Python} is a versatile, general-purpose programming language – it can be used for web development, data analysis, automation, machine learning, and more. \par \vspace{1.5mm}
+  \item \texttt{Python} is a versatile, general-purpose programming language – it can be used for web development, data analysis, automation, machine learning, and more. \par \vspace{2.5mm}
   
-  \item Many of you may already have exposure to \texttt{Python} from Dr. Arfi's classes -- You are welcome to use more \texttt{Python} if you so choose, though I will be teaching \texttt{R} primarily.  \par \vspace{1.5mm}
+  \item Many of you may already have exposure to \texttt{Python} from Dr. Arfi's classes -- You are welcome to use more \texttt{Python} if you so choose, though I will be teaching \texttt{R} primarily.  \par \vspace{2.5mm}
   
-  \item To download \texttt{R} and its companion IDE \texttt{RStudio}, visit: \url{https://jaketruscott.github.io/CSS_POS_UF/class_1/downloading_Python.html} \par \vspace{1.5mm}
+  \item To download \texttt{R} and its companion IDE \texttt{RStudio}, visit: \url{https://jaketruscott.github.io/CSS_POS_UF/class_1/downloading_Python.html} \par \vspace{2.5mm}
 
   
   \end{itemize}
-  \end{column}
-
-  \begin{column}{0.5\textwidth}
-    \centering
-    \vspace{2.5mm}
-    \includegraphics[width=0.75\linewidth]{../../images/Python_logo.png}
-    \vfill
-
-  \end{column}
-\end{columns}
 \end{frame}
 
 \section{Data Storage and
 Organization}\label{data-storage-and-organization}
+
+\begin{frame}{Data Storage and Organization}
+\phantomsection\label{data-storage-and-organization-1}
+\begin{itemize}
+\tightlist
+\item
+  It is imperative that you put yourself in the best position to
+  succeed.
+
+  \par \vspace{2.5mm}
+\item
+  Part of that entails a system for organizing your data and
+  \texttt{R}/\texttt{Python} scripts.
+
+  \par \vspace{2.5mm}
+\item
+  I am going to require everything you complete for this course -- both
+  during our classroom meetings and as homework -- be completed using
+  \texttt{RMarkdown}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Data Storage and Organization (Cont.)}
+\phantomsection\label{data-storage-and-organization-cont.}
+\begin{itemize}
+
+\item We are going to create a directory (folder) to house all of your data, code, and other materials. \par \vspace{2.5mm}
+
+\item \texttt{R} is able to create localized project directories and provides the ability to load or export from a relative path -- i.e., you do \underline{not} need to include the full path to a file.  \par \vspace{2.5mm}
+
+\item Ex: Assuming \texttt{R} Project is Located in \footnotesize{\textbf{"C:/Users/JakeTruscott/Folder"}}
+
+\end{itemize}
+
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{load}\NormalTok{(}\StringTok{"C:/Users/JakeTruscott/Folder/SubFolder/File.rdata"}\NormalTok{)}
+\CommentTok{\# Full Path}
+
+\FunctionTok{load}\NormalTok{(}\StringTok{"SubFolder/File.rdata"}\NormalTok{)}
+\CommentTok{\# Relative Path}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}{Data Storage and Organization (Cont.)}
+\phantomsection\label{data-storage-and-organization-cont.-1}
+\begin{enumerate}
+
+\item Create a new folder -- somewhere obvious and unlikely to be accidentally deleted. \par \vspace{1.5mm}
+
+\item Open \texttt{RStudio} \par \vspace{2.5mm}
+
+\item Navigate to \texttt{File} $\rightarrow$ \texttt{New Project...} \par \vspace{1.5mm}
+
+\item Select \texttt{Existing Directory} \par \vspace{1.5mm}
+
+\item Navigate to and Select the folder you created in Step 1 \par \vspace{1.5mm}
+
+\item Check \texttt{Open in New Session} and Select \texttt{Open} \par \vspace{1.5mm}
+
+\end{enumerate}
+\end{frame}
 
 \end{document}
