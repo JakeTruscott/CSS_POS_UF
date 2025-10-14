@@ -1,5 +1,5 @@
 ---
-title: "Intermediate Programming in R (Cont.) & Parallel"
+title: "Parallel Computing"
 nav_order: 5
 has_children: true
 ---
@@ -7,7 +7,7 @@ has_children: true
 \<div style="text-align: center; margin: 20px 0;">
   <a href="#img-cheat1">
     <img src="{{ site.baseurl }}/assets/images/computer_magic.jpg" 
-         alt="Computers Are Basically Magic" width="600"/>
+         alt="FYI: Computers Are Basically Magic" width="600"/>
   </a>
 </div>
 

@@ -1,6 +1,6 @@
 ---
 title: "Functions (Cont.)"
-parent: "Intermediate Programming in R (Cont.) & Parallel"
+parent: "Parallel Computing"
 nav_order: 1
 ---
 

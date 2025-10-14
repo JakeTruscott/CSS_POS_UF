@@ -1,7 +1,7 @@
 ---
-title: "Class 2 Problem Set"
-parent: "Intermediate Programming in R"
-nav_order: 6
+title: "Class 3 Problem Set"
+parent: "Parallel Computing"
+nav_order: 3
 ---
 
 <iframe 

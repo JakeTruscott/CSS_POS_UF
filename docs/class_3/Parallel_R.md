@@ -1,8 +1,9 @@
 ---
 title: "Parallel Computing"
-parent: "Intermediate Programming in R (Cont.) & Parallel"
+parent: "Parallel Computing"
 nav_order: 2
 ---
+
 
 <style>
 /* Lightbox overlay */
@@ -43,6 +44,7 @@ nav_order: 2
   text-decoration: none;
 }
 </style>
+
 
 ## Parallel Computing
 
