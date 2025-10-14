@@ -63,9 +63,14 @@ has_children: true
 - Complex function programming (<code>R</code>)
 - Parallel Computing (<code>R</code>)
 
+<br> 
+
+
 <div style="text-align: center; margin: 20px 0;">
   <a href="#img-cheat1">
     <img src="{{ site.baseurl }}/assets/images/computer_magic.jpg" 
-         alt="FYI: Computers Are Basically Magic" width="400"/>
+         alt="FYI: Computers Are Basically Magic" 
+         width="400" 
+         style="border: 2px solid black;"/>
   </a>
 </div>
