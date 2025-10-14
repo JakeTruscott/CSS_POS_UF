@@ -5,7 +5,11 @@ nav_order: 2
 
 # Syllabus 
 
-Coming Soon
+<iframe src="{{ site.baseurl }}/assets/syllabus/Computational_Social_Science_Grad.pdf"
+        width="75%" 
+        height="600px" 
+        style="border:1px solid #ccc;">
+</iframe>
 
 ## Syllabus Policy (Addendum)
 
