@@ -63,7 +63,7 @@ Below, I provide some key terms to understand re: parallel computing, as well as
 
 - <b>RAM (Random Access Memory)</b>: RAM is the computer's short-term memory. It stores data that's actively being used so the CPU can access it quickly. In parallel computing, enough RAM is crucial because multiple processors may need to access or share large amounts of data at the same time -- alternatively, allocating memory independently to an individual core (or cores) helps ensure that RAM is not accidentally overburdened trying to hold onto (unnecessary) data for sevral tasks simultaneously. 
 
-- <b>Nodes</b>: A node is a single computer in a cluster -- a group of computers linked together to work on a common task. Each node has its own CPU(s), memory (RAM), and sometimes storage. In large-scale parallel computing (like on supercomputers), many nodes work together, connected through a high-speed network.
+- <b>Nodes</b>: A node is a single computer in a cluster -- a group of computers linked together to work on a common task. Each node has its own CPU(s), memory (RAM), and sometimes storage. 
 
 - <b>Cluster</b>: A cluster is a collection of nodes that work together like one powerful machine. Each node handles a portion of the computation, and the results are combined at the end. <code>HiPerGator</code> is a giant computing cluster from which we can isolate "smaller" allocations of nodes and memory for complex computing tasks. 
 
