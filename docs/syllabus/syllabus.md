@@ -6,7 +6,7 @@ nav_order: 2
 # Syllabus 
 
 <iframe src="{{ site.baseurl }}/assets/syllabus/Computational_Social_Science_Grad.pdf"
-        width="75%" 
+        width="100%" 
         height="600px" 
         style="border:1px solid #ccc;">
 </iframe>
