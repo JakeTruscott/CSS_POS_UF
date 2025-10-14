@@ -1,0 +1,23 @@
+\frametitle{Data Storage and Organization (Cont.)}
+\phantomsection\label{data-storage-and-organization-cont.}
+\begin{itemize}
+
+\item We are going to create a directory (folder) to house all of your data, code, and other materials. \par \vspace{2.5mm}
+
+\item \texttt{R} is able to create localized project directories and provides the ability to load or export from a relative path -- i.e., you do \underline{not} need to include the full path to a file.  \par \vspace{2.5mm}
+
+\item Ex: Assuming \texttt{R} Project is Located in \footnotesize{\textbf{"C:/Users/JakeTruscott/Folder"}}
+
+\end{itemize}
+
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{load}\NormalTok{(}\StringTok{"C:/Users/JakeTruscott/Folder/SubFolder/File.rdata"}\NormalTok{)}
+\CommentTok{\# Full Path}
+
+\FunctionTok{load}\NormalTok{(}\StringTok{"SubFolder/File.rdata"}\NormalTok{)}
+\CommentTok{\# Relative Path}
+\end{Highlighting}
+\end{Shaded}

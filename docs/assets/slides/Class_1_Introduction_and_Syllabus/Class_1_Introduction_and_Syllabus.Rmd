@@ -60,11 +60,7 @@ default_ggplot_theme  <- theme_minimal(base_size = 12) +
 
     \par \vspace{2.5mm}
 
--   File (Data) Storage & Management
-
-    \par \vspace{2.5mm}
-
--   Reproducibility
+-   File (Data) Storage (Management and Reproducibility)
 
     \par \vspace{2.5mm}
 
@@ -325,6 +321,7 @@ load('SubFolder/File.rdata')
 
 
 
+
 ### Data Storage and Organization (Cont.)
 
 \begin{enumerate}
@@ -342,3 +339,35 @@ load('SubFolder/File.rdata')
 \item Check \texttt{Open in New Session} and Select \texttt{Open} \par \vspace{1.5mm}
 
 \end{enumerate}
+
+
+
+### Data Storage and Organization (Cont.)
+
+- Navigate to the new repository folder on your local machine \par \vspace{2.5mm}
+
+- Create a \texttt{data}, \texttt{code}, and \texttt{practice\_set} folders  \par \vspace{2.5mm}
+
+- The purpose of this is simple: Promote reproducibility through relative paths. \par \vspace{2.5mm}
+
+- Now all of the work we do in class and through problem sets will be easy to troubleshoot -- we won't need to mess around with the location of data or files! 
+
+
+
+
+
+# Looking Forward
+
+### Next Class 
+
+- Next class will be a short introduction to Intermediate Programming in \texttt{R} \par \vspace{2.5mm}
+
+- Will will focus on:
+  - Random Number and Distribution Generation
+  - Loops and Iterative Programming 
+  
+\par \vspace{2.5mm}
+  
+- Before Next Class: 
+  - Visit the course Github -- Review Reading Materials 
+  - Secure copy of \texttt{Text as Data} (GRS) -- Llaudet and Imai text only necessary if not fully comfortable with \texttt{R}'s basic syntax. 
