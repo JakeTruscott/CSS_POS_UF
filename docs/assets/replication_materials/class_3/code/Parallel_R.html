@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Truscott (Spring 2026)" />
+
+
+<title>Parallel Computing in R</title>
+
+<script src="Parallel_R_files/header-attrs-2.28/header-attrs.js"></script>
+<script src="Parallel_R_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="Parallel_R_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="Parallel_R_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="Parallel_R_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="Parallel_R_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="Parallel_R_files/navigation-1.1/tabsets.js"></script>
+<link href="Parallel_R_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="Parallel_R_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Parallel Computing in R</h1>
+<h3 class="subtitle">POS6933: Computational Social Science</h3>
+<h4 class="author">Truscott (Spring 2026)</h4>
+
+</div>
+
+
+<hr />
+<div id="parallel-computing" class="section level2">
+<h2>Parallel Computing</h2>
+<p><b>Parallel Computing</b> concerns the practice of dividing a large
+computational task into smaller parts that can be executed
+simultaneously – that is, in <i>parallel</i> – rather than one after
+another. The goal is to increase processing speeds, handle larger
+problems (tasks and data), and deploy resources more efficiently.</p>
+<p><img src="https://raw.githubusercontent.com/JakeTruscott/CSS_POS_UF/ecfae9a49f6b7e5fb29b34ba65c8ae2bc4fc86c4/docs/assets/replication_materials/class_3/supplemental_materials/parallel_vs_serial_computing.png" 
+     alt="Parallel Computing" 
+     width="500" 
+     style="display: block; margin: 0 auto;"></p>
+<p>In traditional (or <b>serial</b>) computing, a program runs on a
+single processor core and executes one instruction at a time. As
+problems get larger or more complex (e.g., simulating electoral
+outcomes, training machine learning models, or otherwise processing
+massive datasets) this approach becomes too slow. Parallel computing
+solves this by spreading the work across multiple cores, processors, or
+even machines, allowing many operations to occur at once.</p>
+<hr />
+<div id="payroll-at-the-university-of-florida-example"
+class="section level3">
+<h3>Payroll at the University of Florida (Example)</h3>
+<p>Imagine you are responsible for discharging payroll to all employees
+(faculty, staff, etc.) at the University of Florida. This is
+approximately 33,000 people – all of whom we can assume are registered
+for direct deposit and would very much appreciate being paid correctly
+and in a timely manner. For the sake of the example, let’s further
+assume everything with respect to payroll can be automated. However, you
+are responsible with designing a programming routine to actually
+discharge payroll – each of which requires 0.25 seconds. Using a single
+system, we can easily compute the completion time as:</p>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mn>33,000
+(Tasks)</mn><mo>×</mo><mn>0.25 (Seconds/Task)</mn><mo>=</mo><mn>8,250
+Seconds (2.29 Hours)</mn></math>.</p>
+<p>Clearly not very efficient – but it’s the result of practical
+limitations. Traditional computers are designed to execute instructions
+one after another in a sequence, which can make completing large volumes
+of tasks a burdensome and time-consuming endeavor.</p>
+<p>But what if we have <b>two</b> computers? The time to complete an
+independent task remains fixed (0.25 seconds/each) due to the serial
+constraints of the computing process, but what if we divided and
+allocated the tasks equally to each computer? Suddenly, the completion
+time has been cut in half:</p>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mfrac><mrow><mn>33,000
+(Tasks)</mn><mo>×</mo><mn>0.25 (Seconds/Completion)</mn></mrow><mn>2
+(Computers)</mn></mfrac><mo>=</mo><mn>4,125 Seconds (1.15
+Hours)</mn></mrow></math>.</p>
+<p>Adding additional computers – say, 3 (About 45 Minutes), 4 (About 34
+Minutes), or 5 (About 27 minutes) computers – continues to reduce the
+computation time. What was once a 2.3 hour task is suddenly about 30
+minutes without changing the serial structure of the computing process –
+we just added more computers to handle the workload!</p>
+<p>This concept is at the heart of parallel computing (generally) and
+high performance computing environments like <code>HiPerGator</code>.
+Barring quantum computing (which, please… don’t ask me about), computers
+can only operationalize tasks serially, but dividing the tasks across
+multiple computing units simultaneously can drastically improve
+computational efficiency. Even cooler, virtually every modern laptop on
+the consumer market can facilitate a parallel environment – you just
+need to tell your computer (or <code>R</code>) to do it!</p>
+<p>Below, I provide some key terms to understand re: parallel computing,
+as well as how to set-up and deploy a parallel environment in
+<code>R</code></p>
+<hr />
+</div>
+</div>
+<div id="key-terms" class="section level2">
+<h2>Key Terms</h2>
+<ul>
+<li><p><b>CPU (Central Processing Unit)</b>: The CPU is the <i>brain</i>
+of a computer. It performs calculations and executes instructions. Most
+modern CPUs have multiple cores, and each core can handle its own stream
+of instructions. This means a CPU can run several tasks in parallel. For
+example, a quad-core processor can process four tasks at once.</p></li>
+<li><p><b>Processor vs. Core</b>: A processor is the entire chip that
+fits into your computer’s motherboard (i.e., the entire CPU). A core is
+an individual processing unit within that chip. So, a single processor
+can contain multiple cores – each capable of independent
+computation</p></li>
+<li><p><b>Thread</b>: A thread is the smallest sequence of instructions
+that a CPU can execute independently. Modern operating systems can
+schedule multiple threads per core, allowing one core to handle multiple
+tasks “concurrently” by quickly switching between them. This is
+sometimes called <b>multithreading</b> (e.g., in the UF payroll example,
+one thread could calculate salaries, another could generate direct
+deposit files, and another could send notifications – all at the same
+time on a multithreaded system.)</p></li>
+<li><p><b>RAM (Random Access Memory)</b>: RAM is the computer’s
+short-term memory. It stores data that’s actively being used so the CPU
+can access it quickly. In parallel computing, enough RAM is crucial
+because multiple processors may need to access or share large amounts of
+data at the same time – alternatively, allocating memory independently
+to an individual core (or cores) helps ensure that RAM is not
+accidentally overburdened trying to hold onto (unnecessary) data for
+sevral tasks simultaneously.</p></li>
+<li><p><b>Nodes</b>: A node is a single computer in a cluster – a group
+of computers linked together to work on a common task. Each node has its
+own CPU(s), memory (RAM), and sometimes storage. In large-scale parallel
+computing (like on supercomputers), many nodes work together, connected
+through a high-speed network.</p></li>
+<li><p><b>Cluster</b>: A cluster is a collection of nodes that work
+together like one powerful machine. Each node handles a portion of the
+computation, and the results are combined at the end.
+<code>HiPerGator</code> is a giant computing cluster from which we can
+isolate “smaller” allocations of nodes and memory for complex computing
+tasks.</p></li>
+</ul>
+</div>
+<div id="setting-up-a-parallel-environment-in-r" class="section level2">
+<h2>Setting Up a Parallel Environment in <code>R</code></h2>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
