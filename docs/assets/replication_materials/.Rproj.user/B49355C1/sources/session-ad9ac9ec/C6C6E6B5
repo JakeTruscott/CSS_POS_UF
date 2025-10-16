@@ -3,7 +3,7 @@
     "path": "C:/Users/jaketruscott/Github/CSS_POLS_UF/docs/assets/replication_materials/class_3/code/Parallel_R.Rmd",
     "project_path": "class_3/code/Parallel_R.Rmd",
     "type": "r_markdown",
-    "hash": "741117249",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1760466139316.0,
@@ -13,15 +13,17 @@
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "65,190",
-        "scrollLine": "58"
+        "cursorPosition": "141,0",
+        "scrollLine": "119",
+        "last_setup_crc32": "ad9ac9ecad7b3d59",
+        "ignored_words": "Envirnoment\n"
     },
     "folds": "",
-    "lastKnownWriteTime": 1760467579,
+    "lastKnownWriteTime": 1760637392,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1760467579514,
+    "last_content_update": 1760637392716,
     "read_only": false,
     "read_only_alternatives": []
 }

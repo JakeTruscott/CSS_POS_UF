@@ -57,7 +57,7 @@ Below, I provide some key terms to understand re: parallel computing, as well as
 
 - <b>CPU (Central Processing Unit)</b>: The CPU is the <i>brain</i> of a computer. It performs calculations and executes instructions. Most modern CPUs have multiple cores, and each core can handle its own stream of instructions. This means a CPU can run several tasks in parallel. For example, a quad-core processor can process four tasks at once.
 
-- <b>Processor vs. Core</b>: A processor is the entire chip that fits into your computer's motherboard (i.e., the entire CPU). A core is an individual processing unit within that chip. So, a single processor can contain multiple cores -- each capable of independent computation
+- <b>Processor vs. Core</b>: A processor is the entire chip that fits into your computer's motherboard (i.e., the entire CPU). A core is a general term for either a single processor on your own computer (technically you only have one processor, but a modern processor like the i7 can have multiple cores - hence the term) or a single machine in a cluster network.
 
 - <b>Thread</b>: A thread is the smallest sequence of instructions that a CPU can execute independently. Modern operating systems can schedule multiple threads per core, allowing one core to handle multiple tasks "concurrently" by quickly switching between them. This is sometimes called <b>multithreading</b> (e.g., in the UF payroll example, one thread could calculate salaries, another could generate direct deposit files, and another could send notifications -- all at the same time on a multithreaded system.)
 
@@ -69,3 +69,74 @@ Below, I provide some key terms to understand re: parallel computing, as well as
 
 
 ## Setting Up a Parallel Environment in <code>R</code>
+
+There are a handful of different means to facilitate a parallel environment in <code>R</code>, and I have been fairly inconsistent in preferring one suite of packages to initiate the start-up over another. However, for the sake of this course, I will show you how to do it primarily using <code>parallel::()</code>. 
+
+```{R setup_parallel}
+
+suppressPackageStartupMessages({
+  library(parallel); 
+  library(doParallel)
+}) # Load Parallel (Quietly)
+
+```
+
+Recall that the CPU included in most modern computers contain several <b>cores</b>, all of which allow for independent computation. Using <code>detectCores()</code>, we can recover the number you have available to you. However, a good rule of thumb -- depending on how much computing power you still need when these processes are running -- is to avoid maxing-out your core allocation for parallel tasks. For instance, if you still wanted to be able to run <code>R</code> using a different project (or maybe even just scroll on your computer...), prescribing more of your computing resources to the parallel job reduces the resources that can be used for other things. 
+
+
+Leaving <i>at least</i> one core available for other tasks is always a good idea --  as you will see below, I generally (at minimum) indicate the number of cores to use as <code>(numcores - 1)</code>. 
+
+```{R detectCores}
+
+numcores <- parallel::detectCores() 
+message('You Have ', numcores, ' Cores Available for Use!')
+
+```
+Next, we will use <code>makeCluster()</code> to initialize the larger volume of available cores into a single socket cluster. <i>Note</i>: There are several additional arguments to declare in <code>makeCluster()</code>, virtually all of which can be ignored. 
+
+```{R makeCluster, eval = F}
+
+cl <- makeCluster(numcores - 1) # Create a Socket Cluster  
+doParallel::registerDoParallel(cl) # Register the Parallel Environment (cl)
+stopCluster(cl) # Relieves Cluster
+
+```
+
+Congrats -- You've created a parallel environment with several cores! Now, we need to actually run something. Let's create a function with something that seems tedious but may take a moment -- like 10 million draws from a standard normal distribution and we'll subsequently calculate the mean of those squared values.
+
+We will use <code>lapply()</code> to serially apply the function serially across 10 repetitions, then do the same using <code>parLapply()</code> (the parallel version) and compare the completion times. 
+
+```{R benchmark_parallel}
+
+tedious_function <- function(x) {
+  y <- rnorm(10000000) # Simulate 10 Million Draws
+  mean(y^2) # Recover Mean of Squared Values
+} 
+
+serial <- system.time({
+  serial_run <- lapply(1:10, tedious_function)
+}) # Serial Run
+
+
+cl <- makeCluster(numcores - 1) # Create a Socket Cluster  
+doParallel::registerDoParallel(cl) # Register the Parallel Environment (cl)
+
+parallel <- system.time({
+  parallel_run <- parLapply(cl, 1:10, tedious_function)
+}) # Parallel Run
+
+stopCluster(cl) # Shut Down Parallel
+
+```
+
+```{R benchmark_results, echo=FALSE}
+
+message('Serial Completion Time: ', round(serial[['elapsed']], 2), ' Seconds')
+
+message('Parallel Completion Time: ', round(parallel[['elapsed']], 2), ' Seconds')
+
+
+```
+
+
+
