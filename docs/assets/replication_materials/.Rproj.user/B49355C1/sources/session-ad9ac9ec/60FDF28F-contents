@@ -1,0 +1,27 @@
+---
+title: "Class 3 Problem Set"
+subtitle: "POS6933: Computational Social Science"
+author: "Truscott (Spring 2026)"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(ggplot2)
+library(dplyr)
+library(cowplot)
+library(stargazer)
+
+
+```
+
+------------------------------------------------------------------------
+
+<b>Note</b>: Students should always aim to produce <i>publication-worthy</i> tables and figures. Unless otherwise stated, tables should be rendered using <code>stargazer::()</code>, while figures can be rendered using <code>ggplot2::()</code> or <code>plot()</code>. Regardless, tables and figures should always be presented with necessary formatting -- e.g., (sub)title, axis (variable) labels and titles, a clearly-identifiable legend and key, etc. Problem sets must always be compiled using <code>LaTex</code> or <code>RMarkdown</code> and include the full coding routine (with notes explaining your implementation) used to complete each problem (10pts).
+
+------------------------------------------------------------------------
+
+1.  Set up a parallel environment using `registerDoParallel()` and sample at least 100k draws from a distribution of your choice before performing some secondary task. Compare the performance of your task given a serial versus parallel approaches with at least (3) different sizes of cores being allocated (e.g., 4, 6, and 8 cores, or similar). (5pts)
+
+2.  
