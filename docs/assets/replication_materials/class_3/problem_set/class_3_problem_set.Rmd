@@ -22,6 +22,7 @@ library(stargazer)
 
 ------------------------------------------------------------------------
 
-1.  Set up a parallel environment using `registerDoParallel()` and sample at least 100k draws from a distribution of your choice before performing some secondary task. Compare the performance of your task given a serial versus parallel approaches with at least (3) different sizes of cores being allocated (e.g., 4, 6, and 8 cores, or similar). (5pts)
+1.  Write a function to sample at least 100k draws from a distribution of your choice before performing some secondary task. Afterwards, compare the performance of your task given a serial versus parallel approaches with at least three different sizes of cores being allocated. For this comparison, construct a table using `stargazer(html)` to record the computation strategy, number of cores, completion time, mean value, and 95 percent confidence intervals. (5pts)
 
-2.  
+
+2.  Create a function that...
