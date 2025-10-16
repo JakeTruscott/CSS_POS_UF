@@ -176,10 +176,10 @@ computational task into smaller parts that can be executed
 simultaneously – that is, in <i>parallel</i> – rather than one after
 another. The goal is to increase processing speeds, handle larger
 problems (tasks and data), and deploy resources more efficiently.</p>
-<p><img src="https://raw.githubusercontent.com/JakeTruscott/CSS_POS_UF/ecfae9a49f6b7e5fb29b34ba65c8ae2bc4fc86c4/docs/assets/replication_materials/class_3/supplemental_materials/parallel_vs_serial_computing.png" 
+<img src="https://raw.githubusercontent.com/JakeTruscott/CSS_POS_UF/ecfae9a49f6b7e5fb29b34ba65c8ae2bc4fc86c4/docs/assets/replication_materials/class_3/supplemental_materials/parallel_vs_serial_computing.png" 
      alt="Parallel Computing" 
      width="500" 
-     style="display: block; margin: 0 auto;"></p>
+     style="display: block; margin: 0 auto;">
 <p>In traditional (or <b>serial</b>) computing, a program runs on a
 single processor core and executes one instruction at a time. As
 problems get larger or more complex (e.g., simulating electoral
@@ -278,6 +278,11 @@ tasks.</p></li>
 </div>
 <div id="setting-up-a-parallel-environment-in-r" class="section level2">
 <h2>Setting Up a Parallel Environment in <code>R</code></h2>
+<p>An easy way to understand what’s happening under the hood when you’re
+using parallel processing in <code>R</code> is that <b> for each core
+you initialize (register), you’re telling it to create background
+sessions to independently handle a portion of the larger
+workload</b>.</p>
 <p>There are a handful of different means to facilitate a parallel
 environment in <code>R</code>, and I have been fairly inconsistent in
 preferring one suite of packages to initiate the start-up over another.
@@ -337,8 +342,40 @@ parallel &lt;- system.time({
 }) # Parallel Run
 
 stopCluster(cl) # Shut Down Parallel</code></pre>
-<pre><code>## Serial Completion Time: 4.59 Seconds</code></pre>
-<pre><code>## Parallel Completion Time: 0.77 Seconds</code></pre>
+<p>The routine executed using a parallel approach is clearly faster,
+though evidently not by much here. However, it’s important to recognize
+that the most obvious benefits of parallel emerge when you need to
+engage with tasks of considerable scale – e.g., the payroll example
+above.</p>
+<div id="a-few-important-things-to-remember" class="section level4">
+<h4>A Few Important Things to Remember</h4>
+<ol style="list-style-type: decimal">
+<li><p>Whenever you are done using a local parallel environment, be sure
+to use <code>stopCluster(cl)</code> to fully and cleanly shut down the
+background <code>R</code> worker processes you’ve created. If you leave
+a cluster running, those processes continue to consume memory and system
+resources, which can slow down your computer or cause errors in later
+parallel tasks.</p></li>
+<li><p>It’s important to view each node you’ve created with
+<code>registerDoParallel</code> as their own <code>R</code> sessions, so
+each one is going to need the necessary packages or libraries, as well
+as any objects (e.g., data, functions, etc.) stored in the global
+environment.</p></li>
+</ol>
+<p>You can achieve that using a combination of <code>clusterEvalQ</code>
+for exporting libraries and <code>clusterExport()</code>for objects and
+functions in the global environment. Below are some examples from a
+project I have been working on to simulate turnover in the American
+lower federal courts – every core I create needs to have its own copy of
+those items.</p>
+<pre class="r"><code>clusterExport(cl, c(&quot;predict_survival&quot;, &#39;new_judge&#39;, &#39;election_simulation&#39;, &#39;senate_moratorium&#39;, &#39;senate_rejection&#39;, &#39;single_simulation_analysis&#39;, &#39;electoral_outcomes_02_24&#39;, &#39;departure_simulation_comparison&#39;, &#39;d1&#39;, &#39;c1&#39;, &#39;fjc_combined_survival&#39;, &#39;allocated_seats&#39;, &#39;nominate&#39;, &#39;senate_rejection_data&#39;))  # Allocate Global Environment Objects &amp; Functions to Nodes
+
+clusterEvalQ(cl, {
+  library(dplyr)
+  library(survival)
+  library(stringr)
+}) # Allocate Necessary Packages </code></pre>
+</div>
 </div>
 
 
