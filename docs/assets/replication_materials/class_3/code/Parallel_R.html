@@ -342,16 +342,18 @@ parallel &lt;- system.time({
 }) # Parallel Run
 
 stopCluster(cl) # Shut Down Parallel</code></pre>
+<pre><code>## Serial Completion Time: 5.32 Seconds</code></pre>
+<pre><code>## Parallel Completion Time: 0.76 Seconds</code></pre>
 <p>The routine executed using a parallel approach is clearly faster,
 though evidently not by much here. However, it’s important to recognize
-that the most obvious benefits of parallel emerge when you need to
-engage with tasks of considerable scale – e.g., the payroll example
-above.</p>
+that the most obvious benefits of parallel computing emerge when you
+need to engage with tasks of considerable scale – e.g., the payroll
+example above.</p>
 <div id="a-few-important-things-to-remember" class="section level4">
 <h4>A Few Important Things to Remember</h4>
 <ol style="list-style-type: decimal">
 <li><p>Whenever you are done using a local parallel environment, be sure
-to use <code>stopCluster(cl)</code> to fully and cleanly shut down the
+to use <code>stopCluster()</code> to fully and cleanly shut down the
 background <code>R</code> worker processes you’ve created. If you leave
 a cluster running, those processes continue to consume memory and system
 resources, which can slow down your computer or cause errors in later
