@@ -1,0 +1,28 @@
+{
+    "id": "040493F9",
+    "path": null,
+    "project_path": null,
+    "type": "object_explorer",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1761752031846.0,
+    "source_on_save": false,
+    "relative_order": 4,
+    "properties": {
+        "id": "bdb4d0e080f749ffb1f3a33d69980610",
+        "name": "parallel_run",
+        "title": "parallel_run",
+        "language": "R",
+        "source_window_id": "",
+        "Source": "Source"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1761750680,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1761752031846,
+    "read_only": false,
+    "read_only_alternatives": []
+}

@@ -370,15 +370,34 @@ explaining your implementation) used to complete each problem
 (10pts).</p>
 <hr />
 <ol style="list-style-type: decimal">
-<li><p>Write a function to sample at least 100k draws from a
-distribution of your choice before performing some secondary task.
-Afterwards, compare the performance of your task given a serial versus
-parallel approaches with at least three different sizes of cores being
-allocated. For this comparison, construct a table using
-<code>stargazer(html)</code> to record the computation strategy, number
-of cores, completion time, mean value, and 95 percent confidence
-intervals. (5pts)</p></li>
-<li><p>Create a function that…</p></li>
+<li>Write a function to sample at least 100 draws 100k times from a
+distribution of your choice before performing a secondary task to
+recover the mean value. Afterwards, compare the performance of your task
+given a serial versus parallel approach with at least three different
+sizes of cores being allocated. For this comparison, construct a table
+using <code>stargazer(html)</code> to record the computation strategy,
+number of cores, completion time, mean value, and 95 percent confidence
+intervals. (5pts)</li>
+</ol>
+<p><br></p>
+<ol start="2" style="list-style-type: decimal">
+<li>Create an artificial dataset consisting of one dependent variable
+and at least five independent variables (6 total). The dataset should
+contain no fewer than 100,000 observations. For replication purposes,
+label the dependent variable as y and the independent variables as x1
+through x10. You may specify the distributions and variances of these
+variables at your discretion, though y should be a linear combination of
+atleast three predictors plus random error. Afterwards, create a
+function that randomly samples 10,000 observations without replacement
+from this dataset, recovers coefficients from a linear model, and
+subsequently estimates predictive values (or probabilities) using
+<code>predict()</code> across an expanded grid
+(<code>expand.grid()</code>) that ranges the scope of values for x1-x10.
+Completing this process 1,000 times using a serial configuration before
+transitioning and repeating using parallel with <em>at least</em> half +
+1 cores available on your personal computer. For this comparison,
+construct a table using <code>stargazer(html)</code> to record the
+computation strategy, number of cores, and completion time. (5pts)</li>
 </ol>
 
 

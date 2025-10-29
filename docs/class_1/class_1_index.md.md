@@ -9,7 +9,7 @@ has_children: true
 
 ## Readings
 
-- Syllabus (Available [Here](https://jaketruscott.github.io/CSS_POS_UF/syllabus.html) and on Canvas)
+- Syllabus (Available [Here](https://jaketruscott.github.io/CSS_POS_UF/syllabus/syllabus.html) and on Canvas)
 
 # Class One Learning Objectives: 
 
