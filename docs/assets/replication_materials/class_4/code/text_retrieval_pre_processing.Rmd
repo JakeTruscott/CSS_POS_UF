@@ -1,0 +1,21 @@
+---
+title: "Text Retrieval and Pre-Processing"
+subtitle: "POS6933: Computational Social Science"
+author: "Truscott (Spring 2026)"
+output:
+  html_document:
+    self_contained: false
+    layout: null
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(warning = FALSE)
+
+library(dplyr); library(ggplot2); library(ggtext); library(cowplot)
+
+```
+
+------------------------------------------------------------------------
+
+# Test 
