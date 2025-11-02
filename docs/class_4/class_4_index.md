@@ -50,7 +50,7 @@ has_children: true
 
 ## Readings
 
-- R Regex Cheet Sheet
+- R Regex Cheat Sheet
 - Denny, M. J., & Spirling, A. (2018). Text preprocessing for unsupervised learning: Why it matters, when it misleads, and what to do about it. Political Analysis, 26(2), 168-189.
 
 

@@ -1,0 +1,28 @@
+---
+title: "R Regex Cheat sheet"
+subtitle: "POS6933: Computational Social Science"
+author: "Truscott (Spring 2026)"
+output:
+  html_document:
+    self_contained: false
+    layout: null
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(warning = FALSE)
+
+library(dplyr); library(ggplot2); library(ggtext); library(cowplot)
+
+```
+
+------------------------------------------------------------------------
+
+## Text Pre-Processing Cheat Sheet
+
+```{=html}
+<img src="https://raw.githubusercontent.com/JakeTruscott/CSS_POS_UF/d8429ac2137c4a6d7d93875578e215c78f647db7/docs/assets/replication_materials/class_4/supplemental_materials/R_regex_cheat_sheet.png" 
+     alt="Parallel Computing" 
+     width="500" 
+     style="display: block; margin: 0 auto;">
+```

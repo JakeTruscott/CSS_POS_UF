@@ -1,9 +1,0 @@
-"0","west_wing <- read.delim(""class_4/supplemental_materials/West_Wing_S1_E21.txt"", header = FALSE)
-"
-"2","Warning in file(file, ""rt"") :"
-"2","
- "
-"2"," cannot open file 'class_4/supplemental_materials/West_Wing_S1_E21.txt': No such file or directory
-"
-"2","Error in file(file, ""rt"") : cannot open the connection
-"

@@ -18,19 +18,42 @@ library(dplyr); library(ggplot2); library(ggtext); library(cowplot)
 
 ------------------------------------------------------------------------
 
-## Intro to Text Analysis
+## Text Retrieval
 
 There are countless sources of text data -- from a single haiku to bounded volumes providing an expansive anthology of human knowledge, we can use text analysis tools to bridge an entire domain of qualitative and quantitative inquiry. 
 
-Aaron Sorken's <em>The West Wing</em> (1999-2007) is not only the best political drama ever created, but I'd go so far as to say it is the best drama -- period. 
+### Lies, Damn Lies, and Statistics (2000)
 
+Aaron Sorken's <em>The West Wing</em> (1999-2007) is not only the best political drama ever created, but I'd go so far as to say it is the best drama -- period. A survey by Data for Progress found that 33 % of Americans had a favorable opinion of <em>The West Wing</em>, while only 10 percent had an unfavorable opinio -- —yielding a net favorability of +24 points. (Data For Progress) The same poll also found that the show is more popular among older, more educated, and higher-income Americans. 
 
+One of my favorite episodes is Season 1's <em>Lies, Damn Lies, and Statistics</em> -- the title originating from a phrase popularized by Mark Twain (though attributed to British Prime Minister Benjamin Disraeli) to describe the persuasive power of statistics to bolster (often weak or subjective) arguments. In this episode, the White House staff obsess over poll results following a made-for-television fight to regain control of the American political narrative. 
 
+Let's imagine I wanted to know which character in the episode spoke the most lines, or maybe even which had the longest dialogue. To do that, I would need to: 
 
-## Text Retrieval
+- Locate the script for the episode <a href="https://westwingwiki.com/2014/04/season-1-episode-21-lies-damn-lies-statistics/">(Here)</a>
+- Convert it to a plain text format (.txt) -- Which I've conventiently done <a href="https://raw.githubusercontent.com/JakeTruscott/CSS_POS_UF/main/docs/assets/replication_materials/class_4/supplemental_materials/West_Wing_S1_E21.txt">here</a>
+- Load that plain text file into <code>R</code>
+- Process and organize the strings, as well as identify those strings with their associated characters
+- Perform analyses on the comparative volume of spoken lines, as well as the breadth of individual monologues. 
 
+```{r include=FALSE}
+west_wing_script_location <- "https://raw.githubusercontent.com/JakeTruscott/CSS_POS_UF/main/docs/assets/replication_materials/class_4/supplemental_materials/West_Wing_S1_E21.txt"
 
+```
 
+```{r, west_wing}
+
+west_wing <- readLines(west_wing_script_location, warn = FALSE) # Read Txt from GitHub Repo
+head(west_wing) # Print Head
+
+```
+
+Clearly, the text is not as organized as I'd like it to be. My next steps will be to conciously try to develop a 4-column dataframe that identifies: 
+
+- <b>Character</b>: Which character is currently speaking.
+- <b>Line</b>: The text (string) 
+- <b>Word Count</b>: How many words are found in the text
+- <b>Line Number</b>: The current number of times that character has individually spoken to that point. 
 
 ------------------------------------------------------------------------
 
