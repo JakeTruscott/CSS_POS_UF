@@ -18,6 +18,15 @@ library(dplyr); library(ggplot2); library(ggtext); library(cowplot)
 
 ------------------------------------------------------------------------
 
+## Intro to Text Analysis
+
+There are countless sources of text data -- from a single haiku to bounded volumes providing an expansive anthology of human knowledge, we can use text analysis tools to bridge an entire domain of qualitative and quantitative inquiry. 
+
+Aaron Sorken's <em>The West Wing</em> (1999-2007) is not only the best political drama ever created, but I'd go so far as to say it is the best drama -- period. 
+
+
+
+
 ## Text Retrieval
 
 
