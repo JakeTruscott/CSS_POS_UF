@@ -217,20 +217,69 @@ steps will be to conciously try to develop a 4-column dataframe that
 identifies:</p>
 <ul>
 <li><b>Character</b>: Which character is currently speaking.</li>
-<li><b>Line</b>: The text (string)</li>
+<li><b>Dialogue</b>: The text (string)</li>
 <li><b>Word Count</b>: How many words are found in the text</li>
-<li><b>Line Number</b>: The current number of times that character has
-individually spoken to that point.</li>
+<li><b>Line Number</b>: The current number of dialogue entries to that
+point</li>
 </ul>
+<p>There are several easier ways to do this, but I want to try to be as
+precise as I can. I am only interested in Josh, Toby, C.J., Donna, Sam,
+Leo, and President Barlet.</p>
 <hr />
+<pre class="r"><code>west_wing &lt;- data.frame(unlist(west_wing)) %&gt;%
+  setNames(&#39;text&#39;)
+characters &lt;- c(&#39;Josh&#39;, &#39;Toby&#39;, &#39;C.J.&#39;, &#39;Donna&#39;, &#39;Sam&#39;, &#39;Leo&#39;, &#39;Bartlet&#39;)
+character_regex &lt;- paste0(&quot;^(&quot;, paste0(toupper(characters), collapse = &quot;|&quot;), &quot;)$&quot;)
+
+damn_lies &lt;-  west_wing %&gt;%
+    mutate(character_line = ifelse(stringr::str_detect(text, character_regex), 1, 0), 
+           empty_row = ifelse(text == &#39;&#39;, 1, 0), 
+           first_entry = ifelse(character_line == 1, 1, NA)) %&gt;%
+    tidyr::fill(first_entry, .direction = &#39;down&#39;) %&gt;%
+    filter(!is.na(first_entry)) %&gt;%
+    select(-c(first_entry)) %&gt;%
+    mutate(group = cumsum(character_line == 1)) %&gt;%
+    group_by(group) %&gt;%
+    mutate(to_keep = row_number() &lt; which(empty_row == 1)[1] | is.na(which(empty_row == 1)[1])) %&gt;%
+    ungroup() %&gt;%
+    filter(to_keep) %&gt;%
+    select(text, character_line) %&gt;%
+    mutate(group = cumsum(character_line == 1)) %&gt;%
+    group_by(group) %&gt;%
+    summarise(
+    character = text[character_line == 1][1],
+    dialogue  = paste(text[-1], collapse = &quot; &quot;),
+    .groups = &quot;drop&quot;) %&gt;%
+    rename(id = group) %&gt;%
+    select(character, dialogue, id) %&gt;%
+    rowwise() %&gt;%
+    mutate(word_count = stringr::str_count(dialogue, &quot;\\S+&quot;)) %&gt;%
+    ungroup() %&gt;%
+    filter(!word_count == 0)</code></pre>
+<pre><code>## # A tibble: 10 × 4
+##    character dialogue                                        id word_count
+##    &lt;chr&gt;     &lt;chr&gt;                                        &lt;int&gt;      &lt;int&gt;
+##  1 DONNA     They got to start the poll, Josh. It&#39;s 7:05.     1          9
+##  2 JOSH      It&#39;s ten to seven.                               2          4
+##  3 DONNA     No, it&#39;s really not.                             3          4
+##  4 JOSH      It&#39;s 7:05?                                       4          2
+##  5 DONNA     Yeah.                                            5          1
+##  6 JOSH      That&#39;s ridiculous.                               6          2
+##  7 DONNA     I&#39;m not making it up.                            7          5
+##  8 JOSH      My watch says ten to seven.                      8          6
+##  9 DONNA     That&#39;s &#39;cause your watch sucks.                  9          5
+## 10 JOSH      My watch is fine.                               10          4</code></pre>
+<pre><code>## # A tibble: 7 × 4
+##   Character `Total Words` `Average Words` `Total Lines`
+##   &lt;chr&gt;             &lt;int&gt;           &lt;dbl&gt;         &lt;int&gt;
+## 1 BARTLET            1359               9           145
+## 2 C.J.                985              11            91
+## 3 JOSH                757              11            67
+## 4 LEO                 679               8            90
+## 5 TOBY                617               8            78
+## 6 SAM                 454               6            75
+## 7 DONNA               162               8            20</code></pre>
 </div>
-</div>
-<div id="text-pre-processing" class="section level2">
-<h2>Text Pre-Processing</h2>
-<img src="https://raw.githubusercontent.com/JakeTruscott/CSS_POS_UF/d8429ac2137c4a6d7d93875578e215c78f647db7/docs/assets/replication_materials/class_4/supplemental_materials/R_regex_cheat_sheet.png" 
-     alt="Parallel Computing" 
-     width="500" 
-     style="display: block; margin: 0 auto;">
 </div>
 
 

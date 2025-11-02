@@ -51,10 +51,62 @@ head(west_wing) # Print Head
 Clearly, the text is not as organized as I'd like it to be. My next steps will be to conciously try to develop a 4-column dataframe that identifies: 
 
 - <b>Character</b>: Which character is currently speaking.
-- <b>Line</b>: The text (string) 
+- <b>Dialogue</b>: The text (string) 
 - <b>Word Count</b>: How many words are found in the text
-- <b>Line Number</b>: The current number of times that character has individually spoken to that point. 
+- <b>Line Number</b>: The current number of dialogue entries to that point 
+
+There are several easier ways to do this, but I want to try to be as precise as I can. I am only interested in Josh, Toby, C.J., Donna, Sam, Leo, and President Barlet. 
 
 ------------------------------------------------------------------------
 
+```{r damn_lies_process, echo=TRUE, message=TRUE, warning=TRUE}
+
+west_wing <- data.frame(unlist(west_wing)) %>%
+  setNames('text')
+characters <- c('Josh', 'Toby', 'C.J.', 'Donna', 'Sam', 'Leo', 'Bartlet')
+character_regex <- paste0("^(", paste0(toupper(characters), collapse = "|"), ")$")
+
+damn_lies <-  west_wing %>%
+    mutate(character_line = ifelse(stringr::str_detect(text, character_regex), 1, 0), 
+           empty_row = ifelse(text == '', 1, 0), 
+           first_entry = ifelse(character_line == 1, 1, NA)) %>%
+    tidyr::fill(first_entry, .direction = 'down') %>%
+    filter(!is.na(first_entry)) %>%
+    select(-c(first_entry)) %>%
+    mutate(group = cumsum(character_line == 1)) %>%
+    group_by(group) %>%
+    mutate(to_keep = row_number() < which(empty_row == 1)[1] | is.na(which(empty_row == 1)[1])) %>%
+    ungroup() %>%
+    filter(to_keep) %>%
+    select(text, character_line) %>%
+    mutate(group = cumsum(character_line == 1)) %>%
+    group_by(group) %>%
+    summarise(
+    character = text[character_line == 1][1],
+    dialogue  = paste(text[-1], collapse = " "),
+    .groups = "drop") %>%
+    rename(id = group) %>%
+    select(character, dialogue, id) %>%
+    rowwise() %>%
+    mutate(word_count = stringr::str_count(dialogue, "\\S+")) %>%
+    ungroup() %>%
+    filter(!word_count == 0)
+```
+
+```{r damn_lies_summary, echo=FALSE}
+
+head(damn_lies, 10)
+
+damn_lies %>%
+  group_by(character) %>%
+  summarise(total_words = sum(word_count), 
+            average_words = round(mean(word_count)), 
+            total_lines = n()) %>%
+  arrange(desc(total_words)) %>%
+  rename(Character = character, 
+         `Total Words` = total_words, 
+         `Average Words` = average_words, 
+         `Total Lines` = total_lines)
+
+```
 

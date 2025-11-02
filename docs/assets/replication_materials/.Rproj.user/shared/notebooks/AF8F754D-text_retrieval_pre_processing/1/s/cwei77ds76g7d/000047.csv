@@ -1,0 +1,33 @@
+"0","  temp_script <- west_wing %>%
+    mutate(character_line = ifelse(grep(temp_character_regex, text, ignore.case = F), 1, 0), 
+           empty_row = ifelse(text == '', 1, 0), 
+           first_entry = ifelse(character_line == 1, 1, NA)) %>%
+    tidyr::fill(first_entry, .direction = 'down') %>%
+    filter(!is.na(first_entry)) %>%
+    select(-c(first_entry)) %>%
+    mutate(group = cumsum(character_line == 1)) %>%
+    group_by(group) %>%
+    mutate(to_keep = row_number() < which(empty_row == 1)[1] | is.na(which(empty_row == 1)[1])) %>%
+    ungroup() %>%
+    filter(to_keep) %>%
+    select(text, character_line) %>%
+    mutate(group = cumsum(character_line == 1)) %>%
+    group_by(group) %>%
+    summarise(
+    character = text[character_line == 1][1],
+    dialogue  = paste(text[-1], collapse = "" ""),
+    .groups = ""drop"") %>%
+    rename(id = group) %>%
+    select(character, dialogue, id) %>%
+    rowwise() %>%
+    mutate(word_count = stringr::str_count(dialogue, ""\\S+"")) %>%
+    ungroup()
+"
+"1","[1m[33mError[39m in `mutate()`:[22m
+[38;5;252m[36mℹ[38;5;252m In argument: `character_line = ifelse(...)`.[39m
+[1mCaused by error:[22m
+[38;5;252m[33m![38;5;252m `character_line` must be size 2982 or 1, not 67.[39m
+Backtrace:
+[90m  1. [39m... %>% ungroup()
+[90m 26. [39m[1mdplyr[22m:::dplyr_internal_error(...)
+"
