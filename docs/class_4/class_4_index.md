@@ -58,7 +58,7 @@ has_children: true
 
 - Practice Set (Class 4)
 
-# Class Two Learning Objectives: 
+# Class Four Learning Objectives: 
 
 - Review Practice Set (Class 3)
 - Text Retrieval & Pre-Processing

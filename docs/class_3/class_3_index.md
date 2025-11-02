@@ -57,7 +57,7 @@ has_children: true
 
 - Practice Set (Class 3)
 
-# Class Two Learning Objectives: 
+# Class Three Learning Objectives: 
 
 - Review Practice Set (Class 2) 
 - Complex function programming (<code>R</code>)
