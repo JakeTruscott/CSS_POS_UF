@@ -23,7 +23,7 @@ library(dplyr); library(ggplot2); library(ggtext); library(cowplot)
 <b>Parallel Computing</b> concerns the practice of dividing a large computational task into smaller parts that can be executed simultaneously -- that is, in <i>parallel</i> -- rather than one after another. The goal is to increase processing speeds, handle larger problems (tasks and data), and deploy resources more efficiently.
 
 ```{=html}
-<img src="https://raw.githubusercontent.com/JakeTruscott/CSS_POS_UF/d8429ac2137c4a6d7d93875578e215c78f647db7/docs/assets/replication_materials/class_4/supplemental_materials/R_regex_cheat_sheet.png" 
+<img src="https://raw.githubusercontent.com/JakeTruscott/CSS_POS_UF/ecfae9a49f6b7e5fb29b34ba65c8ae2bc4fc86c4/docs/assets/replication_materials/class_3/supplemental_materials/parallel_vs_serial_computing.png" 
      alt="Parallel Computing" 
      width="500" 
      style="display: block; margin: 0 auto;">
