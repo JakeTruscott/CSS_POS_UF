@@ -1,0 +1,79 @@
+---
+title: "Class 4 Problem Set"
+subtitle: "POS6933: Computational Social Science"
+author: "Truscott (Spring 2026)"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = TRUE,
+	warning = TRUE
+)
+library(ggplot2)
+library(dplyr)
+library(cowplot)
+library(stargazer)
+library(doParallel)
+library(parallel)
+library(snow)
+library(tm)
+library(quanteda)
+library(gutenbergr)
+library(stringr)
+
+
+```
+
+------------------------------------------------------------------------
+
+<b>Note</b>: Students should always aim to produce <i>publication-worthy</i> tables and figures. Unless otherwise stated, tables should be rendered using <code>stargazer::()</code>, while figures can be rendered using <code>ggplot2::()</code> or <code>plot()</code>. Regardless, tables and figures should always be presented with necessary formatting -- e.g., (sub)title, axis (variable) labels and titles, a clearly-identifiable legend and key, etc. Problem sets must always be compiled using <code>LaTex</code> or <code>RMarkdown</code> and include the full coding routine (with notes explaining your implementation) used to complete each problem (10pts).
+
+------------------------------------------------------------------------
+
+
+1. Using <code>gutenbergr()</code>, recover the text for H.G. Wells' <em>The War of the Worlds</em> (<code>gutenberger</code> id = 36). Recover the number of total words and unique words found in each chapter (3 pts). 
+
+
+```{r question_one, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+
+war <- gutenbergr::gutenberg_download(36) # Download War of the Worlds
+chapter_ids <-  paste0(as.character(as.roman(1:26)), '.') # Roman Number Chapter IDs
+
+war <- war %>%
+  mutate(chapter_start = ifelse(text %in% chapter_ids, 1, 0),  # Identify Chapter Starts
+         chapter_name = ifelse(chapter_start == 1, paste(text, lead(text)), NA)) %>% # Name Chapters
+  filter(!lag(chapter_start) == 1) %>% # Remove Title Rows
+  tidyr::fill(chapter_name, .direction = 'down') %>% # Assign Chapter Down 
+  filter(!is.na(chapter_name), !text %in% c('', ' '), !chapter_start == 1) %>% # Remove Header, Empty Rows, Chapter Start Row
+  select(-c(chapter_start, gutenberg_id)) 
+
+war <- tibble::as_tibble(
+  war %>%
+  group_by(chapter_name) %>%
+  summarize(text = paste(text, collapse = " ")) %>% 
+  tidytext::unnest_tokens(word, text) %>% 
+  group_by(chapter_name) %>%
+  summarize(
+    word_count = n(),
+    unique_words = n_distinct(word)) %>%
+    rename('Chapter Name' = chapter_name, 
+           'Word Count' = word_count, 
+           'Unique Words' = unique_words) 
+) # As Tibble
+
+stargazer::stargazer(war, type = 'text', summary = F)  
+
+
+```
+
+
+---
+
+2. Using the example from class for <em>Lies, Damn Lies and Statistics</em> (2000), recover a separate script from the second season episode <em>Two Cathedrals</em> (2001) -- considered one of the best television episodes in history and certainly a contributing factor to the show's Emmy win for Best Drama in 2001 (it also won in 2000, and would win again in 2002 and 2003...). The script is conveniently available on the course <a href="https://raw.githubusercontent.com/JakeTruscott/CSS_POS_UF/main/docs/assets/replication_materials/class_4/supplemental_materials/West_Wing_S2_E22.txt">Github</a>. Compile a similar array of summary statistics for <code>Leo, Toby, Josh, C.J., and Bartlet</code> that includes (i) the number of different dialogues offered by each character, (ii) the total number of words, and (iii) the average word length for each piece of dialogue. Do not worry about removing stage direction and other production cues from the script (3 pts). 
+
+
+```{r question_two}
+
+```

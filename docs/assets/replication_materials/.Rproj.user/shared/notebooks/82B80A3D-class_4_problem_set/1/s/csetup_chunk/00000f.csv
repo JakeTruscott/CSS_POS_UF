@@ -1,0 +1,13 @@
+"0","library(snow)
+"
+"2","
+Attaching package: ‘snow’
+
+"
+"2","The following objects are masked from ‘package:parallel’:
+
+    closeNode, clusterApply, clusterApplyLB, clusterCall, clusterEvalQ, clusterExport, clusterMap,
+    clusterSplit, makeCluster, parApply, parCapply, parLapply, parRapply, parSapply, recvData,
+    recvOneData, sendData, splitIndices, stopCluster
+
+"
