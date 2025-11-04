@@ -169,21 +169,17 @@ pre code {
 
 
 <hr />
-<div id="corpus-creation" class="section level2">
-<h2>Corpus Creation</h2>
 <p>A <code>corpus</code> is a structured collection of text documents.
 Using packages like <code>quanteda</code> and <code>tm</code>, you can
 create a corpus from raw text data (like a vector of strings or a column
 in a dataframe). Once your text is in a corpus, you can easily perform
 text analysis such as tokenization, creating document-feature matrices,
 and calculating word frequencies.</p>
-<p><br></p>
 <p>Below are two ways to create a corpus in <code>R</code> – I am not
 partial to either, though the latter will be a bit more intuitive (I
 think) for adding metadata. We’ll use the same data for both.</p>
-<p><br></p>
-<div id="using-tm" class="section level4">
-<h4>Using <code>tm</code></h4>
+<div id="using-tm" class="section level3">
+<h3>Using <code>tm</code></h3>
 <pre class="r"><code>library(tm) # Load tm
 
 texts &lt;- c(
@@ -239,8 +235,8 @@ tm::inspect(tm_corpus_clean) # Notice How A Ton of Characters Are Now Gone?</cod
 ## Content:  chars: 34</code></pre>
 <p><br></p>
 </div>
-<div id="using-quanteda" class="section level4">
-<h4>Using <code>quanteda</code></h4>
+<div id="using-quanteda" class="section level3">
+<h3>Using <code>quanteda</code></h3>
 <pre class="r"><code>library(quanteda) # Load Quanteda
 
 texts_with_meta &lt;- tibble(
@@ -260,6 +256,47 @@ summary(quanteda_corpus) # Inspect the Corpus</code></pre>
 ##  sentence_2    10     10         1    Leo 2025-01-02
 ##  sentence_3     9      9         1   Toby 2025-01-03</code></pre>
 </div>
+<div id="example-lies-damn-lies-and-statistics-2000"
+class="section level3">
+<h3>Example: Lies, Damn Lies, and Statistics (2000)</h3>
+<p>Let’s use the same example from the West Wing episode <em>Lies, Damn
+Lies and Statistics</em> (2000). Recall that our data was organized such
+that – for every character we care about – we have a single dataframe
+listing the associated character and their dialogue, as well as other
+information related to word count and dialogue order throughout the
+episode.</p>
+<pre class="r"><code>head(damn_lies, 10)</code></pre>
+<pre><code>## # A tibble: 10 × 4
+##    character dialogue                                        id word_count
+##    &lt;chr&gt;     &lt;chr&gt;                                        &lt;int&gt;      &lt;int&gt;
+##  1 DONNA     They got to start the poll, Josh. It&#39;s 7:05.     1          9
+##  2 JOSH      It&#39;s ten to seven.                               2          4
+##  3 DONNA     No, it&#39;s really not.                             3          4
+##  4 JOSH      It&#39;s 7:05?                                       4          2
+##  5 DONNA     Yeah.                                            5          1
+##  6 JOSH      That&#39;s ridiculous.                               6          2
+##  7 DONNA     I&#39;m not making it up.                            7          5
+##  8 JOSH      My watch says ten to seven.                      8          6
+##  9 DONNA     That&#39;s &#39;cause your watch sucks.                  9          5
+## 10 JOSH      My watch is fine.                               10          4</code></pre>
+<p>Let’s use <code>quanteda</code> to construct a corpus from <em>Lies,
+Damn Lies and Statistics</em>:</p>
+<pre class="r"><code>damn_lies_corpus &lt;- quanteda::corpus(damn_lies, text_field = &quot;dialogue&quot;) # Create Corpus (Text = &#39;dialogue&#39;)
+
+summary(damn_lies_corpus[1:10]) # Inspect (Just First Couple of Rows)</code></pre>
+<pre><code>## Corpus consisting of 10 documents, showing 10 documents:
+## 
+##    Text Types Tokens Sentences character id word_count
+##   text1    13     14         2     DONNA  1          9
+##   text2     5      5         1      JOSH  2          4
+##   text3     6      6         1     DONNA  3          4
+##   text4     5      5         1      JOSH  4          2
+##   text5     2      2         1     DONNA  5          1
+##   text6     3      3         1      JOSH  6          2
+##   text7     6      6         1     DONNA  7          5
+##   text8     7      7         1      JOSH  8          6
+##   text9     7      7         1     DONNA  9          5
+##  text10     5      5         1      JOSH 10          4</code></pre>
 </div>
 
 
