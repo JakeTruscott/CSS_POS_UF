@@ -1,0 +1,40 @@
+"0","tm::inspect(tm_corpus_clean)
+"
+"1","<<VCorpus>>
+"
+"1","Metadata:  corpus specific: 0, document level (indexed): 0
+"
+"1","Content:  documents: 3
+"
+"1","
+"
+"1","[[1]]
+"
+"1","<<PlainTextDocument>>
+"
+"1","Metadata:  7
+"
+"1","Content:  chars: 33
+"
+"1","
+"
+"1","[[2]]
+"
+"1","<<PlainTextDocument>>
+"
+"1","Metadata:  7
+"
+"1","Content:  chars: 55
+"
+"1","
+"
+"1","[[3]]
+"
+"1","<<PlainTextDocument>>
+"
+"1","Metadata:  7
+"
+"1","Content:  chars: 34
+"
+"1","
+"

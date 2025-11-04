@@ -3,7 +3,7 @@
     "path": "C:/Users/jaketruscott/Github/CSS_POLS_UF/docs/assets/replication_materials/class_4/code/corpus_creation.Rmd",
     "project_path": "class_4/code/corpus_creation.Rmd",
     "type": "r_markdown",
-    "hash": "4048663616",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1762276821428.0,
@@ -13,15 +13,16 @@
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "21,0",
-        "scrollLine": "0"
+        "cursorPosition": "29,0",
+        "scrollLine": "22",
+        "last_setup_crc32": "90fac88dad7b3d59"
     },
     "folds": "",
-    "lastKnownWriteTime": 1762276956,
+    "lastKnownWriteTime": 1762277770,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1762276956655,
+    "last_content_update": 1762277770667,
     "read_only": false,
     "read_only_alternatives": []
 }

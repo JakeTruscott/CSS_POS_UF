@@ -171,6 +171,95 @@ pre code {
 <hr />
 <div id="corpus-creation" class="section level2">
 <h2>Corpus Creation</h2>
+<p>A <code>corpus</code> is a structured collection of text documents.
+Using packages like <code>quanteda</code> and <code>tm</code>, you can
+create a corpus from raw text data (like a vector of strings or a column
+in a dataframe). Once your text is in a corpus, you can easily perform
+text analysis such as tokenization, creating document-feature matrices,
+and calculating word frequencies.</p>
+<p><br></p>
+<p>Below are two ways to create a corpus in <code>R</code> – I am not
+partial to either, though the latter will be a bit more intuitive (I
+think) for adding metadata. We’ll use the same data for both.</p>
+<p><br></p>
+<div id="using-tm" class="section level4">
+<h4>Using <code>tm</code></h4>
+<pre class="r"><code>library(tm) # Load tm
+
+texts &lt;- c(
+  &quot;The quick brown fox jumps over the lazy dog.&quot;,
+  &quot;Data science is revolutionizing the way we analyze information.&quot;,
+  &quot;Text analysis in R is fun and informative!&quot;
+) # Sample Texts (as vector)
+
+tm_corpus &lt;- tm::VCorpus(VectorSource(texts)) # Create Corpus from texts
+
+tm::inspect(tm_corpus) # Inspect</code></pre>
+<pre><code>## &lt;&lt;VCorpus&gt;&gt;
+## Metadata:  corpus specific: 0, document level (indexed): 0
+## Content:  documents: 3
+## 
+## [[1]]
+## &lt;&lt;PlainTextDocument&gt;&gt;
+## Metadata:  7
+## Content:  chars: 44
+## 
+## [[2]]
+## &lt;&lt;PlainTextDocument&gt;&gt;
+## Metadata:  7
+## Content:  chars: 63
+## 
+## [[3]]
+## &lt;&lt;PlainTextDocument&gt;&gt;
+## Metadata:  7
+## Content:  chars: 42</code></pre>
+<pre class="r"><code>tm_corpus_clean &lt;- tm::tm_map(tm_corpus, content_transformer(tolower)) # Convert All to Lowercase
+tm_corpus_clean &lt;- tm::tm_map(tm_corpus_clean, removePunctuation) # Remove Punctuation
+tm_corpus_clean &lt;- tm::tm_map(tm_corpus_clean, removeNumbers) # Remove Numbers
+tm_corpus_clean &lt;- tm::tm_map(tm_corpus_clean, removeWords, stopwords(&quot;english&quot;)) # Remove English Stopwords
+
+tm::inspect(tm_corpus_clean) # Notice How A Ton of Characters Are Now Gone?</code></pre>
+<pre><code>## &lt;&lt;VCorpus&gt;&gt;
+## Metadata:  corpus specific: 0, document level (indexed): 0
+## Content:  documents: 3
+## 
+## [[1]]
+## &lt;&lt;PlainTextDocument&gt;&gt;
+## Metadata:  7
+## Content:  chars: 33
+## 
+## [[2]]
+## &lt;&lt;PlainTextDocument&gt;&gt;
+## Metadata:  7
+## Content:  chars: 55
+## 
+## [[3]]
+## &lt;&lt;PlainTextDocument&gt;&gt;
+## Metadata:  7
+## Content:  chars: 34</code></pre>
+<p><br></p>
+</div>
+<div id="using-quanteda" class="section level4">
+<h4>Using <code>quanteda</code></h4>
+<pre class="r"><code>library(quanteda) # Load Quanteda
+
+texts_with_meta &lt;- tibble(
+  doc_id = c(&quot;sentence_1&quot;, &quot;sentence_2&quot;, &quot;sentence_3&quot;),
+  text = texts, 
+  author = c(&#39;Josh&#39;, &#39;Leo&#39;, &#39;Toby&#39;),
+  date = as.Date(c(&quot;2025-01-01&quot;, &quot;2025-01-02&quot;, &quot;2025-01-03&quot;))
+) # Create Metadata for Texts (Same as tm example!)
+
+quanteda_corpus &lt;- corpus(texts_with_meta, text_field = &quot;text&quot;)
+
+summary(quanteda_corpus) # Inspect the Corpus</code></pre>
+<pre><code>## Corpus consisting of 3 documents, showing 3 documents:
+## 
+##        Text Types Tokens Sentences author       date
+##  sentence_1    10     10         1   Josh 2025-01-01
+##  sentence_2    10     10         1    Leo 2025-01-02
+##  sentence_3     9      9         1   Toby 2025-01-03</code></pre>
+</div>
 </div>
 
 

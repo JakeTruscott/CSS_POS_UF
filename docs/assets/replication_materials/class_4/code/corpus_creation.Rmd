@@ -19,3 +19,61 @@ library(dplyr); library(ggplot2); library(ggtext); library(cowplot)
 ------------------------------------------------------------------------
 
 ## Corpus Creation
+
+A <code>corpus</code> is a structured collection of text documents. Using packages like <code>quanteda</code> and <code>tm</code>, you can create a corpus from raw text data (like a vector of strings or a column in a dataframe). Once your text is in a corpus, you can easily perform text analysis such as tokenization, creating document-feature matrices, and calculating word frequencies.
+
+<br>
+
+Below are two ways to create a corpus in <code>R</code> -- I am not partial to either, though the latter will be a bit more intuitive (I think) for adding metadata. We'll use the same data for both. 
+
+<br>
+
+#### Using <code>tm</code>
+
+```{r tm, message=FALSE, warning=FALSE}
+
+library(tm) # Load tm
+
+texts <- c(
+  "The quick brown fox jumps over the lazy dog.",
+  "Data science is revolutionizing the way we analyze information.",
+  "Text analysis in R is fun and informative!"
+) # Sample Texts (as vector)
+
+tm_corpus <- tm::VCorpus(VectorSource(texts)) # Create Corpus from texts
+
+tm::inspect(tm_corpus) # Inspect
+
+tm_corpus_clean <- tm::tm_map(tm_corpus, content_transformer(tolower)) # Convert All to Lowercase
+tm_corpus_clean <- tm::tm_map(tm_corpus_clean, removePunctuation) # Remove Punctuation
+tm_corpus_clean <- tm::tm_map(tm_corpus_clean, removeNumbers) # Remove Numbers
+tm_corpus_clean <- tm::tm_map(tm_corpus_clean, removeWords, stopwords("english")) # Remove English Stopwords
+
+tm::inspect(tm_corpus_clean) # Notice How A Ton of Characters Are Now Gone?
+
+```
+<br>
+
+#### Using <code>quanteda</code>
+
+
+
+```{r quanteda, message=FALSE, warning=FALSE}
+library(quanteda) # Load Quanteda
+
+texts_with_meta <- tibble(
+  doc_id = c("sentence_1", "sentence_2", "sentence_3"),
+  text = texts, 
+  author = c('Josh', 'Leo', 'Toby'),
+  date = as.Date(c("2025-01-01", "2025-01-02", "2025-01-03"))
+) # Create Metadata for Texts (Same as tm example!)
+
+quanteda_corpus <- corpus(texts_with_meta, text_field = "text")
+
+summary(quanteda_corpus) # Inspect the Corpus
+
+```
+
+
+
+
