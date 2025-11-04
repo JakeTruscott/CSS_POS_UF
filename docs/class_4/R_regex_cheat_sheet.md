@@ -1,7 +1,7 @@
 ---
 title: "R Regex Cheat Sheet"
-parent: "Intermediate Programming in R"
-nav_order: 4
+parent: "Intro to Text Analysis"
+nav_order: 2
 ---
 
 <style>
