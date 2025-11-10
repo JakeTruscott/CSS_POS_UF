@@ -1,6 +1,6 @@
 ---
-title: "Intro to Text Analysis"
-nav_order: 6
+title: "The Bag of Words"
+nav_order: 7
 has_children: true
 ---
 
@@ -46,26 +46,26 @@ has_children: true
 </style>
 
 
-# Class Four Checklist 
+# Class Five Checklist 
 
 ## Readings
-
-- GSR Ch. 1-4
-- SR Ch. 1
-- R Regex Cheat Sheet
--  Black, R. C., & Spriggs, J. F. (2008). An empirical analysis of the length of US Supreme Court opinions. Hous. L. Rev., 45, 621
-- Denny, M. J., & Spirling, A. (2018). Text preprocessing for unsupervised learning: Why it matters, when it misleads, and what to do about it. Political Analysis, 26(2), 168-189.
+- GSR Ch. 5 & 16
+- SR Ch. 5
+- Grimmer, J., & Stewart, B. M. (2013). Text as data: The promise and pitfalls of automatic content analysis methods for political texts. Political analysis, 21(3), 267-297.
+- <a href="https://www.ibm.com/think/topics/bag-of-words">Additional Explainer Re: Bag of Words (IBM)</a>
 
 
 ## Homework
 
-- Practice Set (Class 4)
+- Practice Set (Class 5)
 
-# Class Four Learning Objectives: 
+# Class Five Learning Objectives: 
 
-- Review Practice Set (Class 3)
-- Text Retrieval & Pre-Processing
-- Corpus Creation
+- Review Class 4 Problem Set
+- Word Counts
+- Tokenization
+- Complexity Reduction
+- Document Feature Matrices (I) 
 
 <br> 
 
