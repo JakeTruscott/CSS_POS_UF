@@ -3,7 +3,7 @@
     "path": "C:/Users/jaketruscott/Github/CSS_POLS_UF/docs/assets/replication_materials/class_5/code/bag_of_words.Rmd",
     "project_path": "class_5/code/bag_of_words.Rmd",
     "type": "r_markdown",
-    "hash": "0",
+    "hash": "1180430177",
     "contents": "",
     "dirty": false,
     "created": 1762791305522.0,
@@ -13,15 +13,16 @@
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "18,19",
-        "scrollLine": "4"
+        "cursorPosition": "141,0",
+        "scrollLine": "142",
+        "last_setup_crc32": "90fac88d1ae29658"
     },
     "folds": "",
-    "lastKnownWriteTime": 1762791357,
+    "lastKnownWriteTime": 1763038621,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1762791357245,
+    "last_content_update": 1763038621434,
     "read_only": false,
     "read_only_alternatives": []
 }

@@ -171,6 +171,153 @@ pre code {
 <hr />
 <div id="the-bag-of-words" class="section level2">
 <h2>The Bag of Words</h2>
+<p>The <b>Bag of Words</b> model draws on a simple premise: the meaning
+or content of a document can be represented by the frequency of the
+words it contains, disregarding grammar, syntax, and word order. Using a
+similar example as <b>GRS</b> (Ch. 5), imagine we wanted to understand
+how <code>military</code> has been evoked across different
+administrations’ State of the Union addresses. In particular, I want to
+compare Presidents Eisenhower – who served as Supreme Commander of
+Allied Forces in WWII – and George H.W. Bush – the last president to see
+active combat (as a Navy pilot in WWII).</p>
+<p>We’ll recover all of their addresses using <code>sotu::()</code> – a
+<code>CRAN</code> package with a repository of all the addresses from
+previous administrations.</p>
+<pre class="r"><code>library(sotu)
+
+sotu_info &lt;-  sotu::sotu_meta %&gt;%
+  filter(president %in% c(&#39;Dwight D. Eisenhower&#39;, &#39;George Bush&#39;)) # Get Info for Eisenhower and H.W. 
+head(sotu_info) # Print Head</code></pre>
+<pre><code>##     X            president year years_active      party sotu_type
+## 1 165 Dwight D. Eisenhower 1953    1953-1957 Republican   written
+## 2 167 Dwight D. Eisenhower 1954    1953-1957 Republican    speech
+## 3 168 Dwight D. Eisenhower 1955    1953-1957 Republican    speech
+## 4 169 Dwight D. Eisenhower 1956    1953-1957 Republican    speech
+## 5 170 Dwight D. Eisenhower 1956    1953-1957 Republican   written
+## 6 171 Dwight D. Eisenhower 1957    1957-1961 Republican    speech</code></pre>
+<pre class="r"><code>indices &lt;- c(sotu_info$X) # Indices to Partition sotu_text 
+
+sotu_eisenhower_bush &lt;- setNames(
+  lapply(seq_len(nrow(sotu_info)), function(i) {
+    cbind(sotu_info[i, ], text = sotu::sotu_text[[indices[i]]])
+  }),
+  paste0(sotu_info$president, &quot; (&quot;, sotu_info$year, &quot;)&quot;)
+) # Nest Each Speech in List
+
+names(sotu_eisenhower_bush) # Print Names</code></pre>
+<pre><code>##  [1] &quot;Dwight D. Eisenhower (1953)&quot; &quot;Dwight D. Eisenhower (1954)&quot;
+##  [3] &quot;Dwight D. Eisenhower (1955)&quot; &quot;Dwight D. Eisenhower (1956)&quot;
+##  [5] &quot;Dwight D. Eisenhower (1956)&quot; &quot;Dwight D. Eisenhower (1957)&quot;
+##  [7] &quot;Dwight D. Eisenhower (1958)&quot; &quot;Dwight D. Eisenhower (1959)&quot;
+##  [9] &quot;Dwight D. Eisenhower (1960)&quot; &quot;Dwight D. Eisenhower (1961)&quot;
+## [11] &quot;George Bush (1989)&quot;          &quot;George Bush (1990)&quot;         
+## [13] &quot;George Bush (1991)&quot;          &quot;George Bush (1992)&quot;</code></pre>
+<pre class="r"><code>military_words_regex &lt;- paste0(&#39;(&#39;, paste(c(&#39;military&#39;, &#39;army&#39;, &#39;navy&#39;, &#39;marines&#39;, &#39;air force&#39;), 
+                                          collapse = &#39;|&#39;), &#39;)&#39;) # &quot;Military&quot; Words Regex 
+
+
+for (speech in 1:length(sotu_eisenhower_bush)){
+  temp_speech &lt;- sotu_eisenhower_bush[[speech]]
+  temp_speech &lt;- data.frame(stringr::str_split(temp_speech$text, pattern = &#39;\\n&#39;)) %&gt;%
+  setNames(&#39;text&#39;) %&gt;%
+  filter(!text == &#39;&#39;) # Grab Speech -- Partition to Sentences 
+  
+  sotu_eisenhower_bush[[speech]]$text &lt;- list(temp_speech) # Append Back to Original
+
+  
+  military_sentences &lt;- temp_speech %&gt;%
+    filter(grepl(military_words_regex, text, ignore.case = T)) # All Sentences w/ &quot;Military&quot; Words
+  
+  sotu_eisenhower_bush[[speech]]$military_text &lt;- list(military_sentences) # Append
+  
+} # Process Speeches &amp; Isolate &quot;Military&quot; Sentences
+
+for (speech in 1:length(sotu_eisenhower_bush)){
+  temp_speech_name &lt;- names(sotu_eisenhower_bush[speech])
+  military_sentences &lt;- length(unlist(sotu_eisenhower_bush[[speech]]$military_text))
+  cat(temp_speech_name, &#39; -- &#39;, military_sentences, &#39; Sentences \n&#39;)
+} # Prints # of &quot;Military&quot; Sentences Per Speech</code></pre>
+<pre><code>## Dwight D. Eisenhower (1953)  --  12  Sentences 
+## Dwight D. Eisenhower (1954)  --  15  Sentences 
+## Dwight D. Eisenhower (1955)  --  17  Sentences 
+## Dwight D. Eisenhower (1956)  --  0  Sentences 
+## Dwight D. Eisenhower (1956)  --  9  Sentences 
+## Dwight D. Eisenhower (1957)  --  8  Sentences 
+## Dwight D. Eisenhower (1958)  --  25  Sentences 
+## Dwight D. Eisenhower (1959)  --  11  Sentences 
+## Dwight D. Eisenhower (1960)  --  6  Sentences 
+## Dwight D. Eisenhower (1961)  --  7  Sentences 
+## George Bush (1989)  --  4  Sentences 
+## George Bush (1990)  --  6  Sentences 
+## George Bush (1991)  --  1  Sentences 
+## George Bush (1992)  --  2  Sentences</code></pre>
+<pre class="r"><code>unlist(sotu_eisenhower_bush[[14]]$military_text) # Bush 1992 -- Print Example</code></pre>
+<pre><code>##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  text1 
+##      &quot;Two years ago, I began planning cuts in military spending that reflected the changes of the new era. But now, this year, with imperial communism gone, that process can be accelerated. Tonight I can tell you of dramatic changes in our strategic nuclear force. These are actions we are taking on our own because they are the right thing to do. After completing 20 planes for which we have begun procurement, we will shut down further production of the B - 2 bombers. We will cancel the small ICBM program. We will cease production of new warheads for our sea-based ballistic missiles. We will stop all new production of the Peacekeeper missile. And we will not purchase any more advanced cruise missiles. &quot; 
+##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  text2 
+## &quot;The Secretary of Defense recommended these cuts after consultation with the Joint Chiefs of Staff. And I make them with confidence. But do not misunderstand me. The reductions I have approved will save us an additional $50 billion over the next 5 years. By 1997, we will have cut defense by 30 percent since I took office. These cuts are deep, and you must know my resolve: This deep, and no deeper. To do less would be insensible to progress, but to do more would be ignorant of history. We must not go back to the days of \&quot;the hollow army.\&quot; We cannot repeat the mistakes made twice in this century when armistice was followed by recklessness and defense was purged as if the world were permanently safe. &quot;</code></pre>
+<pre class="r"><code>military_speeches &lt;- data.frame()
+
+for (i in 1:length(sotu_eisenhower_bush)){
+  temp_military &lt;- unlist(sotu_eisenhower_bush[[i]]$military_text)
+  if (length(temp_military) == 0){
+    next
+  }
+  temp_speech &lt;- names(sotu_eisenhower_bush[i])
+  temp_df &lt;- data.frame(speech = temp_speech, 
+                        military_text = temp_military)
+  military_speeches &lt;- bind_rows(military_speeches, temp_df)
+} # Combine to Single DF
+
+
+military_speeches$president &lt;- ifelse(grepl(&quot;Eisenhower&quot;, military_speeches$speech), 
+                                      &quot;Eisenhower&quot;, &quot;Bush&quot;) # Add President ID
+
+
+reduce_complexity &lt;- function(text){
+  text &lt;- tolower(text) # Lower Case
+  text &lt;- tm::removePunctuation(text) # Punctuation
+  text &lt;- tm::removeNumbers(text) # Numbers
+  text &lt;- removeWords(text, tm::stopwords(&quot;english&quot;)) # Stop Words
+  text &lt;- unlist(stringr::str_split(text, &#39;\\s+&#39;)) # Tokenize 
+  text &lt;- textstem::lemmatize_words(text) # Lemmatize
+  text &lt;- paste(text, collapse = &#39; &#39;) # Re-Append
+  text &lt;- gsub(&quot;\\s{2,}&quot;, &#39; &#39;, text) # 2 or More Spaces --&gt; One Space
+  text &lt;- trimws(text) # White Space
+  return(text)
+} # Function to Process Text for Bag of Words
+
+military_speeches$military_text[1] # Print Regular Text</code></pre>
+<pre><code>## [1] &quot;But the problem of security demands closer cooperation among the nations of Europe than has been known to date. Only a more closely integrated economic and political system can provide the greatly increased economic strength needed to maintain both necessary military readiness and respectable living standards. &quot;</code></pre>
+<pre class="r"><code>reduce_complexity(military_speeches$military_text[1]) # Processed Text Example</code></pre>
+<pre><code>## [1] &quot;problem security demand close cooperation among nation europe know date closely integrate economic political system can provide greatly increase economic strength need maintain necessary military readiness respectable live standard&quot;</code></pre>
+<pre class="r"><code>military_speeches &lt;- military_speeches %&gt;%
+  mutate(military_text_clean = sapply(military_text, reduce_complexity)) # Apply Complexity Reduction
+
+sotu_corpus &lt;- quanteda::corpus(military_speeches, text_field = &quot;military_text_clean&quot;) # Convert to Corpus Object
+
+sotu_tokens &lt;- quanteda::tokens(sotu_corpus) # Recover Tokens from Corpus Object
+
+sotu_dfm &lt;- dfm(sotu_tokens) %&gt;%
+  dfm_trim(min_termfreq = 2)  # Convert to DFM -- Remove Words w/ Less Than 2 Appearances
+
+topfeatures(sotu_dfm, 20) # 20-top Features (Words)</code></pre>
+<pre><code>## military     will  defense     must    force   nation security economic 
+##      132       65       50       44       43       40       38       34 
+##  program    world strength     make continue     year      new    power 
+##       34       32       31       29       28       28       26       24 
+##    peace     need maintain    shall 
+##       24       23       22       22</code></pre>
+<pre class="r"><code>president_dfm &lt;- dfm_group(sotu_dfm, groups = military_speeches$president) # Group DFM by President
+
+# View top words per president
+top_words_president &lt;- quanteda.textstats::textstat_frequency(sotu_dfm, n = 15, groups = military_speeches$president) # Top Words by Admin
+
+
+# Optional: visualize with wordcloud or comparison plot
+quanteda.textplots::textplot_wordcloud(president_dfm, comparison = TRUE, max_words = 100,
+                   color = c(&quot;blue&quot;, &quot;red&quot;))</code></pre>
+<p><img src="bag_of_words_files/figure-html/sotu_example-1.png" width="672" /></p>
 </div>
 
 
