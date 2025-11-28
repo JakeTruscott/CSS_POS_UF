@@ -1,0 +1,34 @@
+---
+title: "Class 5 Problem Set"
+subtitle: "POS6933: Computational Social Science"
+author: "Truscott (Spring 2026)"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = TRUE,
+	warning = TRUE
+)
+library(ggplot2)
+library(dplyr)
+library(cowplot)
+library(stargazer)
+library(doParallel)
+library(parallel)
+library(snow)
+library(tm)
+library(quanteda)
+library(gutenbergr)
+library(stringr)
+
+
+```
+
+------------------------------------------------------------------------
+
+<b>Note</b>: Students should always aim to produce <i>publication-worthy</i> tables and figures. Unless otherwise stated, tables should be rendered using <code>stargazer::()</code>, while figures can be rendered using <code>ggplot2::()</code> or <code>plot()</code>. Regardless, tables and figures should always be presented with necessary formatting -- e.g., (sub)title, axis (variable) labels and titles, a clearly-identifiable legend and key, etc. Problem sets must always be compiled using <code>LaTex</code> or <code>RMarkdown</code> and include the full coding routine (with notes explaining your implementation) used to complete each problem (10pts).
+
+------------------------------------------------------------------------
+

@@ -1,0 +1,155 @@
+---
+  title: "Class 5 Problem Set"
+subtitle: "POS6933: Computational Social Science"
+author: "Truscott (Spring 2026)"
+output: html_document
+---
+  
+  ```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = TRUE,
+  warning = TRUE
+)
+library(ggplot2)
+library(dplyr)
+library(cowplot)
+library(stargazer)
+library(doParallel)
+library(parallel)
+library(snow)
+library(tm)
+library(quanteda)
+library(gutenbergr)
+library(stringr)
+
+
+```
+
+------------------------------------------------------------------------
+  
+  <b>Note</b>: Students should always aim to produce <i>publication-worthy</i> tables and figures. Unless otherwise stated, tables should be rendered using <code>stargazer::()</code>, while figures can be rendered using <code>ggplot2::()</code> or <code>plot()</code>. Regardless, tables and figures should always be presented with necessary formatting -- e.g., (sub)title, axis (variable) labels and titles, a clearly-identifiable legend and key, etc. Problem sets must always be compiled using <code>LaTex</code> or <code>RMarkdown</code> and include the full coding routine (with notes explaining your implementation) used to complete each problem (10pts).
+
+------------------------------------------------------------------------
+  
+  
+  1. Using <code>gutenbergr()</code>, recover the text for H.G. Wells' <em>The War of the Worlds</em> (<code>gutenberger</code> id = 36). Recover the number of total words and unique words found in each chapter (3 pts). 
+
+
+```{r question_one, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+
+war <- gutenbergr::gutenberg_download(36) # Download War of the Worlds
+chapter_ids <-  paste0(as.character(as.roman(1:26)), '.') # Roman Number Chapter IDs
+
+war <- war %>%
+  mutate(chapter_start = ifelse(text %in% chapter_ids, 1, 0),  # Identify Chapter Starts
+         chapter_name = ifelse(chapter_start == 1, paste(text, lead(text)), NA)) %>% # Name Chapters
+  filter(!lag(chapter_start) == 1) %>% # Remove Title Rows
+  tidyr::fill(chapter_name, .direction = 'down') %>% # Assign Chapter Down 
+  filter(!is.na(chapter_name), !text %in% c('', ' '), !chapter_start == 1) %>% # Remove Header, Empty Rows, Chapter Start Row
+  select(-c(chapter_start, gutenberg_id)) 
+
+war <- tibble::as_tibble(
+  war %>%
+  group_by(chapter_name) %>%
+  summarize(text = paste(text, collapse = " ")) %>% 
+  tidytext::unnest_tokens(word, text) %>% 
+  group_by(chapter_name) %>%
+  summarize(
+    word_count = n(),
+    unique_words = n_distinct(word)) %>%
+    rename('Chapter Name' = chapter_name, 
+           'Word Count' = word_count, 
+           'Unique Words' = unique_words) 
+) # As Tibble
+
+stargazer::stargazer(war, type = 'text', summary = F)  
+
+
+```
+
+
+---
+
+2. Using the example from the class notes for <em>Lies, Damn Lies and Statistics</em> (2000), recover a separate script from the second season episode <em>Two Cathedrals</em> (2001) -- considered one of the best television episodes in history and certainly a contributing factor to the show's Emmy win for Best Drama in 2001 (it also won in 2000, and would win again in 2002 and 2003...). The script is conveniently available on the course <a href="https://raw.githubusercontent.com/JakeTruscott/CSS_POS_UF/main/docs/assets/replication_materials/class_4/supplemental_materials/West_Wing_S2_E22.txt">Github</a>. Compile a similar array of summary statistics for Leo, Toby, Josh, C.J., Sam, Charlie, and Bartlet that includes <b>(i)</b> The number of different dialogues offered by each character, <b>(ii)</b> the total number of words, and <b>(iii)</b> the average word length for each piece of dialogue (<em>Note</em>: Do not worry about trying to remove stage and production direction from the script.) (4pts)
+
+
+```{r question_two, eval=FALSE, include=FALSE}
+
+west_wing_script_location <- "https://raw.githubusercontent.com/JakeTruscott/CSS_POS_UF/main/docs/assets/replication_materials/class_4/supplemental_materials/West_Wing_S2_E22.txt"
+
+west_wing <- readLines(west_wing_script_location, warn = FALSE) # Read Txt from GitHub Repo
+character_stage <- unique(west_wing[grepl("^[^a-z]*$", west_wing)])
+character_stage <- character_stage[!character_stage == '']
+characters <- c('Leo', 'Toby', 'Josh', 'C.J.', 'Sam', 'Charlie', 'Bartlet')
+character_regex <- paste0("^(", paste0(toupper(characters), collapse = "|"), ")$")
+
+west_wing <- data.frame(unlist(west_wing)) %>%
+  setNames('text') %>%
+  mutate(character_line = ifelse(stringr::str_detect(text, character_regex), 1, 0), 
+         dialogue_break = ifelse(lead(text) %in% c(character_stage), 1, 0), 
+         empty_row = ifelse(text == '', 1, 0), 
+         first_entry = ifelse(character_line == 1, 1, NA)) %>%
+  tidyr::fill(first_entry, .direction = 'down') %>%
+  filter(!is.na(first_entry)) %>%
+  select(-c(first_entry)) %>%
+  mutate(group = cumsum(character_line == 1)) %>%
+  group_by(group) %>%
+  mutate(to_keep = row_number() < which(empty_row == 1)[1] | is.na(which(empty_row == 1)[1])) %>%
+  ungroup() %>%
+  filter(to_keep) %>%
+  select(text, character_line) %>%
+  mutate(group = cumsum(character_line == 1)) %>%
+  group_by(group) %>%
+  summarise(
+    character = text[character_line == 1][1],
+    dialogue  = paste(text[-1], collapse = " "),
+    .groups = "drop") %>%
+  rename(id = group) %>%
+  mutate(dialogue = gsub("\\[.*?\\]", '', dialogue), # Remove Hard Brackets 
+         dialogue = trimws(dialogue)) %>%
+  select(character, dialogue, id) %>%
+  rowwise() %>%
+  mutate(word_count = stringr::str_count(dialogue, "\\S+")) %>%
+  ungroup() %>%
+  filter(!word_count == 0) 
+
+two_cathedrals <- tibble::as_tibble(
+  west_wing %>%
+    group_by(character) %>%
+    summarise(total_words = sum(word_count), 
+              average_words = round(mean(word_count)), 
+              total_lines = n()) %>%
+    arrange(desc(total_words)) %>%
+    rename(Character = character, 
+           `Total Words` = total_words, 
+           `Average Words` = average_words, 
+           `Total Lines` = total_lines)
+)
+
+stargazer::stargazer(two_cathedrals, type = 'text', summary = F)
+
+```
+
+
+---
+  
+  3. Convert your data from Question Two (<em>Two Cathedrals</em>) to a corpus using <code>quanteda</code>. Make sure you also assign necessary metadata -- specifically character (speaker) and the dialogue id numbers indicating <b>(i)</b> the order in which this dialogue appears in the episode, as well as <b>(ii)</b> which order of dialogue this is for that particular character. Be sure to render a summary of the corpus object using <code>summary(corpus_object)</code> (3 pts).
+
+```{r question_three, eval=FALSE, include=FALSE}
+
+two_cathedrals <- west_wing %>% 
+  group_by(character) %>%
+  mutate(character_dialogue_id = row_number()) %>%
+  rename(episode_dialogue_id = id) %>%
+  select(character, dialogue, character_dialogue_id, episode_dialogue_id)
+
+two_cathedrals_corpus <- quanteda::corpus(two_cathedrals, text_field = 'dialogue')
+
+summary(two_cathedrals_corpus[1:10]) # Print Summary
+
+```
+
+
+--- 
+  
