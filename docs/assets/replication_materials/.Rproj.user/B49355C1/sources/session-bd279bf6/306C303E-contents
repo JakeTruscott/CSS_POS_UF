@@ -1,0 +1,142 @@
+---
+title: "The Bag of Words"
+subtitle: "POS6933: Computational Social Science"
+author: "Truscott (Spring 2026)"
+output:
+  html_document:
+    self_contained: false
+    layout: null
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(warning = FALSE)
+
+library(ggplot2)
+library(dplyr)
+library(cowplot)
+library(stargazer)
+library(doParallel)
+library(parallel)
+library(snow)
+library(tm)
+library(quanteda)
+library(gutenbergr)
+library(stringr)
+
+```
+
+------------------------------------------------------------------------
+
+## The Bag of Words
+
+The <b>Bag of Words</b> model draws on a simple premise: the meaning or content of a document can be represented by the frequency of the words it contains, disregarding grammar, syntax, and word order. Using a similar example as <b>GRS</b> (Ch. 5), imagine we wanted to understand how <code>military</code> has been evoked across different administrations' State of the Union addresses. In particular, I want to compare Presidents Eisenhower -- who served as Supreme Commander of Allied Forces in WWII -- and George H.W. Bush -- the last president to see active combat (as a Navy pilot in WWII). 
+
+We'll recover all of their addresses using <code>sotu::()</code> -- a <code>CRAN</code> package with a repository of all the addresses from previous administrations. 
+
+```{r sotu_example}
+
+library(sotu)
+
+sotu_info <-  sotu::sotu_meta %>%
+  filter(president %in% c('Dwight D. Eisenhower', 'George Bush')) # Get Info for Eisenhower and H.W. 
+head(sotu_info) # Print Head
+indices <- c(sotu_info$X) # Indices to Partition sotu_text 
+
+sotu_eisenhower_bush <- setNames(
+  lapply(seq_len(nrow(sotu_info)), function(i) {
+    cbind(sotu_info[i, ], text = sotu::sotu_text[[indices[i]]])
+  }),
+  paste0(sotu_info$president, " (", sotu_info$year, ")")
+) # Nest Each Speech in List
+
+names(sotu_eisenhower_bush) # Print Names
+
+military_words_regex <- paste0('(', paste(c('military', 'army', 'navy', 'marines', 'air force'), 
+                                          collapse = '|'), ')') # "Military" Words Regex 
+
+
+for (speech in 1:length(sotu_eisenhower_bush)){
+  temp_speech <- sotu_eisenhower_bush[[speech]]
+  temp_speech <- data.frame(stringr::str_split(temp_speech$text, pattern = '\\n')) %>%
+  setNames('text') %>%
+  filter(!text == '') # Grab Speech -- Partition to Sentences 
+  
+  sotu_eisenhower_bush[[speech]]$text <- list(temp_speech) # Append Back to Original
+
+  
+  military_sentences <- temp_speech %>%
+    filter(grepl(military_words_regex, text, ignore.case = T)) # All Sentences w/ "Military" Words
+  
+  sotu_eisenhower_bush[[speech]]$military_text <- list(military_sentences) # Append
+  
+} # Process Speeches & Isolate "Military" Sentences
+
+for (speech in 1:length(sotu_eisenhower_bush)){
+  temp_speech_name <- names(sotu_eisenhower_bush[speech])
+  military_sentences <- length(unlist(sotu_eisenhower_bush[[speech]]$military_text))
+  cat(temp_speech_name, ' -- ', military_sentences, ' Sentences \n')
+} # Prints # of "Military" Sentences Per Speech
+
+unlist(sotu_eisenhower_bush[[14]]$military_text) # Bush 1992 -- Print Example
+
+
+military_speeches <- data.frame()
+
+for (i in 1:length(sotu_eisenhower_bush)){
+  temp_military <- unlist(sotu_eisenhower_bush[[i]]$military_text)
+  if (length(temp_military) == 0){
+    next
+  }
+  temp_speech <- names(sotu_eisenhower_bush[i])
+  temp_df <- data.frame(speech = temp_speech, 
+                        military_text = temp_military)
+  military_speeches <- bind_rows(military_speeches, temp_df)
+} # Combine to Single DF
+
+
+military_speeches$president <- ifelse(grepl("Eisenhower", military_speeches$speech), 
+                                      "Eisenhower", "Bush") # Add President ID
+
+
+reduce_complexity <- function(text){
+  text <- tolower(text) # Lower Case
+  text <- tm::removePunctuation(text) # Punctuation
+  text <- tm::removeNumbers(text) # Numbers
+  text <- removeWords(text, tm::stopwords("english")) # Stop Words
+  text <- unlist(stringr::str_split(text, '\\s+')) # Tokenize 
+  text <- textstem::lemmatize_words(text) # Lemmatize
+  text <- paste(text, collapse = ' ') # Re-Append
+  text <- gsub("\\s{2,}", ' ', text) # 2 or More Spaces --> One Space
+  text <- trimws(text) # White Space
+  return(text)
+} # Function to Process Text for Bag of Words
+
+military_speeches$military_text[1] # Print Regular Text
+
+reduce_complexity(military_speeches$military_text[1]) # Processed Text Example
+
+military_speeches <- military_speeches %>%
+  mutate(military_text_clean = sapply(military_text, reduce_complexity)) # Apply Complexity Reduction
+
+sotu_corpus <- quanteda::corpus(military_speeches, text_field = "military_text_clean") # Convert to Corpus Object
+
+sotu_tokens <- quanteda::tokens(sotu_corpus) # Recover Tokens from Corpus Object
+
+sotu_dfm <- dfm(sotu_tokens) %>%
+  dfm_trim(min_termfreq = 2)  # Convert to DFM -- Remove Words w/ Less Than 2 Appearances
+
+topfeatures(sotu_dfm, 20) # 20-top Features (Words)
+
+president_dfm <- dfm_group(sotu_dfm, groups = military_speeches$president) # Group DFM by President
+
+# View top words per president
+top_words_president <- quanteda.textstats::textstat_frequency(sotu_dfm, n = 15, groups = military_speeches$president) # Top Words by Admin
+
+
+# Optional: visualize with wordcloud or comparison plot
+quanteda.textplots::textplot_wordcloud(president_dfm, comparison = TRUE, max_words = 100,
+                   color = c("blue", "red"))
+
+
+```
