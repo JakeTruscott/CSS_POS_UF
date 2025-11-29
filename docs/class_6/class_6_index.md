@@ -61,8 +61,9 @@ has_children: true
 
 # Class Six Learning Objectives: 
 
-- Document Feature Matrices (Cont.)
-- Similarity & Dictionary Classification 
+- Multinomial Langauge Model
+- Vector Space Model & Similarity
+- Dictionary Methods
 
 <br> 
 
