@@ -30,7 +30,9 @@ library(stringr)
 
 ## Multinomial Language Model
 
-*Definition/primer*
+The multinomial language model is a probabilistic framework used to model the distribution of words in a document or collection of documents. It assumes that each word in a document is drawn independently from a fixed vocabulary according to a categorical distribution -- i.e., in accordance with the <i>Bag of Words</i>, where each word has a certain probability of occurring. The model is ``multinomial'' in that it considers the counts of each word in a document, rather than just the presence or absence of words. Formally, for a document represented as a sequence of word counts, the likelihood of observing the document is given by the multinomial probability mass function (PMF), which combines the factorial of the total word count with the product of the probabilities of each word raised to the power of its observed count. This framework forms the basis for many text modeling techniques, including Naive Bayes classifiers and topic models (which we will explore more this week and next...), and provides a straightforward way to estimate the probability of unseen documents given observed word frequencies.
+
+---
 
 <b>GRS</b> (Ch. 6) uses a simplified three-word vocabulary <code>(cat, dog, fish)</code> and each document only contains a single token (i.e., instance of a type). We are going to retains a similar structure, but add another word to our vocabulary: <br>
 
