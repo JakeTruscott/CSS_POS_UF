@@ -3,7 +3,7 @@
     "path": "C:/Users/jaketruscott/Github/CSS_POLS_UF/docs/assets/replication_materials/class_6/code/multinomial_language_model.Rmd",
     "project_path": "class_6/code/multinomial_language_model.Rmd",
     "type": "r_markdown",
-    "hash": "3488681954",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1764426859821.0,
@@ -13,15 +13,20 @@
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "16,16",
-        "scrollLine": "0"
+        "cursorPosition": "88,2",
+        "scrollLine": "82",
+        "rmdVisualMode": "false",
+        "rmdVisualWrapConfigured": "true",
+        "docOutlineVisible": "1",
+        "rmdVisualCollapsedChunks": "",
+        "rmdVisualModeLocation": "2193:1200"
     },
     "folds": "",
-    "lastKnownWriteTime": 1764426897,
+    "lastKnownWriteTime": 1764433476,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1764426897392,
+    "last_content_update": 1764433476769,
     "read_only": false,
     "read_only_alternatives": []
 }
