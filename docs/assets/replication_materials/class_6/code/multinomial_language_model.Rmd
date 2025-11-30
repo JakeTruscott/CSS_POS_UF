@@ -163,57 +163,6 @@ covariance_wij
 
 Mosteller and Wallace (1963) were able to use basic notions from the <i>Bag of Words</i> and multinomial language models to infer authorship for those disputed papers given variance in the writing styles of each known author. In essence, given variance in the writing styles of Hamilton, Madison, and Jay, we can infer authorship of those without attribution. 
 
-<i>The code below is courtesy of Dr. Joseph Ornstein (UGA)</i>
-
-```{r, federalist}
-
-library(rvest)
-
-page <- read_html('https://www.gutenberg.org/cache/epub/18/pg18-images.html') # Recover HTML of Project Gutenberg Site
-
-chapters <- html_elements(page, '.chapter') # Recover Chapter Elements
-
-text <- html_text2(chapters) # Convert Chapter to Text
-
-
-federalist <- tibble(text) %>%
-  filter(!str_detect(text, 'slightly different version')) %>%
-  mutate(
-    author = str_extract(text, 'HAMILTON AND MADISON|HAMILTON OR MADISON|HAMILTON|MADISON|JAY') %>%
-             str_to_title(),
-    title = str_extract(text, 'No\\. [A-Z].*')
-  )
-
-federalist_corpus <- quanteda::corpus(federalist, text_field = "text")
-
-# 3. Tokenize and create DFM
-federalist_tokens <- quanteda::tokens(federalist_corpus)
-federalist_dfm <- dfm(federalist_tokens) %>%
-  dfm_trim(min_termfreq = 2)
-
-interesting_words <- c('although', 'always', 
-                       'commonly', 'consequently',
-                       'considerable', 'heretofore', 
-                       'upon', 'whilst') # Filter to Interesting Words
-
-
-federalist_dfm <- dfm_select(federalist_dfm, pattern = interesting_words)
-
-# 5. Group by author
-federalist_author_dfm <- dfm_group(federalist_dfm, groups = federalist$author)
-
-# 6. View top words per author (optional)
-top_words_author <- quanteda.textstats::textstat_frequency(federalist_author_dfm, n = 15)
-top_words_author
-
-# 7. Comparison wordcloud (only filtered words)
-quanteda.textplots::textplot_wordcloud(federalist_author_dfm,
-                                       comparison = TRUE,
-                                       max_words = 100,
-                                       color = c("blue", "red", "green", "orange"))
-
-
-```
 
 
 
