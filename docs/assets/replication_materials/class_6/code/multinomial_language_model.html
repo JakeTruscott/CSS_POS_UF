@@ -175,19 +175,19 @@ pre code {
 model the distribution of words in a document or collection of
 documents. It assumes that each word in a document is drawn
 independently from a fixed vocabulary according to a categorical
-distribution – i.e., in accordance with the <i>Bag of Words</i>, where
-each word has a certain probability of occurring. The model is
-``multinomial’’ in that it considers the counts of each word in a
-document, rather than just the presence or absence of words. Formally,
-for a document represented as a sequence of word counts, the likelihood
-of observing the document is given by the multinomial probability mass
-function (PMF), which combines the factorial of the total word count
-with the product of the probabilities of each word raised to the power
-of its observed count. This framework forms the basis for many text
-modeling techniques, including Naive Bayes classifiers and topic models
-(which we will explore more this week and next…), and provides a
-straightforward way to estimate the probability of unseen documents
-given observed word frequencies.</p>
+distribution – i.e., in accordance with the <i>Bag of Words</i>
+approach, where each word has a certain probability of occurring. The
+model is <i>multinomial</i> in that it considers the counts of each word
+in a document, rather than just the presence or absence of words.
+Formally, for a document represented as a sequence of word counts, the
+likelihood of observing the document is given by the multinomial
+probability mass function (PMF), which combines the factorial of the
+total word count with the product of the probabilities of each word
+raised to the power of its observed count. This framework forms the
+basis for many text modeling techniques, including Naive Bayes
+classifiers and topic models (which we will explore more this week and
+next…), and provides a straightforward way to estimate the probability
+of unseen documents given observed word frequencies.</p>
 <hr />
 <p><b>GRS</b> (Ch. 6) uses a simplified three-word vocabulary
 <code>(cat, dog, fish)</code> and each document only contains a single
@@ -257,6 +257,133 @@ p(\texttt{H,H,T,N} \mid \mu) =
 \]</span> <span class="math display">\[
 p(H,H,T,N \mid \mu) \approx 0.0486
 \]</span></p>
+<hr />
+<p>As <b>GRS</b> (Ch.6) also note, the advantage of specifying a
+probability model is it accompanies a set of known results that are a
+consequence of the modeling assumptions – e.g., expectation, variance,
+and covariance.</p>
+<p><span class="math display">\[
+\text{Expected Number of Times Word } j \text{ appears in Document } i
+\]</span> <span class="math display">\[
+E[\mathbf{W_{ij}}] = M_i\mu_j
+\]</span> <br> <span class="math display">\[
+\text{Variance of the count of word } j \text{ in Document } i
+\]</span></p>
+<p><span class="math display">\[
+\text{Var}(\mathbf{W}_{ij{}}) = M_i\mu_j(1-\mu_j)
+\]</span> <br> <span class="math display">\[
+\text{Covariance of the count of word } j \text{ given word } k  \text{
+in Document } i; j \neq k
+\]</span> <span class="math display">\[
+\text{Cov}(\mathbf{W}_ij, \mathbf{W}_ik) = -M_i\mu_u\mu_j
+\]</span> <br></p>
+<p>Putting it all together…</p>
+<pre class="r"><code>mu &lt;- c(hamburger = 0.3,
+        salad     = 0.25,
+        taco      = 0.15,
+        nuggets   = 0.3)  # Mu (Probs)
+
+M &lt;- 4  # Document length (number of tokens)
+
+
+expectation_wij &lt;- M * mu # i.e., If I repeatedly generated documents of length M from mu, this is the average number of times each word would appear.
+
+expectation_wij</code></pre>
+<pre><code>## hamburger     salad      taco   nuggets 
+##       1.2       1.0       0.6       1.2</code></pre>
+<pre class="r"><code>variance_wij &lt;- M * mu * (1 - mu) # i.e., How much the count of each word bounces around from document to document -- Does it show up a lot (1), never (0), or 50/50 (0.5)? 
+
+variance_wij</code></pre>
+<pre><code>## hamburger     salad      taco   nuggets 
+##      0.84      0.75      0.51      0.84</code></pre>
+<pre class="r"><code>covariance_wij &lt;- -M * (mu %o% mu)  # i.e., How much is the variance of one word related to another? We use off-diagonal elements -- how counts of *different* words move together (all sum to M!)
+
+
+diag(covariance_wij) &lt;- variance_wij # Note: outer-product for off-diagonal gives us wrong values for diagonal (M * mu_j * mu_k) -- so we replace with true variance for W_ij 
+
+covariance_wij</code></pre>
+<pre><code>##           hamburger salad  taco nuggets
+## hamburger      0.84 -0.30 -0.18   -0.36
+## salad         -0.30  0.75 -0.15   -0.30
+## taco          -0.18 -0.15  0.51   -0.18
+## nuggets       -0.36 -0.30 -0.18    0.84</code></pre>
+<hr />
+<div id="example-unaccredited-federalist-papers" class="section level3">
+<h3>Example: Unaccredited Federalist Papers</h3>
+<p><b>GSR</b> (Ch.6) provide an illustrative example from <a
+href="https://www.jstor.org/stable/pdf/2283270.pdf?casa_token=OoOmdwxe1bUAAAAA:FdpJImtxN8WZtE_qSHo_K4eWTT2QfenadrcR9DuabjyvfLVthPoesEBgQWONCeuJkJaSB3xy-nMqTI8KswcB6XrzUrbFaH-kjJrcvkjw60yF9weCsNU">Mosteller
+and Wallace (1963)</a> concerning the disputed authorship of 12
+Federalist Papers – a collection of 85 essays authored by Alexander
+Hamilton, James Madison, and John Jay between October 1787 and August
+1788 advocating for the ratification of the U.S. Constitution. Since
+each Paper was authored using the same collective pseudonym –
+<i>Publius</i> – authorship was disputed. Or, at least, debate was
+surely had concerning which of the three – Hamilton, Madison, or Jay –
+was a particular Paper’s author. Some were later discovred to have been
+authored jointly. However, by the mid-20th century, it was believed that
+Jay authored (5), Hamilton authored at least (43), and Madison authored
+(14).</p>
+<p>Mosteller and Wallace (1963) were able to use basic notions from the
+<i>Bag of Words</i> and multinomial language models to infer authorship
+for those disputed papers given variance in the writing styles of each
+known author. In essence, given variance in the writing styles of
+Hamilton, Madison, and Jay, we can infer authorship of those without
+attribution.</p>
+<p><i>The code below is courtesy of Dr. Joseph Ornstein (UGA)</i></p>
+<pre class="r"><code>library(rvest)
+
+page &lt;- read_html(&#39;https://www.gutenberg.org/cache/epub/18/pg18-images.html&#39;) # Recover HTML of Project Gutenberg Site
+
+chapters &lt;- html_elements(page, &#39;.chapter&#39;) # Recover Chapter Elements
+
+text &lt;- html_text2(chapters) # Convert Chapter to Text
+
+
+federalist &lt;- tibble(text) %&gt;%
+  filter(!str_detect(text, &#39;slightly different version&#39;)) %&gt;%
+  mutate(
+    author = str_extract(text, &#39;HAMILTON AND MADISON|HAMILTON OR MADISON|HAMILTON|MADISON|JAY&#39;) %&gt;%
+             str_to_title(),
+    title = str_extract(text, &#39;No\\. [A-Z].*&#39;)
+  )
+
+federalist_corpus &lt;- quanteda::corpus(federalist, text_field = &quot;text&quot;)
+
+# 3. Tokenize and create DFM
+federalist_tokens &lt;- quanteda::tokens(federalist_corpus)
+federalist_dfm &lt;- dfm(federalist_tokens) %&gt;%
+  dfm_trim(min_termfreq = 2)
+
+interesting_words &lt;- c(&#39;although&#39;, &#39;always&#39;, 
+                       &#39;commonly&#39;, &#39;consequently&#39;,
+                       &#39;considerable&#39;, &#39;heretofore&#39;, 
+                       &#39;upon&#39;, &#39;whilst&#39;) # Filter to Interesting Words
+
+
+federalist_dfm &lt;- dfm_select(federalist_dfm, pattern = interesting_words)
+
+# 5. Group by author
+federalist_author_dfm &lt;- dfm_group(federalist_dfm, groups = federalist$author)
+
+# 6. View top words per author (optional)
+top_words_author &lt;- quanteda.textstats::textstat_frequency(federalist_author_dfm, n = 15)
+top_words_author</code></pre>
+<pre><code>##        feature frequency rank docfreq group
+## 1         upon       387    1       5   all
+## 2       always        84    2       5   all
+## 3 considerable        59    3       5   all
+## 4 consequently        29    4       4   all
+## 5     commonly        26    5       4   all
+## 6       whilst        24    6       4   all
+## 7     although        17    7       4   all
+## 8   heretofore        15    8       3   all</code></pre>
+<pre class="r"><code># 7. Comparison wordcloud (only filtered words)
+quanteda.textplots::textplot_wordcloud(federalist_author_dfm,
+                                       comparison = TRUE,
+                                       max_words = 100,
+                                       color = c(&quot;blue&quot;, &quot;red&quot;, &quot;green&quot;, &quot;orange&quot;))</code></pre>
+<p><img src="multinomial_language_model_files/figure-html/federalist-1.png" width="672" /></p>
+</div>
 </div>
 
 
