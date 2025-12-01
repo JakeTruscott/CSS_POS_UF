@@ -275,7 +275,7 @@ E[\mathbf{W_{ij}}] = M_i\mu_j
 \text{Covariance of the count of word } j \text{ given word } k  \text{
 in Document } i; j \neq k
 \]</span> <span class="math display">\[
-\text{Cov}(\mathbf{W}_ij, \mathbf{W}_ik) = -M_i\mu_u\mu_j
+\text{Cov}(\mathbf{W}_{ij}, \mathbf{W}_{ik}) = -M_i\mu_j\mu_k
 \]</span> <br></p>
 <p>Putting it all together…</p>
 <pre class="r"><code>mu &lt;- c(hamburger = 0.3,
@@ -326,9 +326,152 @@ Jay authored (5), Hamilton authored at least (43), and Madison authored
 <p>Mosteller and Wallace (1963) were able to use basic notions from the
 <i>Bag of Words</i> and multinomial language models to infer authorship
 for those disputed papers given variance in the writing styles of each
-known author. In essence, given variance in the writing styles of
-Hamilton, Madison, and Jay, we can infer authorship of those without
-attribution.</p>
+known author. Given variance in the writing styles of Hamilton, Madison,
+and Jay – e.g., use of specific terminology, phrasing, etc. – we can
+infer authorship of those without attribution. Most importantly, we
+assume these authors’ behaviors represent distinct data generating
+processes – and, by virtue, unique multinomial distribution and
+generative process <span class="math inline">\(\mu_{H,M,J}\)</span>
+(<i>See <b>GSR</b> Table 6.1</i>). However, we’re again going to add a
+bit to <b>GSR</b>’s example and use an five-word vocabulary</p>
+<p>Let’s start by recovering the <i>Federalist Papers</i>, reducing
+complexity, and isolating to instances where any of the authors use the
+terms: <i>by, man, upon, heretofore</i> or <i>whilst</i>. Doing so, we
+recover the unique counts below:</p>
+<pre class="r"><code>tidy_federalist %&gt;%
+  count(author, word) %&gt;%          
+  tidyr:: pivot_wider(names_from = author,values_from = n, values_fill = 0) %&gt;%
+  { 
+    wide &lt;- .                      
+    bind_rows(
+      wide,
+      wide %&gt;%
+        select(-word) %&gt;%
+        summarise(across(everything(), sum)) %&gt;%
+        mutate(word = &quot;TOTAL&quot;) %&gt;%
+        select(word, everything()))
+  } # Print Counts of Interesting Words</code></pre>
+<pre><code>## # A tibble: 6 × 4
+##   word       Hamilton   Jay Madison
+##   &lt;chr&gt;         &lt;int&gt; &lt;int&gt;   &lt;int&gt;
+## 1 by              861    82     477
+## 2 heretofore       13     1       1
+## 3 man             102     0      17
+## 4 upon            374     1       7
+## 5 whilst            1     0      12
+## 6 TOTAL          1351    84     514</code></pre>
+<p>Producing the following sum of multinomials, where the values x in
+Multinomial(x, <span class="math inline">\(\mu\)</span>) represent the
+count of the observed vocabulary for each prospective author : <span
+class="math display">\[
+\mathbf{W_{Hamilton}} ~ \text{Multinomial}(1351, \mu_H)
+\]</span> <span class="math display">\[
+\mathbf{W_{Madison}} ~ \text{Multinomial}(514, \mu_M)
+\]</span> <span class="math display">\[
+\mathbf{W_{Jay}} ~ \text{Multinomial}(84, \mu_J)
+\]</span></p>
+<p>We then turn towards recovering the unique <span
+class="math inline">\(\mu_H,M,J\)</span> for each author – This example
+recovers Hamilton’s:</p>
+<p><span class="math display">\[
+\mu_{Hamilton} =
+(\frac{861}{861+13+102+374+1},\frac{13}{1351},\frac{102}{1351},
+\frac{374}{1351}, \frac{1}{1351})
+\]</span></p>
+<p><span class="math display">\[
+\mu_{Hamilton} = (0.63, 0.009, 0.07, 0.27, 0.0007)
+\]</span></p>
+<p>The others are:</p>
+<p><span class="math display">\[
+\mu_{Madison} = (0.92, 0.001, 0.033, 0.013, 0.023)
+\]</span> <span class="math display">\[
+\mu_{Jay} = (0.97, 0.01, 0, 0.01, 0)
+\]</span></p>
+<p>We’re going to apply these author-specific <span
+class="math inline">\(\mu\)</span> to two examples – <i>Federalist
+51</i>, where authorship was disputed between Madison and Hamilton prior
+to Mosteller and Wallace (1963), and another where we know authorship
+(as a robustness check).</p>
+<p>For <i>Federalist 51</i>, we know the following counts:</p>
+<ul>
+<li><p>by (23)</p></li>
+<li><p>man (1)</p></li>
+<li><p>upon (0)</p></li>
+<li><p>heretofore (0)</p></li>
+<li><p>whilst (2)</p></li>
+</ul>
+<p>Applying our known <span class="math inline">\(\mu\)</span> for each
+author:</p>
+<p><span class="math display">\[
+p(\mathbf{W_{Fed51}}\mid\mu_{Hamilton}) =
+\frac{26!}{(23!)(1!)(0!)(0!)(2!)}(0.63)^{23}(0.009)^{1}(0.07)^{0}(0.27)^{0}(0.0007)^{2}
+\]</span> <span class="math display">\[
+p(\mathbf{W_{Fed51}}\mid\mu_{Hamilton}) = 0.0000000008346
+\]</span> <span class="math display">\[
+p(\mathbf{W_{Fed51}}\mid\mu_{Madison}) =
+\frac{26!}{(23!)(1!)(0!)(0!)(2!)}(0.92)^{23}(0.001)^{1}(0.033)^{0}(0.013)^{0}(0.023)^{2}
+\]</span> <span class="math display">\[
+p(\mathbf{W_{Fed51}}\mid\mu_{Madison}) = 0.00055692
+\]</span> <span class="math display">\[
+p(\mathbf{W_{Fed51}}\mid\mu_{Jay}) =
+\frac{26!}{(23!)(1!)(0!)(0!)(2!)}(0.97)^{23}(0.01)^{1}(0)^{0}(0.01)^{0}(0)^{2}
+\]</span></p>
+<p><span class="math display">\[
+p(\mathbf{W_{Fed51}}\mid\mu_{Jay}) = 0
+\]</span></p>
+<p>Voilà – matching the academic consensus, our results tell us that
+James Madison was the most likely author of <i>Federalist 51</i>.
+However, a primary concern that may emerge is that, while the
+probability of John Jay authoring is very low, our results effectively
+say it is impossible because he did not record <i>whilst</i> or
+<i>man</i> in any of the <i>Federalist Papers</i>. We can do better by
+regularizing our estimates – i.e., adding a small positive number to
+each vector to encode the possibility that (let’s say) Jay might someday
+use those words.</p>
+<p>For the sake of ease, I am going to replicate our results with
+Laplace smoothing and <code>dmultinom()</code>, where
+federalist_51_vector is the vector of word-specific counts, and the
+author-specific vectors are the <span class="math inline">\(\mu\)</span>
+values for Hamilton, Madison, or Jay plus 1 (such that Jay now records
+at least 1 instance of each word)</p>
+<pre class="r"><code>hamilton_likelihood &lt;- dmultinom(x = federalist_51_vector,
+                                 prob = author_vectors[[&#39;Hamilton&#39;]] + 1)
+
+madison_likelihood &lt;- dmultinom(x = federalist_51_vector,
+                                 prob = author_vectors[[&#39;Madison&#39;]] + 1)
+
+jay_likelihood &lt;- dmultinom(x = federalist_51_vector,
+                                 prob = author_vectors[[&#39;Jay&#39;]] + 1)
+
+
+data.frame(Author = c(&#39;Hamilton&#39;, &#39;Madison&#39;, &#39;Jay&#39;), 
+           Likelihood = c(hamilton_likelihood, madison_likelihood, jay_likelihood))</code></pre>
+<pre><code>##     Author   Likelihood
+## 1 Hamilton 3.845094e-08
+## 2  Madison 2.557079e-02
+## 3      Jay 2.222033e-03</code></pre>
+<pre class="r"><code>madison_likelihood/jay_likelihood # Likelihood Ratio of Madison v. Jay</code></pre>
+<pre><code>## [1] 11.50783</code></pre>
+<pre class="r"><code>madison_likelihood/hamilton_likelihood # Likelihood Ratio of Madison v. Hamilton </code></pre>
+<pre><code>## [1] 665023.7</code></pre>
+<p>So - Yeah, We can be <i>very</i> confident from our niche analysis
+that James Madison was likely the author! But, for the sake of ease,
+let’s do a robustness check using <i>Federalist 10</i> – which we know
+James Madison wrote.</p>
+<pre class="r"><code>  hamilton_likelihood &lt;- dmultinom(x = federalist_10_vector,
+                                 prob = author_vectors[[&#39;Hamilton&#39;]] + 1)
+  
+  madison_likelihood &lt;- dmultinom(x = federalist_10_vector,
+                                 prob = author_vectors[[&#39;Madison&#39;]] + 1)
+  
+  jay_likelihood &lt;- dmultinom(x = federalist_10_vector,
+                                 prob = author_vectors[[&#39;Jay&#39;]] + 1)
+
+  
+  madison_likelihood/jay_likelihood # Madison vs. Jay</code></pre>
+<pre><code>## [1] 18.06388</code></pre>
+<pre class="r"><code>  madison_likelihood/hamilton_likelihood # Madison v. Hamilton</code></pre>
+<pre><code>## [1] 181170.9</code></pre>
 </div>
 </div>
 

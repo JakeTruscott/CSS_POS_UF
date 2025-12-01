@@ -1,0 +1,5 @@
+"0","  temp_vector[match(names(temp_vector), temp_values$word)] <- temp_values$count
+"
+"2","Error in temp_vector[match(names(temp_vector), temp_values$word)] <- temp_values$count : 
+  NAs are not allowed in subscripted assignments
+"

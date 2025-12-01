@@ -32,7 +32,7 @@ library(stringr)
 
 The multinomial language model is a probabilistic framework used to model the distribution of words in a document or collection of documents. It assumes that each word in a document is drawn independently from a fixed vocabulary according to a categorical distribution -- i.e., in accordance with the <i>Bag of Words</i> approach, where each word has a certain probability of occurring. The model is <i>multinomial</i> in that it considers the counts of each word in a document, rather than just the presence or absence of words. Formally, for a document represented as a sequence of word counts, the likelihood of observing the document is given by the multinomial probability mass function (PMF), which combines the factorial of the total word count with the product of the probabilities of each word raised to the power of its observed count. This framework forms the basis for many text modeling techniques, including Naive Bayes classifiers and topic models (which we will explore more this week and next...), and provides a straightforward way to estimate the probability of unseen documents given observed word frequencies.
 
----
+------------------------------------------------------------------------
 
 <b>GRS</b> (Ch. 6) uses a simplified three-word vocabulary <code>(cat, dog, fish)</code> and each document only contains a single token (i.e., instance of a type). We are going to retains a similar structure, but add another word to our vocabulary: <br>
 
@@ -65,7 +65,7 @@ p(\mathbf{W}_i \mid \boldsymbol{\mu})
 = \prod_{j=1}^J \mu_j^{w_{ij}}
 $$
 
-which we can generalize for documents that are longer than one word using the multinomial distribution, where $\mathbf{M}$ is an integer that controls the number of tokens (i.e., length of the document): 
+which we can generalize for documents that are longer than one word using the multinomial distribution, where $\mathbf{M}$ is an integer that controls the number of tokens (i.e., length of the document):
 
 $$
 p(\mathbf{W}_i \mid \boldsymbol{\mu}) = 
@@ -74,7 +74,6 @@ p(\mathbf{W}_i \mid \boldsymbol{\mu}) =
 $$
 
 Supplementing our values for the hypothetical document (<code>hamburger</code>, <code>hamburger</code>, <code>taco</code>, <code>nuggets</code>), we get:
-
 
 $$
 p(\texttt{H,H,T,N} \mid \mu) = 
@@ -88,39 +87,30 @@ $$
 
 $$
 = 12 \cdot 0.00406 \\
-$$
-$$
+$$ $$
 p(H,H,T,N \mid \mu) \approx 0.0486
 $$
 
----
+------------------------------------------------------------------------
 
-As <b>GRS</b> (Ch.6) also note, the advantage of specifying a probability model is it accompanies a set of known results that are a consequence of the modeling assumptions -- e.g., expectation, variance, and covariance. 
+As <b>GRS</b> (Ch.6) also note, the advantage of specifying a probability model is it accompanies a set of known results that are a consequence of the modeling assumptions -- e.g., expectation, variance, and covariance.
 
 $$
 \text{Expected Number of Times Word } j \text{ appears in Document } i 
-$$
-$$
+$$ $$
 E[\mathbf{W_{ij}}] = M_i\mu_j
-$$
-<br> 
-$$ 
+$$ <br> $$ 
 \text{Variance of the count of word } j \text{ in Document } i $$
 
 $$
 \text{Var}(\mathbf{W}_{ij{}}) = M_i\mu_j(1-\mu_j)
-$$
-<br>
-$$
+$$ <br> $$
 \text{Covariance of the count of word } j \text{ given word } k  \text{ in Document } i; j \neq k 
-$$
-$$
-\text{Cov}(\mathbf{W}_ij, \mathbf{W}_ik) = -M_i\mu_u\mu_j
-$$
-<br> 
+$$ $$
+\text{Cov}(\mathbf{W}_{ij}, \mathbf{W}_{ik}) = -M_i\mu_j\mu_k
+$$ <br>
 
-Putting it all together... 
-
+Putting it all together...
 
 ```{r, multinomial_known_results}
 
@@ -152,21 +142,311 @@ covariance_wij
 
 ```
 
-
-
---- 
+------------------------------------------------------------------------
 
 ### Example: Unaccredited Federalist Papers
 
-<b>GSR</b> (Ch.6) provide an illustrative example from [Mosteller and Wallace (1963)](https://www.jstor.org/stable/pdf/2283270.pdf?casa_token=OoOmdwxe1bUAAAAA:FdpJImtxN8WZtE_qSHo_K4eWTT2QfenadrcR9DuabjyvfLVthPoesEBgQWONCeuJkJaSB3xy-nMqTI8KswcB6XrzUrbFaH-kjJrcvkjw60yF9weCsNU) concerning the disputed authorship of 12 Federalist Papers -- a collection of 85 essays authored by Alexander Hamilton, James Madison, and John Jay between October 1787 and August 1788 advocating for the ratification of the U.S. Constitution. Since each Paper was authored using the same collective pseudonym -- <i>Publius</i> -- authorship was disputed. Or, at least, debate was surely had concerning which of the three -- Hamilton, Madison, or Jay -- was a particular Paper's author. Some were later discovred to have been authored jointly. However, by the mid-20th century, it was believed that Jay authored (5), Hamilton authored at least (43), and Madison authored (14). 
+<b>GSR</b> (Ch.6) provide an illustrative example from [Mosteller and Wallace (1963)](https://www.jstor.org/stable/pdf/2283270.pdf?casa_token=OoOmdwxe1bUAAAAA:FdpJImtxN8WZtE_qSHo_K4eWTT2QfenadrcR9DuabjyvfLVthPoesEBgQWONCeuJkJaSB3xy-nMqTI8KswcB6XrzUrbFaH-kjJrcvkjw60yF9weCsNU) concerning the disputed authorship of 12 Federalist Papers -- a collection of 85 essays authored by Alexander Hamilton, James Madison, and John Jay between October 1787 and August 1788 advocating for the ratification of the U.S. Constitution. Since each Paper was authored using the same collective pseudonym -- <i>Publius</i> -- authorship was disputed. Or, at least, debate was surely had concerning which of the three -- Hamilton, Madison, or Jay -- was a particular Paper's author. Some were later discovred to have been authored jointly. However, by the mid-20th century, it was believed that Jay authored (5), Hamilton authored at least (43), and Madison authored (14).
+
+Mosteller and Wallace (1963) were able to use basic notions from the <i>Bag of Words</i> and multinomial language models to infer authorship for those disputed papers given variance in the writing styles of each known author. Given variance in the writing styles of Hamilton, Madison, and Jay -- e.g., use of specific terminology, phrasing, etc. -- we can infer authorship of those without attribution. Most importantly, we assume these authors' behaviors represent distinct data generating processes -- and, by virtue, unique multinomial distribution and generative process $\mu_{H,M,J}$ (<i>See <b>GSR</b> Table 6.1</i>). However, we're again going to add a bit to <b>GSR</b>'s example and use an five-word vocabulary
+
+Let's start by recovering the <i>Federalist Papers</i>, reducing complexity, and isolating to instances where any of the authors use the terms: <i>by, man, upon, heretofore</i> or <i>whilst</i>. Doing so, we recover the unique counts below:
+
+```{r federalist_data_ornstein, message=FALSE, warning=FALSE, include=FALSE}
+
+library(tidyverse)
+library(tidytext)
+library(rvest)
+
+# read the raw HTML
+page <- read_html('https://www.gutenberg.org/cache/epub/18/pg18-images.html')
+
+# get all the chapters
+chapters <- html_elements(page, '.chapter')
+
+# get just the text from each chapter
+text <- html_text2(chapters)
+
+d <- tibble(text)
+
+# get rid of the slightly different version of Federalist 70
+d <- d %>%
+  filter(str_detect(text, 'slightly different version', negate = TRUE))
+
+# create a column for the title and attributed author
+federalist <- d %>%
+  mutate(author = text %>%
+           str_extract('HAMILTON AND MADISON|HAMILTON OR MADISON|HAMILTON|MADISON|JAY') %>%
+           str_to_title(),
+         title = str_extract(text, 'No. [A-Z].*'))
 
 
-Mosteller and Wallace (1963) were able to use basic notions from the <i>Bag of Words</i> and multinomial language models to infer authorship for those disputed papers given variance in the writing styles of each known author. In essence, given variance in the writing styles of Hamilton, Madison, and Jay, we can infer authorship of those without attribution. 
+tidy_federalist <- federalist %>% 
+  # tokenize to the word level
+  unnest_tokens(input = 'text',
+                output = 'word')
+
+# keep only a selection of stop words
+
+interesting_words <- c('by', 'man', 'upon', 'heretofore', 'whilst' )
+
+tidy_federalist_51 <- filter(tidy_federalist, 
+                             word %in% interesting_words) %>%
+  filter(title == 'No. LI.')
 
 
+tidy_federalist_10 <- filter(tidy_federalist, 
+                             word %in% interesting_words) %>%
+  filter(title == 'No. X.')
+
+tidy_federalist <- filter(tidy_federalist,
+                          word %in% interesting_words) %>%
+  filter(author %in% c('Hamilton', 'Jay', 'Madison'))
 
 
+```
+
+```{r federalist}
+
+tidy_federalist %>%
+  count(author, word) %>%          
+  tidyr:: pivot_wider(names_from = author,values_from = n, values_fill = 0) %>%
+  { 
+    wide <- .                      
+    bind_rows(
+      wide,
+      wide %>%
+        select(-word) %>%
+        summarise(across(everything(), sum)) %>%
+        mutate(word = "TOTAL") %>%
+        select(word, everything()))
+  } # Print Counts of Interesting Words
 
 
+```
 
+Producing the following sum of multinomials, where the values x in Multinomial(x, $\mu$) represent the count of the observed vocabulary for each prospective author : $$
+\mathbf{W_{Hamilton}} ~ \text{Multinomial}(1351, \mu_H)
+$$ $$
+\mathbf{W_{Madison}} ~ \text{Multinomial}(514, \mu_M)
+$$ $$
+\mathbf{W_{Jay}} ~ \text{Multinomial}(84, \mu_J)
+$$
+
+We then turn towards recovering the unique $\mu_H,M,J$ for each author -- This example recovers Hamilton's:
+
+$$
+\mu_{Hamilton} = (\frac{861}{861+13+102+374+1},\frac{13}{1351},\frac{102}{1351}, \frac{374}{1351}, \frac{1}{1351})
+$$
+
+$$
+\mu_{Hamilton} = (0.63, 0.009, 0.07, 0.27, 0.0007)
+$$
+
+The others are:
+
+$$
+\mu_{Madison} = (0.92, 0.001, 0.033, 0.013, 0.023)
+$$ $$
+\mu_{Jay} = (0.97, 0.01, 0, 0.01, 0)
+$$
+
+We're going to apply these author-specific $\mu$ to two examples -- <i>Federalist 51</i>, where authorship was disputed between Madison and Hamilton prior to Mosteller and Wallace (1963), and another where we know authorship (as a robustness check).
+
+For <i>Federalist 51</i>, we know the following counts:
+
+-   by (23)
+
+-   man (1)
+
+-   upon (0)
+
+-   heretofore (0)
+
+-   whilst (2)
+
+```{r, federalist_51, eval=FALSE, include=FALSE}
+
+tidy_federalist_51 %>%
+  count(author, word) %>%          
+  tidyr:: pivot_wider(names_from = author,values_from = n, values_fill = 0)  %>%
+  { 
+    wide <- .                      
+    bind_rows(
+      wide,
+      wide %>%
+        select(-word) %>%
+        summarise(across(everything(), sum)) %>%
+        mutate(word = "TOTAL") %>%
+        select(word, everything()))
+  }
+
+```
+
+Applying our known $\mu$ for each author: 
+
+$$
+p(\mathbf{W_{Fed51}}\mid\mu_{Hamilton}) = \frac{26!}{(23!)(1!)(0!)(0!)(2!)}(0.63)^{23}(0.009)^{1}(0.07)^{0}(0.27)^{0}(0.0007)^{2}
+$$
+$$
+p(\mathbf{W_{Fed51}}\mid\mu_{Hamilton}) = 0.0000000008346
+$$
+$$
+p(\mathbf{W_{Fed51}}\mid\mu_{Madison}) = \frac{26!}{(23!)(1!)(0!)(0!)(2!)}(0.92)^{23}(0.001)^{1}(0.033)^{0}(0.013)^{0}(0.023)^{2}
+$$
+$$
+p(\mathbf{W_{Fed51}}\mid\mu_{Madison}) = 0.00055692
+$$
+$$
+p(\mathbf{W_{Fed51}}\mid\mu_{Jay}) = \frac{26!}{(23!)(1!)(0!)(0!)(2!)}(0.97)^{23}(0.01)^{1}(0)^{0}(0.01)^{0}(0)^{2}
+$$
+
+
+$$
+p(\mathbf{W_{Fed51}}\mid\mu_{Jay}) = 0
+$$
+
+Voilà -- matching the academic consensus, our results tell us that James Madison was the most likely author of <i>Federalist 51</i>. However, a primary concern that may emerge is that, while the probability of John Jay authoring is very low, our results effectively say it is impossible because he did not record <i>whilst</i> or <i>man</i> in any of the <i>Federalist Papers</i>. We can do better by regularizing our estimates -- i.e., adding a small positive number to each vector to encode the possibility that (let's say) Jay might someday use those words. 
+
+For the sake of ease, I am going to replicate our results with Laplace smoothing and <code>dmultinom()</code>, where federalist_51_vector is the vector of word-specific counts, and the author-specific vectors are the $\mu$ values for Hamilton, Madison, or Jay plus 1 (such that Jay now records at least 1 instance of each word)
+
+
+```{r federalist_51_laplace_setup, include=FALSE}
+
+federalist_51_counts <- tidy_federalist_51 %>%
+  mutate(word = factor(word)) %>% 
+  count(word, .drop = FALSE) %>%
+  setNames(c('word', 'count'))
+
+federalist_51_vector <- rep(0, length(interesting_words)) 
+names(federalist_51_vector) <- interesting_words
+
+for (i in 1:nrow(federalist_51_counts)){
+  temp_row <- federalist_51_counts[i,]
+  federalist_51_vector[[as.character(temp_row$word)]] <- temp_row$count
+}
+
+author_vectors <- list()
+author_tidy_federalis <- tidy_federalist %>%
+  count(author, word) %>%          
+  tidyr:: pivot_wider(names_from = author,values_from = n, values_fill = 0) %>%
+  { 
+    wide <- .                      
+    bind_rows(
+      wide,
+      wide %>%
+        select(-word) %>%
+        summarise(across(everything(), sum)) %>%
+        mutate(word = "TOTAL") %>%
+        select(word, everything()))
+  } # Print Counts of Interesting Words
+
+
+for (i in c('Hamilton', 'Madison', 'Jay')){
+  
+  temp_federalist_51_vector <- rep(0, length(interesting_words)) 
+  names(temp_federalist_51_vector) <- interesting_words
+  temp_values <- tidy_federalist %>%
+  filter(author == i) %>%
+  count(author, word) %>%          
+  tidyr:: pivot_wider(names_from = author,values_from = n, values_fill = 0) %>%
+  setNames(c('word', 'count')) 
+  temp_vector <- temp_federalist_51_vector
+  temp_vector[match(temp_values$word, names(temp_vector))] <- temp_values$count
+
+  
+  author_vectors[[as.character(i)]] <- temp_vector
+  
+}
+
+```
+
+```{r federalist_51_laplace}
+
+hamilton_likelihood <- dmultinom(x = federalist_51_vector,
+                                 prob = author_vectors[['Hamilton']] + 1)
+
+madison_likelihood <- dmultinom(x = federalist_51_vector,
+                                 prob = author_vectors[['Madison']] + 1)
+
+jay_likelihood <- dmultinom(x = federalist_51_vector,
+                                 prob = author_vectors[['Jay']] + 1)
+
+
+data.frame(Author = c('Hamilton', 'Madison', 'Jay'), 
+           Likelihood = c(hamilton_likelihood, madison_likelihood, jay_likelihood))
+
+madison_likelihood/jay_likelihood # Likelihood Ratio of Madison v. Jay
+madison_likelihood/hamilton_likelihood # Likelihood Ratio of Madison v. Hamilton 
+
+
+```
+So - Yeah, We can be <i>very</i> confident from our niche analysis that James Madison was likely the author! But, for the sake of ease, let's do a robustness check using <i>Federalist 10</i> -- which we know James Madison wrote. 
+
+```{r federalist_10_laplace_setup, include=FALSE}
+
+federalist_10_counts <- tidy_federalist_10 %>%
+  mutate(word = factor(word)) %>% 
+  count(word, .drop = FALSE) %>%
+  setNames(c('word', 'count'))
+
+federalist_10_vector <- rep(0, length(interesting_words)) 
+names(federalist_10_vector) <- interesting_words
+
+for (i in 1:nrow(federalist_10_counts)){
+  temp_row <- federalist_10_counts[i,]
+  federalist_10_vector[[as.character(temp_row$word)]] <- temp_row$count
+}
+
+author_vectors <- list()
+author_tidy_federalist <- tidy_federalist %>%
+  count(author, word) %>%          
+  tidyr:: pivot_wider(names_from = author,values_from = n, values_fill = 0) %>%
+  { 
+    wide <- .                      
+    bind_rows(
+      wide,
+      wide %>%
+        select(-word) %>%
+        summarise(across(everything(), sum)) %>%
+        mutate(word = "TOTAL") %>%
+        select(word, everything()))
+  } # Print Counts of Interesting Words
+
+
+for (i in c('Hamilton', 'Madison', 'Jay')){
+  
+  temp_federalist_10_vector <- rep(0, length(interesting_words)) 
+  names(temp_federalist_10_vector) <- interesting_words
+  temp_values <- tidy_federalist %>%
+  filter(author == i) %>%
+  count(author, word) %>%          
+  tidyr:: pivot_wider(names_from = author,values_from = n, values_fill = 0) %>%
+  setNames(c('word', 'count')) 
+  temp_vector <- temp_federalist_10_vector
+  temp_vector[match(temp_values$word, names(temp_vector))] <- temp_values$count
+
+  
+  author_vectors[[as.character(i)]] <- temp_vector
+  
+}
+
+```
+
+```{r, federalist_10}
+
+  hamilton_likelihood <- dmultinom(x = federalist_10_vector,
+                                 prob = author_vectors[['Hamilton']] + 1)
+  
+  madison_likelihood <- dmultinom(x = federalist_10_vector,
+                                 prob = author_vectors[['Madison']] + 1)
+  
+  jay_likelihood <- dmultinom(x = federalist_10_vector,
+                                 prob = author_vectors[['Jay']] + 1)
+
+  
+  madison_likelihood/jay_likelihood # Madison vs. Jay
+  madison_likelihood/hamilton_likelihood # Madison v. Hamilton
+
+```
 
