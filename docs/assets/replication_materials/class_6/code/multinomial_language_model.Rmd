@@ -454,3 +454,37 @@ Same confidence!
 
 ---
 
+### Dirichlet Distribution (Briefly)
+
+We are going to spend much more time on the <b>Dirchlet Distribution</b> when we discuss topic models, but let's briefly discuss this distribution as an alternative to Laplace smoothing. Recall that Laplace smoothing effectively just adds psuedo-data (a positive integer as a constant) to $\mu$ in order to alleviate concerns where authors simply never employed certain terms in the vocabulary (thus rendering the authorship attribution to 0). The Dirichlet distribution represents a probability distribution over a $k$-dimensional simplex -- the set of all non-negative vectors that sum to one. A draw from the distribution gives you an entire set of probabilities for a multinomial -- instead of fixing those probabilities, the Dirichlet treats them as random and allows uncertainty about how categories are mixed. In essence, the Dirichlet distribution is not a distribution over counts or single outcomes — it is a distribution over the probability vectors that generate those outcomes.
+
+<b>In Short -- </b> Instead of just adding a small number to every category like Laplace smoothing, the Dirichlet lets us treat the probabilities themselves as random (though we can choose what $\sigma_k$ is for a given value in the vector). It gives us a whole set of possible probability values at once. The hyperparameter α controls whether the probabilities are mostly focused on one category or spread more evenly across all categories.
+
+ $$ \alpha < 1 \rightarrow \mu \text{ vectors lie near the corners of the simplex}$$
+ $$ \alpha = 1 \rightarrow \mu \text{ vectors are uniformly distributed (equally likely)}$$
+ $$ \alpha > 1 \rightarrow \mu \text{ vectors are balanced across categories and cluster toward the center of the simplex}$$
+
+Returning to the <i>Federalist Paper</i> example from <b>GSR</b>, we too will address the disputed paper with the addition of the Dirichlet distribution, rather than relying on Laplace smoothing to regularize. Using our intuition, let's assume that we expect <i>by</i> and <i>upon</i> to feature most prominently -- so we assign $\alpha = (2, 1, 1, 2, 1)$, such that: 
+
+
+$$\mu_k \sim \text{ Dirichlet}(\alpha = (2, 1, 1, 2, 1))$$
+$$ W_i\mid\mu,\pi_i \sim \text{ Multinomial}(M_i, \mu\pi_i)  $$
+
+$$ \mu_k\mid\alpha,W_i \sim \text{ Dirichlet}(W_i, + \alpha) $$
+
+$$ E[\mu_k\mid\alpha,W_i] \sim \frac{W_i,+\alpha}{\sum^j_{j=1}(W_i,j + \alpha_j)} $$
+
+Looking at Hamilton...
+
+$$ \hat{\mu}_{Hamilton} = (\frac{861 + 2}{861+13+102+374+1 + (2 + 1 + 1 + 2 + 1)}, \frac{13+1}{1358}, \frac{102+1}{1358}, \frac{374+2}{1358}, \frac{1+1}{1358})  $$
+$$ \hat{\mu}_{Hamilton} = (0.63, 0.01, 0.07, 0.27, 0.001)$$
+
+Notice how these probabilities in $\hat{\mu}_{Hamilton}$ are not entirely dissimilar from our original probabilities -- the ones with the most discernible change are those with very low probabilities to begin with! 
+
+
+$$
+p(\mathbf{W_{Fed51}\mid\hat{\mu}_{Hamilton}}) = \frac{26!}{(23!)(1!)(0!)(0!)(2!)}(0.63)^{23}(0.01)^{1}(0.07)^{0}(0.27)^{0}(0.001)^{2}
+$$
+Which results in a probability of authorship greater than the original (though still discernbily lesser than what we'd get for Madison!)
+
+$$ p(\mathbf{W_{Fed51}\mid\hat{\mu}_{Hamilton}}) = 0.00000000186 $$ 
