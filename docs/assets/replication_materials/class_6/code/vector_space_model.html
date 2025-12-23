@@ -274,13 +274,13 @@ between them. This approach will be of particular importance once we
 move to sentence embeddings and analyze similarity in a high-dimensional
 space. For now, let’s just recognize that there are a handful of useful
 measures (e.g., Euclidean and Manhattan distances) that aren’t entirely
-dissimilar from subtracting the normalized cosine similarity from 1 –
-i.e., Cosine <i>Distance</i>. Yet, it’s important to emphasize that
-while we’re likely to get similar values – or, at least, values
-representing substantively similar inferences, the choice of which
-distance metric to use is generally a modeling choice, not a
-mathematical one. Let’s use our values from Hamilton and the disputed
-<i>Federalist Paper</i> as an example:</p>
+dissimilar from subtracting normalized cosine similarity from 1 (i.e.,
+Cosine <i>Distance</i>). Yet, it’s important to emphasize that although
+we’re likely to get similar values – or, at least, values representing
+substantively similar inferences, the choice of which distance metric to
+use is generally a modeling choice (i.e., what we want similarity to
+mean), not a mathematical one. Let’s use our values from Hamilton and
+the disputed <i>Federalist Paper</i> as an example:</p>
 <p><br> <b>Euclidean</b> <span class="math display">\[
 ||\mathbf{W}_{Hamilton}|| - ||\mathbf{W}_{Disputed}|| =
 \sqrt{\sum^j_{j=1}(W_{Hamilton}-W_{Disputed})^2}
@@ -288,9 +288,9 @@ mathematical one. Let’s use our values from Hamilton and the disputed
 ||\mathbf{W}_{Hamilton}|| - ||\mathbf{W}_{Disputed}|| = \sqrt{838^2 +
 12^2 + 102^2 + 374^2 + (-1)^2} \\ = \sqrt{852,669} \\\quad \approx
 923.36
-\]</span> <br> <b>Minkowski</b> (<span class="math inline">\(p\)</span>
-=3 &amp; <span class="math inline">\(j\)</span> = size of vocabulary)
-<span class="math display">\[s
+\]</span> <br> <b>Minkowski</b> (<span class="math inline">\(p =
+3\)</span> &amp; <span class="math inline">\(j =\)</span> size of
+vocabulary) <span class="math display">\[
 d_p(W_{Hamilton}, W_{Disputed}) = (\sum^j_{j=1}|W_{Hamilton,j} -
 W_{Disputed, j}|^p)^{\frac{1}{p}}
 \]</span> <span class="math display">\[
@@ -300,9 +300,83 @@ d_p(W_{Hamilton}, W_{Disputed}) = (|838|^3 + |12|^3 + |102|^3 + |374|^3
 \]</span></p>
 <p><br> <b>Manhattan</b> (Just Sum of Absolute Values because <span
 class="math inline">\(p\)</span> = 1) <span class="math display">\[
-||\mathbf{W}_{Hamilton}|| - ||\mathbf{W}_{Disputed}|| = |838| + |12| +
-|102| + |374| + |(-1)| \\ = \quad \approx 1,327
+d_p(W_{Hamilton}, W_{Disputed}) = |838| + |12| + |102| + |374| + |(-1)|
+\\ \quad \approx 1,327
 \]</span></p>
+<p><br></p>
+</div>
+<div id="tf-idf-weighting" class="section level3">
+<h3>TF-IDF Weighting</h3>
+<p>Universities frequently employ a point-based or index system for
+deciding admission to its graduate and undergraduate programs.
+Notwithstanding recent Supreme Court decisions (particularly those
+concerning the consideration of race and ethnicity), universities
+frequently employ these systems because they allow admissions committees
+to evaluate applicants in a structured, comparative manner while still
+preserving a degree of discretion. By converting heterogeneous
+credentials – such as grades, standardized test scores, coursework
+rigor, extracurricular involvement, and personal statements – into a
+common metric, point-based or index systems facilitate consistency and
+transparency in large-scale admissions processes. The central problem in
+evaluating large numbers of applicants is not merely identifying which
+attributes are present, but determining which attributes are
+informative. Some features appear in nearly every application – e.g.,
+completion of basic coursework or participation in common
+extracurricular activities – and therefore do little to distinguish
+among candidates. Other features are rarer or context-specific as a
+result may convey substantially more information about an applicant’s
+preparation or fit. Treating all attributes as equally important risks
+overvaluing ubiquitous signals while under-weighting those that are
+genuinely discriminating.</p>
+<p>This central problem is not far removed from ours. Given an expansive
+vocabulary, how should we discriminate between two documents? Up to this
+point, we have effectively assumed that – after removing stopwords and
+other terms known to contribute little substantive information – all
+remaining words should be treated as equally informative. Under this
+assumption, similarity is driven by word co-occurrence, while difference
+is driven by word discrimination. Yet this approach risks two opposing
+errors. On the one hand, it may overstate the importance of documents
+that share a large number of common terms drawn from a high-frequency
+vocabulary. On the other, it may exaggerate differences based on the
+presence of a single word (or small series of words) that appears in
+only one document but carries little intrinsic meaning or substantive
+relevance.</p>
+<p>Directly prescribing informative value to specific words constitutes
+a weighting scheme, whereby the mathematics underlying similarity or
+distance calculations assigns unequal numerical importance to terms in
+the vocabulary based on their assumed informational content. As
+<b>GSR</b> note, “the common theme in computational linguistics
+literature is that the greatest signals from words are those in the
+<i>Goldilocks region</i> – neither too rare nor too frequent.” Very
+common words are glue that hold documents together – but they generally
+do a poor job at telling you what a document is about. Rare words
+certainly help you discriminate across documents, but their infrequency
+makes it difficult to assess any generalizations. The result is in the
+middle – which we can explore using <b>term frequency inverse frequency
+weighting</b> or <b>TF-IDF</b>.</p>
+<p>TF–IDF attempts to prioritize terms that are frequent within a given
+document but rare across the corpus as a whole. After computing a DFM,
+tf–idf rescales each term by its inverse document frequency, which
+down-weights terms that appear in many documents. As a result, words
+that occur frequently in individual documents while remaining relatively
+uncommon in the broader corpus receive greater weight. Terms that
+satisfy both conditions occupy a “Goldilocks” zone, while terms that
+violate both conditions are penalized. As the book notes, there are a
+handful of ways to specify tf-idf, though we will use:</p>
+<p><span class="math display">\[
+W^{tf-idf}_{ij} = W_{ij} * log\frac{N}{n_j}
+\]</span> Where…</p>
+<p><span class="math display">\[
+N = \text{Number of Documents in Corpus} \\
+n_j = \text{Number of Documents Containing Word } j \\
+W_{ij} = \text{Word Count} \\
+log\frac{N}{n_j} = \text{Penalty for Frequent Words} \\
+\]</span></p>
+<p><b>Hamilton (No TF-IDF) </b></p>
+<p><img src="vector_space_model_files/figure-html/hamilton_reg-1.png" width="672" /></p>
+<p><br> <b>Hamilton (TF-IDF)</b></p>
+<p><img src="vector_space_model_files/figure-html/hamilton_tfidf-1.png" width="672" /></p>
+<p><br></p>
 </div>
 </div>
 

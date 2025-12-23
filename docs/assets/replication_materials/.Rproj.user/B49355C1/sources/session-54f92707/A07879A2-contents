@@ -103,7 +103,7 @@ Wow! Even though cosine similarity gave much more credence to the idea that Hami
 
 ### Measuring Distance
 
-Another way to measure the (dis)similarity between two documents is to imagine them as two points in space and calculating the distance between them. This approach will be of particular importance once we move to sentence embeddings and analyze similarity in a high-dimensional space. For now, let's just recognize that there are a handful of useful measures (e.g., Euclidean and Manhattan distances) that aren't entirely dissimilar from subtracting the normalized cosine similarity from 1 -- i.e., Cosine <i>Distance</i>. Yet, it's important to emphasize that while we're likely to get similar values -- or, at least, values representing substantively similar inferences, the choice of which distance metric to use is generally a modeling choice, not a mathematical one. Let's use our values from Hamilton and the disputed <i>Federalist Paper</i> as an example: 
+Another way to measure the (dis)similarity between two documents is to imagine them as two points in space and calculating the distance between them. This approach will be of particular importance once we move to sentence embeddings and analyze similarity in a high-dimensional space. For now, let's just recognize that there are a handful of useful measures (e.g., Euclidean and Manhattan distances) that aren't entirely dissimilar from subtracting normalized cosine similarity from 1 (i.e., Cosine <i>Distance</i>). Yet, it's important to emphasize that although we're likely to get similar values -- or, at least, values representing substantively similar inferences, the choice of which distance metric to use is generally a modeling choice (i.e., what we want similarity to mean), not a mathematical one. Let's use our values from Hamilton and the disputed <i>Federalist Paper</i> as an example: 
 
 <br>
 <b>Euclidean</b>
@@ -114,8 +114,8 @@ $$
 ||\mathbf{W}_{Hamilton}|| - ||\mathbf{W}_{Disputed}|| = \sqrt{838^2 + 12^2 + 102^2 + 374^2 + (-1)^2} \\ = \sqrt{852,669} \\\quad \approx 923.36
 $$
 <br>
-<b>Minkowski</b> ($p$ =3 \& $j$ = size of vocabulary)
-$$s
+<b>Minkowski</b> ($p = 3$ \& $j =$ size of vocabulary)
+$$
 d_p(W_{Hamilton}, W_{Disputed}) = (\sum^j_{j=1}|W_{Hamilton,j} - W_{Disputed, j}|^p)^{\frac{1}{p}}
 $$
 $$
@@ -126,5 +126,110 @@ $$
 <br>
 <b>Manhattan</b> (Just Sum of Absolute Values because $p$ = 1)
 $$
-||\mathbf{W}_{Hamilton}|| - ||\mathbf{W}_{Disputed}|| = |838| + |12| + |102| + |374| + |(-1)| \\ = \quad \approx 1,327
+d_p(W_{Hamilton}, W_{Disputed}) = |838| + |12| + |102| + |374| + |(-1)| \\ \quad \approx 1,327
 $$
+
+<br>
+
+### TF-IDF Weighting
+
+Universities frequently employ a point-based or index system for deciding admission to its graduate and undergraduate programs. Notwithstanding recent Supreme Court decisions (particularly those concerning the consideration of race and ethnicity), universities frequently employ these systems because they  allow admissions committees to evaluate applicants in a structured, comparative manner while still preserving a degree of discretion. By converting heterogeneous credentials -- such as grades, standardized test scores, coursework rigor, extracurricular involvement, and personal statements -- into a common metric, point-based or index systems facilitate consistency and transparency in large-scale admissions processes. The central problem in evaluating large numbers of applicants is not merely identifying which attributes are present, but determining which attributes are informative. Some features appear in nearly every application -- e.g., completion of basic coursework or participation in common extracurricular activities -- and therefore do little to distinguish among candidates. Other features are rarer or context-specific as a result may convey substantially more information about an applicant’s preparation or fit. Treating all attributes as equally important risks overvaluing ubiquitous signals while under-weighting those that are genuinely discriminating.
+
+This central problem is not far removed from ours. Given an expansive vocabulary, how should we discriminate between two documents? Up to this point, we have effectively assumed that -- after removing stopwords and other terms known to contribute little substantive information -- all remaining words should be treated as equally informative. Under this assumption, similarity is driven by word co-occurrence, while difference is driven by word discrimination. Yet this approach risks two opposing errors. On the one hand, it may overstate the importance of documents that share a large number of common terms drawn from a high-frequency vocabulary. On the other, it may exaggerate differences based on the presence of a single word (or small series of words) that appears in only one document but carries little intrinsic meaning or substantive relevance. 
+
+Directly prescribing informative value to specific words constitutes a weighting scheme, whereby the mathematics underlying similarity or distance calculations assigns unequal numerical importance to terms in the vocabulary based on their assumed informational content. As <b>GSR</b> note, "the common theme in computational linguistics literature is that the greatest signals from words are those in the <i>Goldilocks region</i> -- neither too rare nor too frequent." Very common words are glue that hold documents together -- but they generally do a poor job at telling you what a document is about. Rare words certainly help you discriminate across documents, but their infrequency makes it difficult to assess any generalizations. The result is in the middle -- which we can explore using <b>term frequency inverse frequency weighting</b> or <b>TF-IDF</b>. 
+
+TF–IDF attempts to prioritize terms that are frequent within a given document but rare across the corpus as a whole. After computing a DFM, tf–idf rescales each term by its inverse document frequency, which down-weights terms that appear in many documents. As a result, words that occur frequently in individual documents while remaining relatively uncommon in the broader corpus receive greater weight. Terms that satisfy both conditions occupy a “Goldilocks” zone, while terms that violate both conditions are penalized. As the book notes, there are a handful of ways to specify tf-idf, though we will use: 
+
+$$
+W^{tf-idf}_{ij} = W_{ij} * log\frac{N}{n_j} 
+$$
+Where...
+
+$$
+N = \text{Number of Documents in Corpus} \\
+n_j = \text{Number of Documents Containing Word } j \\
+W_{ij} = \text{Word Count} \\
+log\frac{N}{n_j} = \text{Penalty for Frequent Words} \\
+$$
+
+
+```{r tidy_federalist, echo=FALSE, message=FALSE, warning=FALSE}
+
+library(tidyverse)
+library(tidytext)
+library(rvest)
+
+# read the raw HTML
+page <- read_html('https://www.gutenberg.org/cache/epub/18/pg18-images.html')
+
+# get all the chapters
+chapters <- html_elements(page, '.chapter')
+
+# get just the text from each chapter
+text <- html_text2(chapters)
+
+d <- tibble(text)
+
+# get rid of the slightly different version of Federalist 70
+d <- d %>%
+  filter(str_detect(text, 'slightly different version', negate = TRUE))
+
+# create a column for the title and attributed author
+federalist <- d %>%
+  mutate(author = text %>%
+           str_extract('HAMILTON AND MADISON|HAMILTON OR MADISON|HAMILTON|MADISON|JAY') %>%
+           str_to_title(),
+         title = str_extract(text, 'No. [A-Z].*'))
+
+
+tidy_federalist <- federalist %>% 
+  # tokenize to the word level
+  unnest_tokens(input = 'text',
+                output = 'word')
+
+tidy_federalist_clean <- tidy_federalist %>%
+  filter(!word %in% stop_words$word) %>%
+  filter(str_detect(word, "[a-z]"))
+
+tf_author <- tidy_federalist_clean %>%
+  count(author, word, sort = TRUE)
+
+# Compute tf-idf
+tfidf_author <- tf_author %>%
+  bind_tf_idf(term = word, document = author, n = n)
+
+top_words <- tfidf_author %>%
+  group_by(author) %>%
+  slice_max(tf_idf, n = 100) %>%  # top 50 words per author
+  ungroup()
+
+top_hamilton <- top_words %>% filter(author == "Hamilton")
+
+
+```
+
+<b>Hamilton (No TF-IDF) </b>
+
+```{r hamilton_reg, echo=FALSE}
+
+wordcloud::wordcloud(words = top_hamilton$word, 
+            freq = top_hamilton$n, 
+          vfont=c("serif","plain"))
+
+```
+
+<br>
+<b>Hamilton (TF-IDF)</b>
+
+```{r, hamilton_tfidf, echo = F}
+
+wordcloud::wordcloud(words = top_hamilton$word, 
+            freq = top_hamilton$tf_idf, 
+          vfont=c("serif","plain"))
+
+```
+
+
+<br>
+
