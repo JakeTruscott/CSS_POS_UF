@@ -49,7 +49,7 @@ has_children: true
 # Class Seven Checklist 
 
 ## Readings
-- **GSR** Ch. 10 & 12-13
+- **GSR** Ch. 11-13
 - **SR** Ch. 6 
 - Valdez, D., Pickett, A. C., & Goodson, P. (2018). Topic modeling: latent semantic analysis for the social sciences. Social Science Quarterly, 99(5), 1665-1679.
 - Rice, D. (2019). Measuring the issue content of Supreme Court opinions. Journal of Law and Courts, 7(1), 107-127.

@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Truscott (Spring 2026)" />
+
+
+<title>Discriminating Words</title>
+
+<script src="discriminating_words_files/header-attrs-2.28/header-attrs.js"></script>
+<script src="discriminating_words_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="discriminating_words_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="discriminating_words_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="discriminating_words_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="discriminating_words_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="discriminating_words_files/navigation-1.1/tabsets.js"></script>
+<link href="discriminating_words_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="discriminating_words_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Discriminating Words</h1>
+<h3 class="subtitle">POS6933: Computational Social Science</h3>
+<h4 class="author">Truscott (Spring 2026)</h4>
+
+</div>
+
+
+<hr />
+<div id="discriminating-words" class="section level2">
+<h2>Discriminating Words</h2>
+<p>Although we won’t spend as much time on this topic as on others this
+week, I want to briefly address the concept of discriminating words,
+which underpins clustering algorithms and topic discovery. As we
+emphasized in last week’s discussion of the disputed <em>Federalist
+Papers</em>, the core goal of text analysis is often to recover and
+interpret the discursive properties of distinct documents – i.e., to
+compare and contrast different documents. In our example, we represented
+the writing styles of Hamilton, Madison, and Jay as unique identifiers
+that could be used to infer authorship for disputed essays. The central
+idea is that each author exhibits distinctive “quarks” in their writing
+style, which can be used to distinguish them – e.g., a disputed document
+that exhibits more features of one style than the others provides a
+signal of its likely author. That exercise touched on a broader concept
+in studies of content analysis – namely, the ability to both make an
+assessment of attribution given variance in behaviors, as well as draw
+other assessments re: association with alternative groups or
+clusters.</p>
+<p>In short, we could assert:</p>
+<ol style="list-style-type: decimal">
+<li><p><em>Federalist 51</em> was most likely written by James Madison
+because his writing style most closely matched the disputed
+essay</p></li>
+<li><p>James Madison’s writing style is more alike to Alexander Hamilton
+than John Jay</p></li>
+<li><p>Alexander Hamilton is more likely to have authored <em>Federalist
+51</em> than John Jay.</p></li>
+</ol>
+<p><span class="math display">\[
+\text{Federalist 51} \ge \text{Madison} &gt; \text{Hamilton} &gt;
+\text{Jay}
+\]</span></p>
+<p>We were able to use individual words to address not only how variance
+in word choice informs us about individual authors and the disputed
+essay(s), but also how it can inform us about these items as
+non-mutually exclusive or discrete groups (or clusters) – ex: political
+parties, authors, etc. The key idea is that the frequency and
+distribution of words carry meaningful information about latent
+categories – i.e., words that appear more frequently in some categories
+(<strong>Discriminating Words</strong>) than others are informative
+signals about that category.</p>
+<p>For example, consider this passage from one of my articles
+<a href="https://www.cambridge.org/core/journals/journal-of-law-and-courts/article/measuring-judicial-ideology-through-text/0E0D78599D82B2A4E94B27B6124C65CC">Measuring
+Judicial Ideology as Text (2025)</a>:</p>
+<blockquote>
+<p>Terminology is an expression of language and language is an
+expression of ideology (Thompson, 1987; Woolard and Schieffelin, 1994).
+The choices made by judges regarding how they express decisions through
+written opinions is thus an expression of preferences, which are shaped
+by both personal inclinations (Segal and Spaeth, 2002), strategic
+machinations (Bailey and Maltzman, 2011; Bonneau et al., 2007), and
+considerations of the perceived audience (Baum, 2009; Romano and Curry,
+2019) (…) Put more simply: the words judges choose matter and are a
+reflection of their own ideological beliefs, which facilitates a
+considerable impact on how we know and speak about the law. An
+illustrative example is the contrasting use of terms such as
+“<strong>healthcare provider</strong>” – a neutral descriptor for
+medical professionals – and “<strong>abortionist</strong>” – a
+perceptively derogatory term endowed with legal significance through
+rulings like <em>Dobbs v. Jackson Women’s Health Organization</em>
+(2022). <strong>Despite serving the same lexical purpose, these terms
+carry distinct ideological meanings.</strong></p>
+</blockquote>
+<p>While sensibly concerning the same topic, the terms <em>healthcare
+provider</em> and <em>abortionist</em> draw from distinct discursive
+frames and connotations, signaling different ideological perspectives
+and shaping how audiences interpret the underlying issue. Moreover,
+rather than just focusing on how groups may use divergent terminology to
+discuss the same concept, we can go even broader to view discriminating
+words as those simply more likely to appear in contextual discussions.
+For instance, if we had to make a list of (5) words most likely to be
+used to describe the policy focuses of Democrats vs. Republicans, we
+might get something like this:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Democrats</th>
+<th align="center">Republicans</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Climate</td>
+<td align="center">Freedom</td>
+</tr>
+<tr class="even">
+<td align="center">Healthcare</td>
+<td align="center">Tax</td>
+</tr>
+<tr class="odd">
+<td align="center">Immigration</td>
+<td align="center">Border</td>
+</tr>
+<tr class="even">
+<td align="center">Justice</td>
+<td align="center">Security</td>
+</tr>
+<tr class="odd">
+<td align="center">Welfare</td>
+<td align="center">Economy</td>
+</tr>
+</tbody>
+</table>
+<p>This is not to say that these words are <u>exclusively</u>
+representative of Democrats <u>or</u>Republicans, but rather that if we
+were to compile all the speeches, policies, and other documents released
+by the parties, we’d find these words most frequently appear – and thus
+discriminate between the parties. For instance, both parties may spend
+time discussing immigration – but Republicans would be more likely than
+Democrats to discuss it in the context of border security.
+Alternatively, both may discuss the economy – although Democrats would
+be more likely to discuss it in the context of Medicaid or other welfare
+programs.</p>
+<div id="calculating-discriminating-words" class="section level3">
+<h3>Calculating Discriminating Words</h3>
+<div id="mutual-information" class="section level4">
+<h4>Mutual Information</h4>
+<p>In essence, mutual information (MI) concerns the amount of
+information one variable provides about another. In our context, assume
+we have two classification labels: <span style="color:red">Red</span>
+and <span style="color:blue">Blue</span>, as well as a tokenized list of
+words sourced from documents published by authors associated with one of
+the two classifications. Here, mutual information helps us disentangle
+which terms best discriminate across the labels, as well as which labels
+best discriminate across the text. If a word and a label are completely
+independent, knowing one informs nothing about the other – so MI will be
+0. Alternatively, if knowing one thing perfectly informs the other, then
+the MI will be high.</p>
+<p><span class="math display">\[
+H(k) = -\pi_k\log_2\pi_k-\pi_{-k}\log_2\pi_{-k,}  \\
+H(k|j) = -\sum_{k,-k}\sum_{j,-j}\pi_{k,j}\log_2\pi_{k,j} \\
+\text{MI}_{kj} = H(k) - H(k|j)
+\]</span></p>
+<p>Where:</p>
+<p><span class="math display">\[
+H(k) = \text{Unconditional Certainty (Entropy)} \\
+H(k|j) = \text{Conditional Certainty (Entropy)} \\
+\text{MI}_{kj} = \text{Unconditional Certainty - Conditional Certainty}
+\]</span></p>
+<p>Here, <span class="math inline">\(k\)</span> is the discrete
+categories (<span style="color:red">Red</span> and <span
+style="color:blue">Blue</span>), and <span
+class="math inline">\(j\)</span> is a particular word in the lexicon of
+words found among the various documents. <span
+class="math inline">\(\pi_k\)</span> represents the proportion of
+documents that fall into categories (<span
+class="math inline">\(k\)</span>) <span style="color:red">Red</span> or
+<span style="color:blue">Blue</span>, <span
+class="math inline">\(\pi_{-k}\)</span> (same as <span
+class="math inline">\(1-\pi_k\)</span>) be the probability that a
+document does not belong in category <span
+class="math inline">\(k\)</span>. <span
+class="math inline">\(H(k)\)</span> just quantifies how uncertain we are
+about the category of a randomly selected document before seeing any
+word – i.e., how likely are to assume any random document belongs to a
+particular category without even seeing a word? As we could imagine, if
+<span class="math inline">\(\pi_k\)</span> is high, it means that one
+category seemingly dominates the observable data and our entropy
+(uncertainty) would be very low. For instance, if there are 100
+documents from <span style="color:blue">Blue</span> and 5 from <span
+style="color:red">Red</span>, <span
+class="math inline">\(H(Blue)\)</span> would be very low – because we
+could reasonably assume virtually any word <span
+class="math inline">\(j\)</span> from any document would belong to <span
+style="color:blue">Blue</span>. If we balanced closer to 50/50, the
+entropy would be much higher.</p>
+<p>Moreover, <span class="math inline">\(H(k|j)\)</span> builds on the
+intuition by assessing our how much our uncertainty decreases after we
+condition on the presence of a particular word found among the
+documents. If a word <span class="math inline">\(j\)</span> perfectly
+predicts a category <span class="math inline">\(k\)</span>, then the
+uncertainty would reasonably be 0. Combining this intuition with <span
+class="math inline">\(H(k)\)</span>, we can assess the mutual
+information as the unconditional certainty minus the conditional
+certainty – which we can replicate for each word and category available
+to us.</p>
+<p>Let’s suppose we have 10 documents:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Document ID</th>
+<th align="center">Category (<span
+class="math inline">\(k\)</span>)</th>
+<th align="center">Words (<span class="math inline">\(j\)</span>)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">1</td>
+<td align="center"><span style="color:red">Red</span></td>
+<td align="center">Apple, Tree</td>
+</tr>
+<tr class="even">
+<td align="center">2</td>
+<td align="center"><span style="color:red">Red</span></td>
+<td align="center">Apple, Juice</td>
+</tr>
+<tr class="odd">
+<td align="center">3</td>
+<td align="center"><span style="color:red">Red</span></td>
+<td align="center">Tree, Green</td>
+</tr>
+<tr class="even">
+<td align="center">4</td>
+<td align="center"><span style="color:red">Red</span></td>
+<td align="center">Apple, Green</td>
+</tr>
+<tr class="odd">
+<td align="center">5</td>
+<td align="center"><span style="color:blue">Blue</span></td>
+<td align="center">Blue, Ocean</td>
+</tr>
+<tr class="even">
+<td align="center">6</td>
+<td align="center"><span style="color:blue">Blue</span></td>
+<td align="center">Ocean, Water</td>
+</tr>
+<tr class="odd">
+<td align="center">7</td>
+<td align="center"><span style="color:blue">Blue</span></td>
+<td align="center">Blue, Water</td>
+</tr>
+<tr class="even">
+<td align="center">8</td>
+<td align="center"><span style="color:blue">Blue</span></td>
+<td align="center">Ocean, Blue</td>
+</tr>
+<tr class="odd">
+<td align="center">9</td>
+<td align="center"><span style="color:red">Red</span></td>
+<td align="center">Apple, Tree</td>
+</tr>
+<tr class="even">
+<td align="center">10</td>
+<td align="center"><span style="color:blue">Blue</span></td>
+<td align="center">Ocean, Tree</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 1: Compute Unconditional Certainty (</strong><span
+class="math inline">\(\pi_k\)</span>) <span class="math display">\[
+\pi_{Red} = 5/10 = 0.5 \\
+\pi_{Blue} = 5/10 = 0.5 \\
+H(K) = -\pi_{Red}\log_2\pi_{Red}-\pi_{Blue}\log_2\pi_{Blue} \\
+H(K) = -0.5\log_20.5-0.5\log_20.5 \\
+H(K) = 1
+\]</span></p>
+<p><strong>Step 2: Compute Conditional Certainty for Each
+Word</strong></p>
+<p>Tree is the only word that appears in both categories, so we will
+calculate the mutual information for that word – though the others will
+have much higher MI because they perfectly predict the categories. For
+example, when <em>apple</em> appears in Documents 1, 2, 4, and 9, every
+one of those documents are <span style="color:red">Red</span> documents.
+So if we get <em>apple</em> as <span class="math inline">\(j\)</span>,
+we know it perfectly predicts <span style="color:red">Red</span> – there
+is no uncertainty!</p>
+<p><span class="math display">\[
+P(Red|Tree) = 3/4 = 0.75 \\
+P(Blue|Tree) = 1/4 = 0.25 \\
+H(K|Tree) = -(0.75\log_20.75+0.25\log_20.25) = 0.811 \\
+MI(k,Tree) = H(k) - H(k|Tree) = 1 - 0.811 \approx 0.189
+\]</span></p>
+<p><br></p>
+<p><span class="math display">\[
+P(Red|Apple) = 4/4 = 1\\
+P(Blue|Apple) = 0/4 = 0 \\
+H(K|Apple) = -(1\log_21+0\log_20) = 0
+\]</span></p>
+<p><br></p>
+<p>Pretty neat – huh? That being said, there are certainly downsides to
+this approach (as <strong>GRS</strong> note in Chapter 11) – including
+that it doesn’t take into account uncertainty in the estimation of
+probabilities, only considers whether a word appears (or not) in a
+document (rather than the volume of repetition), is sensitive to rare
+words, is difficult to interpret with more than (2) categories, and
+ignores co-occurrence and context (e.g., <em>Not Good</em> – “Not”
+“Good” independently). We can account for most of these concerns when we
+move to a fully probabilistic model.</p>
+</div>
+<div id="fightin-words" class="section level4">
+<h4>Fightin’ Words</h4>
+<p>Fighting Words (Monroe, Colaresi, and Quinn 2008) is a method to
+identify words that discriminate between two categories (e.g., party
+affiliation, authorship, etc.) using regularized log-odds ratios. In
+essence, our goal is to identify words that are strongly associated with
+one category versus another that also accounts for rarity of words and
+overestimation of discriminating power. The solution is to essentially
+regularize the probability estimate.</p>
+<p><span class="math display">\[
+\hat{\mu}_{jk} = \frac{W^*_{jk} + \alpha_j}{n_k + \sum^j_{j=1}\alpha_j}
+\]</span></p>
+<p>This may look daunting, but we’ve already learned most of the tools
+necessary to do this: <span class="math inline">\(\alpha_j\)</span> is
+just a small value to smooth the estimates, similar to the Dirichlet
+prior that we discussed in a previous class. As <strong>GSR</strong>
+note, if we suppose that <span class="math inline">\(\mu \sim
+\text{Dirichlet}(\alpha)\)</span> and that <span
+class="math inline">\(W^*_k \sim \text{Multinomial}(n_k,\mu_k)\)</span>,
+the estimate corresponds to the expected value of the posterior
+distribution <span class="math inline">\(p(\mu|W)\)</span> after
+observing the words. In short, this means that <span
+class="math inline">\(\hat{\mu_{jk}}\)</span> gives a smoothed
+probability of word <span class="math inline">\(j\)</span> in category
+<span class="math inline">\(k\)</span>, combining the observed counts
+with a small prior so that even words we haven’t seen get a small
+chance.</p>
+<p>We can then represent our probability model with uncertainty using a
+standardized log odds ratio, which is the log odds a particular word is
+used nd compare usage in group <span class="math inline">\(k\)</span> to
+other groups:</p>
+<p><span class="math display">\[
+\text{Log Odds Ratio}_{kj} = \log(\frac{\mu_{kj}}{1-\mu_{kj}}) -
+\log(\frac{\mu-kj}{1-\mu_{-kj}})
+\]</span></p>
+<p>Going back to our previous example of <span
+style="color:red">Red</span> and <span style="color:blue">Blue</span>
+categories <span class="math inline">\(k\)</span>, we get the
+following:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Word</th>
+<th align="center">Red</th>
+<th align="center">Blue</th>
+<th align="center">Total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Apple</td>
+<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">4</td>
+</tr>
+<tr class="even">
+<td align="center">Tree</td>
+<td align="center">3</td>
+<td align="center">1</td>
+<td align="center">4</td>
+</tr>
+<tr class="odd">
+<td align="center">Green</td>
+<td align="center">2</td>
+<td align="center">0</td>
+<td align="center">2</td>
+</tr>
+<tr class="even">
+<td align="center">Juice</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="center">Blue</td>
+<td align="center">0</td>
+<td align="center">3</td>
+<td align="center">3</td>
+</tr>
+<tr class="even">
+<td align="center">Ocean</td>
+<td align="center">0</td>
+<td align="center">4</td>
+<td align="center">4</td>
+</tr>
+<tr class="odd">
+<td align="center">Water</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">2</td>
+</tr>
+</tbody>
+</table>
+<p>Assuming <span class="math inline">\(\sigma_j\)</span> = 0.5 for each
+of the (7) words, the Dirichlet prior for <em>Apple</em> is:</p>
+<p><span class="math display">\[
+\hat{\mu}(Apple|Red) = \frac{n_{(Apple \neq Red)} +
+\alpha_{Apple}}{n_{Red} + \sum_j\alpha_j} \\
+\hat{\mu}(Apple|Red) = \frac{4 + 0.5}{10 + 7 \times 0.5} = 0.33 \\
+\hat{\mu}(Apple|Blue) = \frac{0 + 0.05}{9 + 7 \times 0.5} = 0.04
+\]</span></p>
+<p>From here, the log odds ratio that <em>Apple</em> is a predictor of
+<span style="color:red">Red</span> is:</p>
+<p><span class="math display">\[
+\delta{Red} = \log(\frac{0.33}{1-0.33}) \rightarrow \log(0.492) \approx
+-0.70 \\
+\delta{Blue} = \log(\frac{0.04}{1-0.04}) \rightarrow \log(0.041) \approx
+-3.19 \\
+\delta_{kj} = -0.70 - (-3.19) \approx 2.49
+\]</span></p>
+<p>Viewed conceptually, the difference in the log odds that
+<em>Apple</em> appears in a <span style="color:red">Red</span> document
+is approximately 2.49 – which, after exponentiation <span
+class="math inline">\(\exp(2.49)\)</span> is revealed as being <span
+class="math inline">\(\approx\)</span> 12 times larger. Because it’s
+regularized, we have a lot more power to assert that our belief re:
+<em>Apple</em> is not simply driven by the relative lack of observations
+in <span style="color:blue">Blue</span> and that a larger value means
+the word’s association is robust, not just accidental.</p>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
