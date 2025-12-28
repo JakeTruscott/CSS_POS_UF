@@ -50,6 +50,7 @@ has_children: true
 
 ## Readings
 - GSR Ch. 6-7, 16
+- Ornstein, J. T., Blasingame, E. N., \& Truscott, J. S. (2025). How to train your stochastic parrot: Large language models for political texts. Political Science Research and Methods, 13(2), 264-281. (**Sections 3.1-3.2**)
 - Laver, M., Benoit, K., & Garry, J. (2003). Extracting policy positions from political texts using words as data. American Political Science Review, 97(2), 311-331.
 - Black, R. C., Treul, S. A., Johnson, T. R., & Goldman, J. (2011). Emotions, oral arguments, and Supreme Court decision making. The Journal of Politics, 73(2), 572-581.
 - Rice, D. R., & Zorn, C. (2021). Corpus-based dictionaries for sentiment analysis of specialized vocabularies. Political Science Research and Methods, 9(1), 20-35.
@@ -61,9 +62,9 @@ has_children: true
 
 # Class Six Learning Objectives: 
 
-- Multinomial Langauge Model
-- Vector Space Model & Similarity
-- Dictionary Methods
+- Dictionaries and Similarity
+- Multinomial Language Model
+- Vector Space Model
 
 <br> 
 
