@@ -1,7 +1,7 @@
 ---
 title: "Multinomial Language Model"
 parent: "Modeling the Bag of Words"
-nav_order: 2
+nav_order: 3
 ---
 
 <iframe 
