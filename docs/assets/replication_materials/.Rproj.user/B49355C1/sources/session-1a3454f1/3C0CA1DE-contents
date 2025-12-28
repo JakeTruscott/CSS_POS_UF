@@ -32,20 +32,32 @@ library(stringr)
 
 ------------------------------------------------------------------------
 
-1.  Mosteller & Wallace (1963) considered, among others, the authorship of <i>Federalist 55, 56, 57, 58, 62, and 63</i>. Although the essays were born from three authors -- James Madison, Alexander Hamilton, and John Jay -- the latter author (Jay) is known to have not authored any beyond those directly attributed to him. Using the remaining essays whose authorship we can attribute to Madison or Hamilton, complete the following tasks:
+1.  Produce a series of 10 strings and perform sentiment analysis using BING, AFINN, and Sentimentr (*Note:* Be sure to produce three, publication-ready tables using <code>stargazer()</code> for each approach) (2pts).
+
+2.  Mosteller & Wallace (1963) considered, among others, the authorship of <i>Federalist 55, 56, 57, 58, 62, and 63</i>. Although the essays were born from three authors -- James Madison, Alexander Hamilton, and John Jay -- the latter author (Jay) is known to have not authored any beyond those directly attributed to him. Using the remaining essays whose authorship we can attribute to Madison or Hamilton, complete the following tasks:
 
     <br>
-    A.   Develop a corpus and recover the most commonly used words for each author. Further, produce both a data frame (or tibble) representing the 10 most common terms with their associated volumes, as well as a word cloud graphic of the 50 most common terms for each author (1pt). 
-    
-    <br>
+
+    A.  Develop a corpus and recover the most commonly used words for each author. Further, produce both a data frame (or tibble) representing the 10 most common terms with their associated volumes, as well as a word cloud graphic of the 50 most common terms for each author (1pt).
+
+        <br>
+
+    ```{=html}
+    <!-- -->
+    ```
     B.  With your corpus, construct the same items as (A) but aggregated across both authors – e.g., a data frame and word cloud of the most common terms for both Hamilton <u>and</u> Madison (1pt).
-    
-    <br>
+
+        <br>
+
+    ```{=html}
+    <!-- -->
+    ```
     C.  Using the multinomial language model appraoch, employ (B) to construct a vocabulary and associated multinomial probability vectors ($\mu$) for each author using <u>at least</u> five unique words (2pts)
-    
-    <br>
-    D. For each of the listed <i>Federalist Papers</i>, recover $\mathbf{W_{Hamilton}}$ and $\mathbf{W_{Madison}}$ (4pts).
-    
-    <br>
-    
-2.  Using only <i>Federalist 58</i>, measure the cosine similarity and the Euclidean distance between both $\mathbf{W}_{Hamilton/Madison}$ and $\mathbf{W}_{Federalist\hspace{0.5mm}55}$ 
+
+        <br>
+
+    D.  For each of the listed <i>Federalist Papers</i>, recover $\mathbf{W_{Hamilton}}$ and $\mathbf{W_{Madison}}$ (2pts).
+
+        <br>
+
+    E.  Using only <i>Federalist 58</i>, measure the cosine similarity and the Euclidean distance between both $\mathbf{W}_{Hamilton/Madison}$ and $\mathbf{W}_{Federalist\hspace{0.5mm}55}$ (2pts).
