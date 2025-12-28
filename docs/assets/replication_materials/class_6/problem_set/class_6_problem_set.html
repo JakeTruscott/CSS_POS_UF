@@ -369,6 +369,40 @@ sets must always be compiled using <code>LaTex</code> or
 explaining your implementation) used to complete each problem
 (10pts).</p>
 <hr />
+<ol style="list-style-type: decimal">
+<li><p>Mosteller &amp; Wallace (1963) considered, among others, the
+authorship of <i>Federalist 55, 56, 57, 58, 62, and 63</i>. Although the
+essays were born from three authors – James Madison, Alexander Hamilton,
+and John Jay – the latter author (Jay) is known to have not authored any
+beyond those directly attributed to him. Using the remaining essays
+whose authorship we can attribute to Madison or Hamilton, complete the
+following tasks:</p>
+<p><br></p>
+<ol style="list-style-type: upper-alpha">
+<li>Develop a corpus and recover the most commonly used words for each
+author. Further, produce both a data frame (or tibble) representing the
+10 most common terms with their associated volumes, as well as a word
+cloud graphic of the 50 most common terms for each author (1pt).</li>
+</ol>
+<p><br></p>
+<ol start="2" style="list-style-type: upper-alpha">
+<li>With your corpus, construct the same items as (A) but aggregated
+across both authors – e.g., a data frame and word cloud of the most
+common terms for both Hamilton <u>and</u> Madison (1pt).</li>
+</ol>
+<p><br></p>
+<ol start="3" style="list-style-type: upper-alpha">
+<li>Using the multinomial language model appraoch, employ (B) to
+construct a vocabulary and associated multinomial probability vectors
+(<span class="math inline">\(\mu\)</span>) for each author using <u>at
+least</u> five unique words (2pts)</li>
+</ol>
+<p><br> D. For each of the listed <i>Federalist Papers</i>, recover
+<span class="math inline">\(\mathbf{W_{Hamilton}}\)</span> and <span class="math inline">\(\mathbf{W_{Madison}}\)</span> (4pts).</p>
+<p><br></p></li>
+<li><p>Using only <i>Federalist 58</i>, measure the cosine similarity
+and the Euclidean distance between both <span class="math inline">\(\mathbf{W}_{Hamilton/Madison}\)</span> and <span class="math inline">\(\mathbf{W}_{Federalist\hspace{0.5mm}55}\)</span></p></li>
+</ol>
 
 
 
