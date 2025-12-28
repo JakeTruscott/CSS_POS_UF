@@ -324,12 +324,12 @@ bing_dictionary %&gt;%
 <pre><code>## # A tibble: 6 × 2
 ##   word        sentiment
 ##   &lt;chr&gt;       &lt;chr&gt;    
-## 1 injurious   negative 
-## 2 denunciate  negative 
-## 3 hustler     negative 
-## 4 convience   positive 
-## 5 tempt       positive 
-## 6 inexpensive positive</code></pre>
+## 1 disapprove  negative 
+## 2 forbidden   negative 
+## 3 egotistical negative 
+## 4 complements positive 
+## 5 galore      positive 
+## 6 appreciate  positive</code></pre>
 <pre class="r"><code>strings_tokens %&gt;%
   inner_join(tidytext::get_sentiments(lexicon = &#39;bing&#39;), by = &#39;word&#39;) %&gt;%
   count(doc_id, sentiment) %&gt;%
@@ -364,19 +364,19 @@ afinn_dictionary %&gt;%
   arrange(value) %&gt;%
   print(n = 11) # Sample Words (Value -5 to 5)</code></pre>
 <pre><code>## # A tibble: 11 × 2
-##    word          value
-##    &lt;chr&gt;         &lt;dbl&gt;
-##  1 niggas           -5
-##  2 torture          -4
-##  3 irritating       -3
-##  4 ashamed          -2
-##  5 demonstration    -1
-##  6 some kind         0
-##  7 smart             1
-##  8 encourage         2
-##  9 visionary         3
-## 10 wowww             4
-## 11 outstanding       5</code></pre>
+##    word        value
+##    &lt;chr&gt;       &lt;dbl&gt;
+##  1 bastards       -5
+##  2 pissed         -4
+##  3 catastrophe    -3
+##  4 touting        -2
+##  5 overweight     -1
+##  6 some kind       0
+##  7 attracted       1
+##  8 inspires        2
+##  9 gallant         3
+## 10 masterpiece     4
+## 11 superb          5</code></pre>
 <pre class="r"><code>strings_tokens %&gt;%
   inner_join(tidytext::get_sentiments(lexicon = &#39;afinn&#39;), by = &#39;word&#39;) %&gt;%
   count(doc_id, value) %&gt;%

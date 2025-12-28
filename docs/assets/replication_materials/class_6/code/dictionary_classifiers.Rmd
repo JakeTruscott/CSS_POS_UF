@@ -24,7 +24,6 @@ library(quanteda)
 library(gutenbergr)
 library(stringr)
 
-
 reduce_complexity <- function(text){
   text <- tolower(text) # Lower Case
   text <- tm::removePunctuation(text) # Punctuation
@@ -37,6 +36,8 @@ reduce_complexity <- function(text){
   text <- trimws(text) # White Space
   return(text)
 }
+
+set.seed(41)
 
 ```
 
@@ -131,6 +132,7 @@ strings_tokens %>%
 The **AFINN** lexicon is designed to capture **both the direction and intensity of sentiment**. Unlike binary lexicons such as Bing, AFINN assigns each word a numeric sentiment score, typically ranging from **–5 (strongly negative)** to **+5 (strongly positive)**. The dictionary contains roughly 2,500–3,400 terms.
 
 ```{r, afinn}
+
 
 afinn_dictionary <- tidytext::get_sentiments("afinn") # Afinn Dictionary
 
