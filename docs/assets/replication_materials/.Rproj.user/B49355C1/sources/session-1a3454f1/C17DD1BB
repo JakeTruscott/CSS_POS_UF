@@ -3,7 +3,7 @@
     "path": "C:/Users/jaketruscott/Github/CSS_POLS_UF/docs/assets/replication_materials/class_6/code/dictionary_classifiers.Rmd",
     "project_path": "class_6/code/dictionary_classifiers.Rmd",
     "type": "r_markdown",
-    "hash": "2028402039",
+    "hash": "3406798054",
     "contents": "",
     "dirty": false,
     "created": 1766882160257.0,
@@ -12,15 +12,21 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "31,0",
-        "scrollLine": "4"
+        "cursorPosition": "83,0",
+        "scrollLine": "76",
+        "rmdVisualMode": "false",
+        "rmdVisualWrapConfigured": "true",
+        "docOutlineVisible": "1",
+        "rmdVisualCollapsedChunks": "",
+        "rmdVisualModeLocation": "1475:513",
+        "last_setup_crc32": "1a3454f153be462d"
     },
     "folds": "",
-    "lastKnownWriteTime": 1766882188,
+    "lastKnownWriteTime": 1766885238,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1766882188155,
+    "last_content_update": 1766885238862,
     "read_only": false,
     "read_only_alternatives": []
 }

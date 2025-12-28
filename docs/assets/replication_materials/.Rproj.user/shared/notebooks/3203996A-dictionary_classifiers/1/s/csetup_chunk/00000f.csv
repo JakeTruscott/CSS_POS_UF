@@ -1,0 +1,91 @@
+"0","library(ggplot2)
+library(dplyr)
+"
+"2","
+Attaching package: ‘dplyr’
+
+"
+"2","The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+"
+"0","library(cowplot)"
+"0","library(stargazer)"
+"2","
+Please cite as: 
+
+"
+"2"," Hlavac, Marek (2022). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+"
+"2"," R package version 5.2.3. https://CRAN.R-project.org/package=stargazer 
+
+"
+"0","library(doParallel)"
+"2","Loading required package: foreach
+"
+"2","Loading required package: iterators
+"
+"2","Loading required package: parallel
+"
+"0","library(parallel)"
+"0","library(snow)"
+"2","
+Attaching package: ‘snow’
+
+"
+"2","The following objects are masked from ‘package:parallel’:
+
+    closeNode, clusterApply, clusterApplyLB, clusterCall, clusterEvalQ, clusterExport, clusterMap, clusterSplit, makeCluster,
+    parApply, parCapply, parLapply, parRapply, parSapply, recvData, recvOneData, sendData, splitIndices, stopCluster
+
+"
+"0","library(tm)"
+"2","Warning:"
+"2"," package ‘tm’ was built under R version 4.4.2
+"
+"2","Loading required package: NLP
+"
+"2","Warning:"
+"2"," package ‘NLP’ was built under R version 4.4.2
+"
+"2","
+Attaching package: ‘NLP’
+
+"
+"2","The following object is masked from ‘package:ggplot2’:
+
+    annotate
+
+"
+"0","library(quanteda)"
+"2","Package version: 4.0.2
+Unicode version: 15.1
+ICU version: 74.1
+"
+"2","Parallel computing: 14 of 14 threads used.
+"
+"2","See https://quanteda.io for tutorials and examples.
+"
+"2","
+Attaching package: ‘quanteda’
+
+"
+"2","The following object is masked from ‘package:tm’:
+
+    stopwords
+
+"
+"2","The following objects are masked from ‘package:NLP’:
+
+    meta, meta<-
+
+"
+"0","library(gutenbergr)"
+"0","library(stringr)"
+"0",""

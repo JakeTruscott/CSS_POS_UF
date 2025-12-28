@@ -171,6 +171,111 @@ pre code {
 <hr />
 <div id="dictionaries" class="section level2">
 <h2>Dictionaries</h2>
+<p>There are few intellectual exercises more demanding (or more
+burdensome…) than studying variation in language. Most modern English
+dictionaries estimate the language to contain no fewer than 170,000
+words, a figure that continues to evolve as some terms fall into
+obsolescence while others are continually introduced (often to the
+dismay of those who find Generation Alpha brain rot slang less than
+inspiring…). Matters become even more complicated when we consult a
+thesaurus and recognize that nearly every word possesses multiple
+synonyms, each differing in appropriateness depending on meaning, tense,
+register, and broader syntactic context.</p>
+<p>For the moment, we will set aside many of these complexities until we
+turn to vectorized word embeddings in high-dimensional spaces. For now,
+let us assume that words – irrespective of tense or usage – possess
+localized and singular meanings. Consider the following sentence:</p>
+<p><span class="math display">\[
+\text{I loved the new restaurant; the food was delicious and the service
+was fantastic}
+\]</span> After reducing complexity using the same approach as
+<a href="https://jaketruscott.github.io/CSS_POS_UF/class_5/bag_of_words.html">our
+previous class</a>, we are left with <i>love new restaurant food
+delicious service fantastic</i>.While we might have been able to infer
+from just reading the original sentence that the implied <b> rhetorical
+sentiment</b> (i.e., the attitudinal or affective quality of text) was
+certainly <i>positive</i> (as opposed to <i>neutral, negative</i>, or
+some alternative <b>classification</b>), reducing the complexity we are
+left with two words (<i>glad &amp; enjoy</i>) that still reflect a
+<i>positive</i> sentiment, while <i>movie</i> appears to not relay a
+perceivable sentiment. In its most basic form, we can simply assert that
+because there are (2) <i>positive</i> words and (0) <i>negative</i>
+words, the sentence is <i>positive</i>!</p>
+<p>Now let’s consider another sentence:</p>
+<p><span class="math display">\[
+\text{The movie was a disappointment; the plot was confusing and the
+acting was poor.}
+\]</span> Much like the first sentence, we could probably infer the
+<i>negative</i> intent, but removing complexity again further reinforces
+our belief (<i>movie disappointment plot confuse act poor</i>). The
+terms <i>disappointment, confuse,</i> and <i>poor</i> offer a
+preponderance of evidence that the sentence’s implied sentiment is
+<i>negative</i></p>
+<p>But what about a sentence like this:</p>
+<p><span class="math display">\[
+\text{The concert had amazing visuals and energy, but the sound quality
+was inconsistent}
+\]</span> Which produces <i>concert amaze visual energy sound quality
+inconsistent</i>. Suddenly our ability to consider sentiment at face
+value is a bit more challenging – surely we could make the argument that
+the author certainly enjoyed the concert, but it is not a full-throated
+endorsement due to the inconsistent sound quality. Assessing sentiment
+at the word level (<i>concert amaze visual energy sound quality
+inconsistent</i>) now requires greater diligence – as we could
+reasonably assert that although the sentence contains at least one
+<i>positive</i> term (<i>amaze</i>) and one <i>negative</i> term
+(<i>inconsistent</i>) whether and how we assess meaning to the remaining
+terms with debatable classifications (<i>energy &amp; quality</i>),
+could have an important impact on our ability to classify this sentence
+correctly, as well as any others where we employ that approach.</p>
+<p>This approach is at the core of dictionary methods – perhaps the best
+introductory approach to understanding how we can derive meaning (e.g.,
+rhetorical sentiment) from text. In short, dictionary methods rely on a
+pre-defined lexicon where each word (or n-gram) is assigned to one or
+more categories, such as <i>positive</i> or <i>negative</i> sentiment.
+The strength of this approach lies in having a large, carefully curated
+vocabulary whose classifications are both theoretically grounded and
+defensable (i.e., terms that you define as + or - are truly such.) By
+counting the frequency of words in each category, we can estimate the
+presence and intensity of particular meanings or sentiments across
+sentences, passages, and documents.</p>
+<p>Before I demonstrate a handful of the existing dictionary methods in
+<code>R</code>, I want to emphasize (4) key points about dictionary
+classifiers (which I already touch on briefly in the previous note):</p>
+<ol style="list-style-type: decimal">
+<li><p>Dictionary classifiers, while simple, can nevertheless provide
+robust classification power. Especially among documents retaining
+authentic discursive properties – i.e., authors refrain from literary
+tools like misdirection, sarcasm, or other inauthentic speech, a
+dictionary strategy provides a lot of upside for considerably little
+technical effort.</p></li>
+<li><p>However, much of that validity relies on the ability of
+researchers to construct dense lexicons. Much like anything in
+statistical analyses, small-N problems easily permeate dictionary
+approaches when the size of variety of the lexicon is insufficient to
+capture the variance of the documents themselves.</p></li>
+<li><p>Moreover, while a dense dictionary is certainly important,
+paramount to such is constructing categorical classifications (e.g.,
+positive or negative) that are both authentic and defensible. For
+example, terms like <i>happy</i> and <i>joyous</i> are (almost always)
+associated with <i>positive</i> sentiments, while terms like
+<i>depressing</i> or <i>hateful</i> are certainly more negative.
+Misidentifying those terms will surely impact your ability to make valid
+classifications.</p></li>
+<li><p>Finally, and in a similar vein, dictionary methods are sensibly
+plagued by the same concern as the bag of words, more generally. In
+particular, words have associated meaning based on tense and conditional
+usage. For instance, <i>happy</i> is certainly <i>positive</i> – but
+what if the sentence actually reads <i>I was not happy at all</i>.
+Suddenly that very negative sentence may be misclassified as a
+<i>positive</i> sentence based solely on the classification label for
+<i>happy</i>. Much of these concerns (as with other areas concerning the
+bag of words) can be improved given more robust methods, including the
+incorporation of inverses (<i>not</i>) and n-grams.</p></li>
+</ol>
+<div id="dictionary-methods-examples-in-r" class="section level3">
+<h3>Dictionary Methods (Examples in <code>R</code>)</h3>
+</div>
 </div>
 
 
