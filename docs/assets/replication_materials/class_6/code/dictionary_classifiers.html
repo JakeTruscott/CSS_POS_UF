@@ -204,7 +204,7 @@ words, the sentence is <i>positive</i>!</p>
 <p>Now let’s consider another sentence:</p>
 <p><span class="math display">\[
 \text{The movie was a disappointment; the plot was confusing and the
-acting was poor.}
+acting was poor}
 \]</span> Much like the first sentence, we could probably infer the
 <i>negative</i> intent, but removing complexity again further reinforces
 our belief (<i>movie disappointment plot confuse act poor</i>). The
@@ -243,12 +243,12 @@ sentences, passages, and documents.</p>
 <code>R</code>, I want to emphasize (4) key points about dictionary
 classifiers (which I already touch on briefly in the previous note):</p>
 <ol style="list-style-type: decimal">
-<li><p>Dictionary classifiers, while simple, can nevertheless provide
-robust classification power. Especially among documents retaining
-authentic discursive properties – i.e., authors refrain from literary
-tools like misdirection, sarcasm, or other inauthentic speech, a
-dictionary strategy provides a lot of upside for considerably little
-technical effort.</p></li>
+<li><p>Dictionary classifiers, while rather simple and intuitive, can
+nevertheless provide robust classification power. Especially among
+documents retaining authentic discursive properties – i.e., authors
+refrain from literary tools like misdirection, sarcasm, or other
+inauthentic speech, a dictionary strategy provides a lot of upside for
+considerably little technical effort.</p></li>
 <li><p>However, much of that validity relies on the ability of
 researchers to construct dense lexicons. Much like anything in
 statistical analyses, small-N problems easily permeate dictionary
@@ -260,7 +260,7 @@ positive or negative) that are both authentic and defensible. For
 example, terms like <i>happy</i> and <i>joyous</i> are (almost always)
 associated with <i>positive</i> sentiments, while terms like
 <i>depressing</i> or <i>hateful</i> are certainly more negative.
-Misidentifying those terms will surely impact your ability to make valid
+Misidentifying these terms will surely impact your ability to make valid
 classifications.</p></li>
 <li><p>Finally, and in a similar vein, dictionary methods are sensibly
 plagued by the same concern as the bag of words, more generally. In
@@ -273,8 +273,154 @@ Suddenly that very negative sentence may be misclassified as a
 bag of words) can be improved given more robust methods, including the
 incorporation of inverses (<i>not</i>) and n-grams.</p></li>
 </ol>
-<div id="dictionary-methods-examples-in-r" class="section level3">
-<h3>Dictionary Methods (Examples in <code>R</code>)</h3>
+<div id="sentiment-analysis-using-dictionary-methods-examples-in-r"
+class="section level3">
+<h3>Sentiment Analysis Using Dictionary Methods (Examples in
+<code>R</code>)</h3>
+<p>Below I provide a handful of sandboxed dictionary methods – all of
+which will rely on the same collection of strings. In particular, I will
+focus just on three methods: Bing (Word <span
+class="math inline">\(\rightarrow\)</span> Class), Afinn (Word <span
+class="math inline">\(\rightarrow\)</span> Scalar), and Sentimentr
+(Sentiment = Polarity x Valence).</p>
+<pre class="r"><code>strings &lt;- c(&#39;This decision is excellent, fair, and clearly the right outcome&#39;, 
+             &#39;The opinion is good and persuasive, even if it is not perfect&#39;, 
+             &#39;The ruling has some good points but also several serious flaws&#39;, 
+             &#39;The decision is bad and poorly reasoned&#39;, 
+             &#39;This opinion is terrible, deeply unfair, and completely wrong&#39;)
+
+strings &lt;- tibble(
+  doc_id = seq_along(strings),
+  text = strings) 
+
+strings_tokens &lt;- strings %&gt;% # Convert to tibble
+  tidytext::unnest_tokens(word, text) # Convert to Unnested Tokens
+
+head(strings_tokens)</code></pre>
+<pre><code>## # A tibble: 6 × 2
+##   doc_id word     
+##    &lt;int&gt; &lt;chr&gt;    
+## 1      1 this     
+## 2      1 decision 
+## 3      1 is       
+## 4      1 excellent
+## 5      1 fair     
+## 6      1 and</code></pre>
+<p><br></p>
+<div id="bing" class="section level4">
+<h4>Bing</h4>
+<p>The <strong>Bing</strong> Dictionary is a sentiment lexicon widely
+used for binary sentiment classification. It assigns words to one of two
+categories (<em>positive</em> or <em>negative</em>) and contains roughly
+6,800 sentiment-labeled terms (approx. 2,000 positive and 4,800
+negative)</p>
+<pre class="r"><code>bing_dictionary &lt;- tidytext::get_sentiments(&quot;bing&quot;)
+
+bing_dictionary %&gt;%
+  group_by(sentiment) %&gt;%
+  slice_sample(n = 3) %&gt;%
+  ungroup() %&gt;%
+  arrange(sentiment) # Sample BING</code></pre>
+<pre><code>## # A tibble: 6 × 2
+##   word        sentiment
+##   &lt;chr&gt;       &lt;chr&gt;    
+## 1 injurious   negative 
+## 2 denunciate  negative 
+## 3 hustler     negative 
+## 4 convience   positive 
+## 5 tempt       positive 
+## 6 inexpensive positive</code></pre>
+<pre class="r"><code>strings_tokens %&gt;%
+  inner_join(tidytext::get_sentiments(lexicon = &#39;bing&#39;), by = &#39;word&#39;) %&gt;%
+  count(doc_id, sentiment) %&gt;%
+  left_join(strings, by = &#39;doc_id&#39;) %&gt;%
+  select(text, sentiment, n)</code></pre>
+<pre><code>## # A tibble: 7 × 3
+##   text                                                           sentiment     n
+##   &lt;chr&gt;                                                          &lt;chr&gt;     &lt;int&gt;
+## 1 This decision is excellent, fair, and clearly the right outco… positive      4
+## 2 The opinion is good and persuasive, even if it is not perfect  positive      2
+## 3 The ruling has some good points but also several serious flaws negative      1
+## 4 The ruling has some good points but also several serious flaws positive      1
+## 5 The decision is bad and poorly reasoned                        negative      2
+## 6 The decision is bad and poorly reasoned                        positive      1
+## 7 This opinion is terrible, deeply unfair, and completely wrong  negative      2</code></pre>
+<p><br></p>
+</div>
+<div id="afinn" class="section level4">
+<h4>AFINN</h4>
+<p>The <strong>AFINN</strong> lexicon is designed to capture
+<strong>both the direction and intensity of sentiment</strong>. Unlike
+binary lexicons such as Bing, AFINN assigns each word a numeric
+sentiment score, typically ranging from <strong>–5 (strongly
+negative)</strong> to <strong>+5 (strongly positive)</strong>. The
+dictionary contains roughly 2,500–3,400 terms.</p>
+<pre class="r"><code>afinn_dictionary &lt;- tidytext::get_sentiments(&quot;afinn&quot;) # Afinn Dictionary
+
+afinn_dictionary %&gt;% 
+  group_by(value) %&gt;%
+  slice_sample(n = 1) %&gt;%
+  ungroup() %&gt;%
+  arrange(value) %&gt;%
+  print(n = 11) # Sample Words (Value -5 to 5)</code></pre>
+<pre><code>## # A tibble: 11 × 2
+##    word          value
+##    &lt;chr&gt;         &lt;dbl&gt;
+##  1 niggas           -5
+##  2 torture          -4
+##  3 irritating       -3
+##  4 ashamed          -2
+##  5 demonstration    -1
+##  6 some kind         0
+##  7 smart             1
+##  8 encourage         2
+##  9 visionary         3
+## 10 wowww             4
+## 11 outstanding       5</code></pre>
+<pre class="r"><code>strings_tokens %&gt;%
+  inner_join(tidytext::get_sentiments(lexicon = &#39;afinn&#39;), by = &#39;word&#39;) %&gt;%
+  count(doc_id, value) %&gt;%
+  left_join(strings, by = &#39;doc_id&#39;) %&gt;%
+  select(text, value, n)</code></pre>
+<pre><code>## # A tibble: 8 × 3
+##   text                                                            value     n
+##   &lt;chr&gt;                                                           &lt;dbl&gt; &lt;int&gt;
+## 1 This decision is excellent, fair, and clearly the right outcome     1     1
+## 2 This decision is excellent, fair, and clearly the right outcome     2     1
+## 3 This decision is excellent, fair, and clearly the right outcome     3     1
+## 4 The opinion is good and persuasive, even if it is not perfect       3     2
+## 5 The ruling has some good points but also several serious flaws      3     1
+## 6 The decision is bad and poorly reasoned                            -3     1
+## 7 This opinion is terrible, deeply unfair, and completely wrong      -3     1
+## 8 This opinion is terrible, deeply unfair, and completely wrong      -2     2</code></pre>
+</div>
+<div id="sentimentr" class="section level4">
+<h4>SentimentR</h4>
+<p><strong>SentimentR</strong> improves on simple dictionary classifiers
+by explicitly modeling context and valence shifters. Rather than relying
+solely on raw word counts, <strong>sentimentr</strong> computes
+sentiment at the sentence level, accounting for how nearby words modify
+sentiment expression. At its core, it uses a BING-style polarity lexicon
+(Where words have a singular classification) combined with rule-based
+adjustments for <strong>negators</strong> (e.g., <em>not, never</em>,
+etc.), <strong>amplifiers</strong> (e.g., <em>very, extremely,</em>
+etc.), and <strong>adversarial conjunctions</strong> (e.g.,
+<em>but</em>). The result is the base polarity (BING-style score) times
+a valence multiplier that adjusts for sentence hueristics (ex:
+<em>good</em> = 1x, <em>not good</em> = -1x, <em>barely good</em> =
+0.5x, etc.) – where negation doesn’t invariably flip the sign, but
+rather it will scale the intensity.</p>
+<pre class="r"><code>strings %&gt;%
+  mutate(sentiment = sentimentr::sentiment_by(text)$ave_sentiment)</code></pre>
+<pre><code>## # A tibble: 5 × 3
+##   doc_id text                                                          sentiment
+##    &lt;int&gt; &lt;chr&gt;                                                             &lt;dbl&gt;
+## 1      1 This decision is excellent, fair, and clearly the right outc…     0.885
+## 2      2 The opinion is good and persuasive, even if it is not perfect     0    
+## 3      3 The ruling has some good points but also several serious fla…    -0.460
+## 4      4 The decision is bad and poorly reasoned                          -0.340
+## 5      5 This opinion is terrible, deeply unfair, and completely wrong    -0.667</code></pre>
+</div>
 </div>
 </div>
 
