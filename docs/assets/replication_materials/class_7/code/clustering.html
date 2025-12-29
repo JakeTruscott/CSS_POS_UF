@@ -212,8 +212,10 @@ that assigns each document to the closest cluster center (<span
 class="math inline">\(\mu_k\)</span>) based on some distance metric
 (<strong>GSR</strong> use squared Euclidean distance in Ch. 12), as well
 as an <em>update step</em> that recomputes each cluster center as the
-mean of all documents assigned to that cluster. It will repeat the loop
-until it reaches convergence.</p></li>
+mean of all documents assigned to that cluster. All of this is in
+pursuit of the <strong>objective function</strong> (minimizes the sum of
+the squared distance) and will repeat the loop until
+convergence.</p></li>
 </ol>
 <div id="k-means-analogy" class="section level4">
 <h4>K-Means Analogy</h4>
@@ -251,6 +253,134 @@ cluster assignment is based on proximity to <span
 class="math inline">\(\mu_k\)</span> – the more a film aligns with a
 cluster’s center, the more likely it is to be assigned to that
 cluster.</p>
+</div>
+<div id="k-means-example" class="section level4">
+<h4>K-Means Example</h4>
+<p>Below are two example implementations of k-means in <code>R</code>
+using the <code>iris</code> dataset (a built-in dataset of iris flowers
+from three species). The only difference between the two being the
+number of assigned cluster centers (<span
+class="math inline">\(K\)</span> = 3 or 4). As you can see, adding
+another cluster affects the objective function – i.e., the sum of
+squared differences is reduced. However, I want to emphasize that we may
+not want to read too much into this. Adding more clusters is going to
+reduce the objective, but that doesn’t necessarily imply a better or
+more meaningful solution. Especially with text data, it’s important to
+be holistic in your assessment of clustering – <strong>GSR</strong> Ch.
+12.4-12.5 does a great job discussing this!</p>
+<pre class="r"><code>data &lt;- iris %&gt;%
+  rename(sepal_length = Sepal.Length, 
+         sepal_width = Sepal.Width, 
+         petal_length = Petal.Length, 
+         petal_width = Petal.Width) %&gt;%
+  select(sepal_length, sepal_width, petal_length, petal_width)
+
+kmeans_example &lt;- kmeans(data, # Iris Data 
+                         centers = 3, # Cluster Centers (3 Defined)
+                         nstart = 25) # No. Independent Runs 
+
+kmeans_example$tot.withinss # Within-Cluster Sum of Squares (Dispersion Measure)</code></pre>
+<pre><code>## [1] 78.85144</code></pre>
+<p><img src="clustering_files/figure-html/kmeans_figure-1.png" width="672" /><img src="clustering_files/figure-html/kmeans_figure-2.png" width="672" /></p>
+</div>
+</div>
+<div id="clustering-components" class="section level3">
+<h3>Clustering Components</h3>
+<p>As <strong>GSR</strong> note (and I imply above), clustering
+algorithms are holistically a bit different than other concepts we’ve
+discussed so far. Perhaps the most notable difference is that, unlike
+other circumstances where we (more or less) implicitly know which models
+are built to conform to certain data generating processes, clustering
+algorithms like k-means offer a lot of flexibility in how you may wish
+to view notions of (dis)similarity, iteration, and what a “correct”
+configuration might look like.</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Document (Dis)Similarity</strong>: While k-means uses the
+squared Euclidean distance as a means to discern similarity (which also
+implicitly defines dissimilarity…), there are several alternatives –
+including cosine similarity and Manhattan distance. Interestingly, the
+common practice (as you may have inferred from some of our other
+readings) is to effectively benchmark different approaches and compare
+their performance given a set of metrics (<em>More Next</em>). For
+instance, you can compare the dispersion between documents among shared
+clusters, as well as conduct qualitative checks to confirm that
+words/documents grouped together among alike clusters seem reasonably
+alike.</p></li>
+<li><p><strong>Measure of Partition Quality</strong>: Since clustering
+is unsupervised and we’re not assessing model fit for a known data
+generating processes, assessing whether a cluster partition for any
+iteration or series of iterations from a certain optimization strategy
+is “good” is inherently relative (and comparable to other
+iterations/strategies). As noted in (1) above, common diagnostics focus
+on some combination of within-cluster cohesion (e.g., summing each
+document’s dissimilarity from its cluster center) to test whether the
+partition actually groups alike documents effectively, as well as
+qualitative assessments of how documents are grouped. In short, the
+latter emphasizes a smell test – i.e., *is it reasonable and defensible
+that these documents should inhabit a similar cluster?” This isn’t
+algebra – multiple solutions are reasonable acceptable here!</p></li>
+<li><p><strong>Optimization Algorithm</strong>: Again, this is not a
+situation where there is invariably one correct answer. There is a
+global maximum (which is theoretically the <em>best</em> possible
+configuration, but using brute force to locate such a configuration
+given the ridiculous volume of possible configurations makes it very
+unlikely we can run every iteration and associated configuration to
+confirm it. Instead, we generally stop iterations once the difference
+between iterations is minuscule or insufficient – it doesn’t mean we’ve
+located the global maximum, but rather that this local optimum is
+nevertheless a great solution. A good test of quality re: optimization
+is to (a) change the starting values, (b) the optimization algorithm,
+and/or (c) change the convergence threshold and see what changes emerge
+in the clusters. If the difference in the clusters (i.e., the documents
+in them or the dispersion of the cluster centers) is in the same
+ballpark as a previous (series of) configuration(s) (ex: Tables 12.3 and
+12.1 in <strong>GSR</strong> Ch. 12), then you’re probably in good
+shape!</p></li>
+</ol>
+<div id="other-clustering-considerations" class="section level4">
+<h4>Other Clustering Considerations</h4>
+<ol style="list-style-type: decimal">
+<li><p>Algorithmic v. Probabilistic: K-means is an example of an
+algorithmic clustering strategy in that it assigns each document
+deterministic to the nearest cluster centroid, aiming to minimize the
+sum of squared distances. Alternatively, probabilistic models like
+mixture models the documents as coming from a mixture of probability
+distributions, where each point has some probability of belonging to
+each cluster. There are tradeoffs to both (some of which are explored in
+subsequent points…), but a good rule of thumb is to acknowledge that if
+you want fast, interpretable, and deterministic (yes or no) clusters,
+stick if algorithmic like k-means. If you want something a bit richer
+with an assumption that clusters or group alignment needs some nuance or
+uncertainty, probabilistic may be the way to go.</p></li>
+<li><p>Soft v. Hard Partitions: K-means uses hard partitions to assign
+documents to the nearest cluster centroid. In short, if each document
+was represented as a vector with length <span
+class="math inline">\(K\)</span>, only one element would be (1), the
+rest would be (0). Alterntively, soft partitions allow for uncertainty
+given probabilistic clustering. Yet, as <strong>GSR</strong> note, the
+difference is less significant than it may seem. Like hard partitions,
+soft (fuzzy) clustering methods align documents toward the nearest
+cluster – meaning that each document is likely to have a greater
+probability of aligning with one cluster than any of the
+others.</p></li>
+<li><p>Means v. Mediods: This basically just concerns the difference
+between assessing cluster means versus cluster medians. In the sense of
+k-means/mediods, its the difference between measuring (a) the location
+of the average document in the cluster, or (b) the document that
+minimizes the distance to all others in the cluster. Much like concerns
+re: sampling populations, means are much more sensitive to outliers –
+while medians (mediods) can theoretically omit the average behavior
+we’re actually interested in.</p></li>
+<li><p>Flat v. Hierarchical: Flat clustering methods (like k-means)
+produce a single-level partition of the data into a fixed number of
+clusters. Hierarchical clustering produces a nested tree of clusters,
+either by successively merging individual observations or recursively
+splitting the dataset. The former starts with many individual clusters
+and attempts to aggregate across successive iterations, while the latter
+does the opposite – it tries to split clusters through iteration. Both
+offer inferential value for studying clusters at various levels of
+granularity (from broad groupings to subclusters).</p></li>
+</ol>
 </div>
 </div>
 </div>
