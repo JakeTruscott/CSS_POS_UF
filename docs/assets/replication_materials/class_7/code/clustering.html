@@ -171,6 +171,88 @@ pre code {
 <hr />
 <div id="clustering" class="section level2">
 <h2>Clustering</h2>
+<p>In clustering, we assume that some latent structure – in this case, a
+discrete grouping or classification – organizes the observed data. It
+conditions latent group membership to explain patterns in lexical
+variance, estimating the grouping that makes the observed text data most
+probable. It is generally <strong>unsupervised</strong> in that, unlike
+dictionary-based methods where we explicitly encode how our models
+should classify certain words, clustering algorithms do not rely on
+predefined labels or lexicons. Instead, they infer latent group
+structure directly from patterns in the data, allowing word usage and
+co-occurrence to determinate how documents are grouped.</p>
+<div id="k-means-clustering" class="section level3">
+<h3>K-Means Clustering</h3>
+<p>As <strong>GSR</strong> (Ch. 12) note, k-means clustering is one of
+the most widely used clustering algorithms. We’re not going to spend a
+whole lot of time on walking through the equation(s) with example data
+like we’ve done with previous topics, largely because k-means is best
+understood as an iterative “rinse-and-repeat” procedure with several
+researcher-driven choices regarding initialization and optimization. A
+few notes:</p>
+<ol style="list-style-type: decimal">
+<li><p>K-means make <em>hard assignments</em> (or one-hot encodings) of
+cluster assignment – i.e., each document is assigned to only one
+category (for example, if we assume K = 4, only a single element of
+<span class="math inline">\(\pi_i\)</span> will equal one – the rest
+will be 0).</p></li>
+<li><p>Importantly, k-means clustering is not something where there is
+usually a single definitive answer. Rather, the goal is to minimize the
+global objective function (typically the within-cluster sum of squared
+distances), but there is no guarantee it will ever be recovered from any
+particular iteration. Instead, the algorithm may converge to a <em>local
+optimum</em> (a stable solution that satisfies the convergence criterion
+but doesn’t fully minimize the function globally). This convergence
+generally happens when successive iterations produce negligible changes
+in cluster assignments from partitions (<span
+class="math inline">\(\pi\)</span>) or cluster centers (<span
+class="math inline">\(\mu\)</span>).</p></li>
+<li><p>In essence, k-means clustering has an <em>assignment step</em>
+that assigns each document to the closest cluster center (<span
+class="math inline">\(\mu_k\)</span>) based on some distance metric
+(<strong>GSR</strong> use squared Euclidean distance in Ch. 12), as well
+as an <em>update step</em> that recomputes each cluster center as the
+mean of all documents assigned to that cluster. It will repeat the loop
+until it reaches convergence.</p></li>
+</ol>
+<div id="k-means-analogy" class="section level4">
+<h4>K-Means Analogy</h4>
+<p>Imagine you get a call from your parents that they would like help
+organizing their collection of DVDs, which they would like to organize
+based on similarity in style or genre. Each film has various features:
+comedy, drama, and action, though most of these features aren’t mutually
+exclusive (e.g., some films can be both romantic and funny).</p>
+<p>To get started, we assume that there are 3 groups (comedy, drama, and
+action) and place placards on the loor representing the “prime location”
+for each genre. These placards correspond to the cluster centers (<span
+class="math inline">\(\mu_k\)</span>) for each genre, meaning that if a
+film is placed directly on that placard, it would represent the average
+movie for that group (ex: placing a film directly on the <em>action</em>
+placard means it represents the average action movie).</p>
+<p>Next, we randomly scatter the DVDs on the floor. This sets up the
+initial <em>assignment step</em>, where each movie is assigned to the
+nearest cluster center (placard) based on its features. Because the
+initial placement is random, many DVDs will likely be far from their
+“true” cluster center.</p>
+<p>Once all films are assigned, we recalculate the cluster centers. Each
+placard is moved to the average position of all the films currently
+assigned to that cluster. This updated position now better represents
+the “average movie” for the cluster.</p>
+<p>We then repeat the assignment step, reassigning each film to the
+nearest updated cluster center, followed by recomputing the cluster
+centers again. This iterative process continues until the assignments
+and cluster centers stop changing significantly, meaning the algorithm
+has converged. At convergence, each film belongs to the cluster closest
+to it, and each cluster center represents the “average movie” for that
+group.</p>
+<p>In short: a film that is (hypothetically) 30% Comedy, 60 % Drama, and
+10% Action should more readily cluster with other dramatic films because
+cluster assignment is based on proximity to <span
+class="math inline">\(\mu_k\)</span> – the more a film aligns with a
+cluster’s center, the more likely it is to be assigned to that
+cluster.</p>
+</div>
+</div>
 </div>
 
 

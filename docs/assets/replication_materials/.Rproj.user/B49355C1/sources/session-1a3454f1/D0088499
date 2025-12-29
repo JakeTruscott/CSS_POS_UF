@@ -3,7 +3,7 @@
     "path": "C:/Users/jaketruscott/Github/CSS_POLS_UF/docs/assets/replication_materials/class_7/code/discriminating_words.Rmd",
     "project_path": "class_7/code/discriminating_words.Rmd",
     "type": "r_markdown",
-    "hash": "0",
+    "hash": "1849128319",
     "contents": "",
     "dirty": false,
     "created": 1766932339618.0,
@@ -12,8 +12,8 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "25,0",
-        "scrollLine": "19",
+        "cursorPosition": "165,39",
+        "scrollLine": "151",
         "rmdVisualMode": "false",
         "rmdVisualWrapConfigured": "true",
         "docOutlineVisible": "1",
@@ -21,11 +21,11 @@
         "rmdVisualModeLocation": "11606:4798"
     },
     "folds": "",
-    "lastKnownWriteTime": 1766952532,
+    "lastKnownWriteTime": 1766952598,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1766952532603,
+    "last_content_update": 1766952598819,
     "read_only": false,
     "read_only_alternatives": []
 }

@@ -545,8 +545,8 @@ following:</p>
 <p>Assuming <span class="math inline">\(\sigma_j\)</span> = 0.5 for each
 of the (7) words, the Dirichlet prior for <em>Apple</em> is:</p>
 <p><span class="math display">\[
-\hat{\mu}(Apple|Red) = \frac{n_{(Apple \neq Red)} +
-\alpha_{Apple}}{n_{Red} + \sum_j\alpha_j} \\
+\hat{\mu}(Apple|Red) = \frac{n_{(Apple,Red)} + \alpha_{Apple}}{n_{Red} +
+\sum_j\alpha_j} \\
 \hat{\mu}(Apple|Red) = \frac{4 + 0.5}{10 + 7 \times 0.5} = 0.33 \\
 \hat{\mu}(Apple|Blue) = \frac{0 + 0.05}{9 + 7 \times 0.5} = 0.04
 \]</span></p>
