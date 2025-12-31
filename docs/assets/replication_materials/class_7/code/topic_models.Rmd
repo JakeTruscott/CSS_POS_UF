@@ -41,3 +41,45 @@ If we were to apply a clustering algorithm to these speeches, we may be incident
 **Topic Models** are similar to clustering methods with an important caveat: *rather than assign each document to only one cluster, topic models assign each document with proportional membership to all categories (topics). That is, topic models suppose that each document is a mixture across categories -- a mixed membership model* (GSR Ch. 13). The key benefit here is that we don't need a single topic to be representative an entire document on its own. For instance, in trying to identify how presidents may discuss the economy, topic models may help us understand this through the lens of more discrete items like the welfare state, taxation, foreign trade or other topics within the broader scope of discussion related to economic policy -- we don't need to say that only one of these should be used to discuss a speech (like a SOTU address) that touches on all of them!
 
 ### Latent Dirichlet Allocation
+
+Much like how k-means is the canonical clustering algorithm, Latent Dirichlet Allocation (LDA) is the canonical topic model. First introduced in 2003, LDA is a generative probabilistic model -- meaning that it explicitly posits a data generating process for documents where documents are mixtures of latent topics and words are drawn conditional on those topics. In particular, it tries to recover: 
+
+1. **Document-Topic Distributions** -- where each document is represented a distribution over (perhaps multiple) different topics, each with a certain probability. 
+
+2. **Topic-Word Distributions** -- where each topic is represented as a distribution over words, meaning that each topic is defined by a set of words (again all with an associated probability of appearing in that topic).
+
+- Document Index = $i$
+- Topic Index = $K$
+- Word Position In Document ($i$) = $m$
+- Observed Word = $W_{im}$
+- Document-Topic Weights: $\pi_{ik}$ where $\sum_{K}\pi_{iK} =1$ (All Sum to 1)
+
+As you might be able to infer, LDA assumes the document-topic $Z_{im}$ and topic-word $W_{im}$ distributions has a Dirichlet prior and draws from a multinomial distribution, where: 
+
+$$
+Z_{im} \sim \text{Multinomial}(1,\pi_i) \quad \text{Topic Indicator for Each Word} \\
+W_{im} \sim \text{Multinomial}(1, \mu{Z_{im}}) \quad \text{Observed Word Token For Each Word Position} 
+$$
+So the probability of observing a word token in a document ($W_{im} = j$) conditional on both the document-topic weights ($\pi_{iK}$) and the topic-word distributions ($\mu_k$) is a weighted average of topic-specific word probabilities, where the weights are given by the document's topic proportions ($\pi_{iK}$): 
+
+$$
+p(W_{im} = j \mid \pi_i,\mu) = \sum_K\pi_{iK}\mu_{jK}
+$$
+#### LDA Example: 
+
+```{r}
+
+library(topicmodels)
+data("AssociatedPress")
+dtm <- AssociatedPress
+
+lda_model <- LDA(dtm, k = 5, method = "Gibbs", control = list(seed = 1234)) # LDA w/ 5 Topics & Gibbs Sampling 
+topicmodels::terms(lda_model, 10) 
+
+topic_probs <- posterior(lda_model)$topics # Prob Document i Belongs to Topic K
+print(round(topic_probs[c(1:10), c(1:5)], 2))
+
+word_probs <- posterior(lda_model)$terms # Prob Word J in Topic K
+head(round(word_probs[, 1:5], 5))   
+
+```

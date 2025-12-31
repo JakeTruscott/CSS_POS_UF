@@ -207,6 +207,89 @@ to say that only one of these should be used to discuss a speech (like a
 SOTU address) that touches on all of them!</p>
 <div id="latent-dirichlet-allocation" class="section level3">
 <h3>Latent Dirichlet Allocation</h3>
+<p>Much like how k-means is the canonical clustering algorithm, Latent
+Dirichlet Allocation (LDA) is the canonical topic model. First
+introduced in 2003, LDA is a generative probabilistic model – meaning
+that it explicitly posits a data generating process for documents where
+documents are mixtures of latent topics and words are drawn conditional
+on those topics. In particular, it tries to recover:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Document-Topic Distributions</strong> – where each
+document is represented a distribution over (perhaps multiple) different
+topics, each with a certain probability.</p></li>
+<li><p><strong>Topic-Word Distributions</strong> – where each topic is
+represented as a distribution over words, meaning that each topic is
+defined by a set of words (again all with an associated probability of
+appearing in that topic).</p></li>
+</ol>
+<ul>
+<li>Document Index = <span class="math inline">\(i\)</span></li>
+<li>Topic Index = <span class="math inline">\(K\)</span></li>
+<li>Word Position In Document (<span class="math inline">\(i\)</span>) =
+<span class="math inline">\(m\)</span></li>
+<li>Observed Word = <span class="math inline">\(W_{im}\)</span></li>
+<li>Document-Topic Weights: <span
+class="math inline">\(\pi_{ik}\)</span> where <span
+class="math inline">\(\sum_{K}\pi_{iK} =1\)</span> (All Sum to 1)</li>
+</ul>
+<p>As you might be able to infer, LDA assumes the document-topic <span
+class="math inline">\(Z_{im}\)</span> and topic-word <span
+class="math inline">\(W_{im}\)</span> distributions has a Dirichlet
+prior and draws from a multinomial distribution, where:</p>
+<p><span class="math display">\[
+Z_{im} \sim \text{Multinomial}(1,\pi_i) \quad \text{Topic Indicator for
+Each Word} \\
+W_{im} \sim \text{Multinomial}(1, \mu{Z_{im}}) \quad \text{Observed Word
+Token For Each Word Position}
+\]</span> So the probability of observing a word token in a document
+(<span class="math inline">\(W_{im} = j\)</span>) conditional on both
+the document-topic weights (<span
+class="math inline">\(\pi_{iK}\)</span>) and the topic-word
+distributions (<span class="math inline">\(\mu_k\)</span>) is a weighted
+average of topic-specific word probabilities, where the weights are
+given by the document’s topic proportions (<span
+class="math inline">\(\pi_{iK}\)</span>):</p>
+<p><span class="math display">\[
+p(W_{im} = j \mid \pi_i,\mu) = \sum_K\pi_{iK}\mu_{jK}
+\]</span> #### LDA Example:</p>
+<pre class="r"><code>library(topicmodels)
+data(&quot;AssociatedPress&quot;)
+dtm &lt;- AssociatedPress
+
+lda_model &lt;- LDA(dtm, k = 5, method = &quot;Gibbs&quot;, control = list(seed = 1234)) # LDA w/ 5 Topics &amp; Gibbs Sampling 
+topicmodels::terms(lda_model, 10) </code></pre>
+<pre><code>##       Topic 1  Topic 2   Topic 3      Topic 4     Topic 5     
+##  [1,] &quot;i&quot;      &quot;percent&quot; &quot;court&quot;      &quot;i&quot;         &quot;government&quot;
+##  [2,] &quot;people&quot; &quot;million&quot; &quot;police&quot;     &quot;president&quot; &quot;soviet&quot;    
+##  [3,] &quot;two&quot;    &quot;year&quot;    &quot;two&quot;        &quot;bush&quot;      &quot;united&quot;    
+##  [4,] &quot;air&quot;    &quot;billion&quot; &quot;state&quot;      &quot;house&quot;     &quot;states&quot;    
+##  [5,] &quot;years&quot;  &quot;new&quot;     &quot;case&quot;       &quot;new&quot;       &quot;two&quot;       
+##  [6,] &quot;new&quot;    &quot;company&quot; &quot;years&quot;      &quot;committee&quot; &quot;military&quot;  
+##  [7,] &quot;just&quot;   &quot;last&quot;    &quot;federal&quot;    &quot;congress&quot;  &quot;people&quot;    
+##  [8,] &quot;city&quot;   &quot;market&quot;  &quot;department&quot; &quot;dukakis&quot;   &quot;police&quot;    
+##  [9,] &quot;like&quot;   &quot;prices&quot;  &quot;attorney&quot;   &quot;national&quot;  &quot;union&quot;     
+## [10,] &quot;first&quot;  &quot;stock&quot;   &quot;drug&quot;       &quot;campaign&quot;  &quot;officials&quot;</code></pre>
+<pre class="r"><code>topic_probs &lt;- posterior(lda_model)$topics # Prob Document i Belongs to Topic K
+print(round(topic_probs[c(1:10), c(1:5)], 2))</code></pre>
+<pre><code>##          1    2    3    4    5
+##  [1,] 0.20 0.05 0.61 0.06 0.08
+##  [2,] 0.07 0.31 0.12 0.20 0.30
+##  [3,] 0.29 0.10 0.44 0.08 0.08
+##  [4,] 0.30 0.17 0.13 0.14 0.25
+##  [5,] 0.28 0.14 0.18 0.26 0.15
+##  [6,] 0.06 0.08 0.08 0.38 0.40
+##  [7,] 0.22 0.30 0.21 0.11 0.16
+##  [8,] 0.13 0.13 0.10 0.39 0.25
+##  [9,] 0.25 0.19 0.18 0.18 0.21
+## [10,] 0.18 0.13 0.11 0.27 0.30</code></pre>
+<pre class="r"><code>word_probs &lt;- posterior(lda_model)$terms # Prob Word J in Topic K
+head(round(word_probs[, 1:5], 5))   </code></pre>
+<pre><code>##     aaron abandon abandoned abandoning abbott
+## 1 0.00000 0.00000   0.00039      0e+00  0e+00
+## 2 0.00000 0.00000   0.00000      0e+00  0e+00
+## 3 0.00000 0.00000   0.00000      0e+00  1e-04
+## 4 0.00011 0.00016   0.00001      7e-05  0e+00
+## 5 0.00000 0.00000   0.00006      0e+00  0e+00</code></pre>
 </div>
 </div>
 
