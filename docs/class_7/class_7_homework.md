@@ -1,7 +1,7 @@
 ---
 title: "Class 7 Problem Set"
 parent: "Clustering and Topic Discovery"
-nav_order: 6
+nav_order: 5
 ---
 
 <iframe 

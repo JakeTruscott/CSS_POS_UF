@@ -12,7 +12,7 @@
 <meta name="author" content="Truscott (Spring 2026)" />
 
 
-<title>Clustering</title>
+<title>Topic Models</title>
 
 <script src="topic_models_files/header-attrs-2.28/header-attrs.js"></script>
 <script src="topic_models_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -161,7 +161,7 @@ pre code {
 
 
 
-<h1 class="title toc-ignore">Clustering</h1>
+<h1 class="title toc-ignore">Topic Models</h1>
 <h3 class="subtitle">POS6933: Computational Social Science</h3>
 <h4 class="author">Truscott (Spring 2026)</h4>
 
@@ -171,6 +171,43 @@ pre code {
 <hr />
 <div id="topic-models" class="section level2">
 <h2>Topic Models</h2>
+<p>Recall that one of our first exercises using text as data was to
+analyze State of the Union addresses by former presidents – particularly
+as it relates to concepts like the military and the economy. To do this,
+we made at least two important assumptions:</p>
+<ol style="list-style-type: decimal">
+<li><p>Presidents may touch on various policy areas and themes
+throughout these speeches.</p></li>
+<li><p>Even though they may draw from different perspectives and
+contexts, we can define a word or assert a general vocabulary to
+identify those thematic elements – e.g., I can use terms like
+<em>navy</em>, <em>army</em>, <em>marines</em>, etc. to reasonably
+identify periods where the president is discussing military
+matters.</p></li>
+</ol>
+<p>If we were to apply a clustering algorithm to these speeches, we may
+be incidentally obscuring our ability to correctly identify these
+various discussion points. Even clustering algorithms that use <em>soft
+partitioning</em> are likely to draw documents towards a single cluster
+center. But when we have documents where themes and other distinct
+literary elements are in flux throughout, we may want to instead rely on
+topic models.</p>
+<p><strong>Topic Models</strong> are similar to clustering methods with
+an important caveat: <em>rather than assign each document to only one
+cluster, topic models assign each document with proportional membership
+to all categories (topics). That is, topic models suppose that each
+document is a mixture across categories – a mixed membership model</em>
+(GSR Ch. 13). The key benefit here is that we don’t need a single topic
+to be representative an entire document on its own. For instance, in
+trying to identify how presidents may discuss the economy, topic models
+may help us understand this through the lens of more discrete items like
+the welfare state, taxation, foreign trade or other topics within the
+broader scope of discussion related to economic policy – we don’t need
+to say that only one of these should be used to discuss a speech (like a
+SOTU address) that touches on all of them!</p>
+<div id="latent-dirichlet-allocation" class="section level3">
+<h3>Latent Dirichlet Allocation</h3>
+</div>
 </div>
 
 

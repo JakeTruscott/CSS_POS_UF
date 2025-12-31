@@ -1,7 +1,7 @@
 ---
 title: "Topic Models"
 parent: "Clustering and Topic Discovery"
-nav_order: 2
+nav_order: 4
 ---
 
 <iframe 

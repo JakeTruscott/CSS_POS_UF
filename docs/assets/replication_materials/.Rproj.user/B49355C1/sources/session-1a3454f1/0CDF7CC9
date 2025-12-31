@@ -3,7 +3,7 @@
     "path": "C:/Users/jaketruscott/Github/CSS_POLS_UF/docs/assets/replication_materials/class_7/code/clustering.Rmd",
     "project_path": "class_7/code/clustering.Rmd",
     "type": "r_markdown",
-    "hash": "2731245558",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1766931998946.0,
@@ -12,16 +12,16 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "60,734",
-        "scrollLine": "52",
+        "cursorPosition": "131,193",
+        "scrollLine": "128",
         "last_setup_crc32": "1a3454f11ae29658"
     },
     "folds": "",
-    "lastKnownWriteTime": 1767042594,
+    "lastKnownWriteTime": 1767108790,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1767042594729,
+    "last_content_update": 1767108790158,
     "read_only": false,
     "read_only_alternatives": []
 }
