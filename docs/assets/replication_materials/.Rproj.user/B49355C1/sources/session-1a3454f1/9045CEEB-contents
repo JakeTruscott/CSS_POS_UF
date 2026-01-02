@@ -40,7 +40,7 @@ If we were to apply a clustering algorithm to these speeches, we may be incident
 
 **Topic Models** are similar to clustering methods with an important caveat: *rather than assign each document to only one cluster, topic models assign each document with proportional membership to all categories (topics). That is, topic models suppose that each document is a mixture across categories -- a mixed membership model* (GSR Ch. 13). The key benefit here is that we don't need a single topic to be representative an entire document on its own. For instance, in trying to identify how presidents may discuss the economy, topic models may help us understand this through the lens of more discrete items like the welfare state, taxation, foreign trade or other topics within the broader scope of discussion related to economic policy -- we don't need to say that only one of these should be used to discuss a speech (like a SOTU address) that touches on all of them!
 
-### Latent Dirichlet Allocation
+## Latent Dirichlet Allocation
 
 Much like how k-means is the canonical clustering algorithm, Latent Dirichlet Allocation (LDA) is the canonical topic model. First introduced in 2003, LDA is a generative probabilistic model -- meaning that it explicitly posits a data generating process for documents where documents are mixtures of latent topics and words are drawn conditional on those topics. In particular, it tries to recover: 
 
@@ -65,9 +65,10 @@ So the probability of observing a word token in a document ($W_{im} = j$) condit
 $$
 p(W_{im} = j \mid \pi_i,\mu) = \sum_K\pi_{iK}\mu_{jK}
 $$
-#### LDA Example: 
 
-```{r lda_example_AP, eval=FALSE, include=FALSE}
+### LDA Example: 
+
+```{r lda_example_AP, echo=TRUE}
 
 library(topicmodels)
 data("AssociatedPress")
@@ -81,5 +82,72 @@ print(round(topic_probs[c(1:10), c(1:5)], 2))
 
 word_probs <- posterior(lda_model)$terms # Prob Word J in Topic K
 head(round(word_probs[, 1:5], 5))   
+
+```
+
+---
+
+## Structural Topic Models
+
+**GRS** spend some time talking about upstream and downstream structural methods (though we won't get too bogged down in it...), but there is a lot of merit to the Structural Topic Model (STM) -- which provides a mechanism to add covariates to help explain both topic prevalence $X^P_i$ and topic content $X^c_i$. It works like a traditional topic model but also lets you introduce information about the documents themselves $X^p_i$. For each document, the model first decides how much of each topic is likely to appear (topic prevalence) -- this can be driven by features like authorship, publication date, etc.
+
+Then, for each word in the document, the model picks a topic according to those proportions and generates the word from that topic. What makes STM especially powerful is that the way topics are expressed in words (topic content) can also shift depending on covariates ($X^c_i$). Not only can you see which topics are more common in certain types of documents, but you can also see how the language used to discuss a topic changes with different document characteristics. It’s a way to combine topic discovery with regression-style analysis, giving you richer insights into both what topics are present and how they’re talked about.
+
+### STM Example: 
+
+```{R stm_example, echo=TRUE}
+
+
+texts <- apply(AssociatedPress, 1, function(x) {
+  paste(rep(colnames(AssociatedPress), x), collapse = " ")
+})
+
+reduce_complexity <- function(text){
+  text <- tolower(text) # Lower Case
+  text <- tm::removePunctuation(text) # Punctuation
+  text <- tm::removeNumbers(text) # Numbers
+  text <- removeWords(text, tm::stopwords("english")) # Stop Words
+  text <- unlist(stringr::str_split(text, '\\s+')) # Tokenize 
+  text <- textstem::lemmatize_words(text) # Lemmatize
+  text <- paste(text, collapse = ' ') # Re-Append
+  text <- gsub("\\s{2,}", ' ', text) # 2 or More Spaces --> One Space
+  text <- trimws(text) # White Space
+  return(text)
+} # Complexity Reduction (See Class 5!)
+
+texts_reduced <- vapply(texts, reduce_complexity, character(1))
+
+corpus_reduced <- VCorpus(VectorSource(texts_reduced))
+
+dtm_reduced <- DocumentTermMatrix(
+  corpus_reduced,
+  control = list(wordLengths = c(1, Inf))
+)
+
+dfm_ap <- as.dfm(dtm_reduced)
+
+docs_stm <- convert(dfm_ap, to = "stm")
+
+meta <- data.frame(dummy = rep(1, length(docs_stm$documents)))
+
+stm_model <- stm::stm(
+  documents  = docs_stm$documents,
+  vocab      = docs_stm$vocab,
+  K          = 5,
+  prevalence = ~1,
+  data       = meta,
+  init.type  = "Spectral",
+  seed       = 1234,
+  max.em.its = 500,
+  verbose    = FALSE
+)
+
+stm::labelTopics(stm_model, n = 10) # Top Words/Topic
+
+proportions <- stm_model$theta # Document-Topic Proportions
+round(proportions[1:10, ], 2)
+
+topic_word_probs <- exp(stm_model$beta$logbeta[[1]]) #Topic Word Probabilities
+head(round(topic_word_probs[,1:5], 5))
 
 ```

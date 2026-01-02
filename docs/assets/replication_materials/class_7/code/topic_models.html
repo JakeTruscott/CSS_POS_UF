@@ -205,8 +205,9 @@ the welfare state, taxation, foreign trade or other topics within the
 broader scope of discussion related to economic policy – we don’t need
 to say that only one of these should be used to discuss a speech (like a
 SOTU address) that touches on all of them!</p>
-<div id="latent-dirichlet-allocation" class="section level3">
-<h3>Latent Dirichlet Allocation</h3>
+</div>
+<div id="latent-dirichlet-allocation" class="section level2">
+<h2>Latent Dirichlet Allocation</h2>
 <p>Much like how k-means is the canonical clustering algorithm, Latent
 Dirichlet Allocation (LDA) is the canonical topic model. First
 introduced in 2003, LDA is a generative probabilistic model – meaning
@@ -251,7 +252,9 @@ given by the document’s topic proportions (<span
 class="math inline">\(\pi_{iK}\)</span>):</p>
 <p><span class="math display">\[
 p(W_{im} = j \mid \pi_i,\mu) = \sum_K\pi_{iK}\mu_{jK}
-\]</span> #### LDA Example:</p>
+\]</span></p>
+<div id="lda-example" class="section level3">
+<h3>LDA Example:</h3>
 <pre class="r"><code>library(topicmodels)
 data(&quot;AssociatedPress&quot;)
 dtm &lt;- AssociatedPress
@@ -290,6 +293,125 @@ head(round(word_probs[, 1:5], 5))   </code></pre>
 ## 3 0.00000 0.00000   0.00000      0e+00  1e-04
 ## 4 0.00011 0.00016   0.00001      7e-05  0e+00
 ## 5 0.00000 0.00000   0.00006      0e+00  0e+00</code></pre>
+<hr />
+</div>
+</div>
+<div id="structural-topic-models" class="section level2">
+<h2>Structural Topic Models</h2>
+<p><strong>GRS</strong> spend some time talking about upstream and
+downstream structural methods (though we won’t get too bogged down in
+it…), but there is a lot of merit to the Structural Topic Model (STM) –
+which provides a mechanism to add covariates to help explain both topic
+prevalence <span class="math inline">\(X^P_i\)</span> and topic content
+<span class="math inline">\(X^c_i\)</span>. It works like a traditional
+topic model but also lets you introduce information about the documents
+themselves <span class="math inline">\(X^p_i\)</span>. For each
+document, the model first decides how much of each topic is likely to
+appear (topic prevalence) – this can be driven by features like
+authorship, publication date, etc.</p>
+<p>Then, for each word in the document, the model picks a topic
+according to those proportions and generates the word from that topic.
+What makes STM especially powerful is that the way topics are expressed
+in words (topic content) can also shift depending on covariates (<span
+class="math inline">\(X^c_i\)</span>). Not only can you see which topics
+are more common in certain types of documents, but you can also see how
+the language used to discuss a topic changes with different document
+characteristics. It’s a way to combine topic discovery with
+regression-style analysis, giving you richer insights into both what
+topics are present and how they’re talked about.</p>
+<div id="stm-example" class="section level3">
+<h3>STM Example:</h3>
+<pre class="r"><code>texts &lt;- apply(AssociatedPress, 1, function(x) {
+  paste(rep(colnames(AssociatedPress), x), collapse = &quot; &quot;)
+})
+
+reduce_complexity &lt;- function(text){
+  text &lt;- tolower(text) # Lower Case
+  text &lt;- tm::removePunctuation(text) # Punctuation
+  text &lt;- tm::removeNumbers(text) # Numbers
+  text &lt;- removeWords(text, tm::stopwords(&quot;english&quot;)) # Stop Words
+  text &lt;- unlist(stringr::str_split(text, &#39;\\s+&#39;)) # Tokenize 
+  text &lt;- textstem::lemmatize_words(text) # Lemmatize
+  text &lt;- paste(text, collapse = &#39; &#39;) # Re-Append
+  text &lt;- gsub(&quot;\\s{2,}&quot;, &#39; &#39;, text) # 2 or More Spaces --&gt; One Space
+  text &lt;- trimws(text) # White Space
+  return(text)
+} # Complexity Reduction (See Class 5!)
+
+texts_reduced &lt;- vapply(texts, reduce_complexity, character(1))
+
+corpus_reduced &lt;- VCorpus(VectorSource(texts_reduced))
+
+dtm_reduced &lt;- DocumentTermMatrix(
+  corpus_reduced,
+  control = list(wordLengths = c(1, Inf))
+)
+
+dfm_ap &lt;- as.dfm(dtm_reduced)
+
+docs_stm &lt;- convert(dfm_ap, to = &quot;stm&quot;)
+
+meta &lt;- data.frame(dummy = rep(1, length(docs_stm$documents)))
+
+stm_model &lt;- stm::stm(
+  documents  = docs_stm$documents,
+  vocab      = docs_stm$vocab,
+  K          = 5,
+  prevalence = ~1,
+  data       = meta,
+  init.type  = &quot;Spectral&quot;,
+  seed       = 1234,
+  max.em.its = 500,
+  verbose    = FALSE
+)
+
+stm::labelTopics(stm_model, n = 10) # Top Words/Topic</code></pre>
+<pre><code>## Topic 1 Top Words:
+##       Highest Prob: court, year, case, charge, say, two, attorney, go, police, school 
+##       FREX: court, attorney, judge, trial, sentence, justice, lawyer, book, mother, convict 
+##       Lift: male, moore, souter, abrams, abyss, acquit, actress, adjourn, adkins, admission 
+##       Score: court, attorney, sentence, trial, police, lawyer, judge, prison, jury, convict 
+## Topic 2 Top Words:
+##       Highest Prob: official, report, air, department, state, two, service, test, area, fire 
+##       FREX: water, plane, flight, ship, accident, space, pilot, navy, pentagon, aircraft 
+##       Lift: virus, airplane, aspirin, bay, bomber, cargo, carrier, creek, crow, defect 
+##       Score: plane, flight, pilot, nasa, aircraft, shuttle, airline, accident, ship, pentagon 
+## Topic 3 Top Words:
+##       Highest Prob: percent, million, year, market, price, company, billion, trade, new, stock 
+##       FREX: market, price, stock, dollar, sale, cent, index, yen, gold, investor 
+##       Lift: chrysler, trader, troy, abboud, acquisition, acustar, aftertax, ag, alkaline, alltime 
+##       Score: stock, cent, percent, price, market, yen, index, rate, dollar, billion 
+## Topic 4 Top Words:
+##       Highest Prob: soviet, government, official, people, police, state, unite, party, force, military 
+##       FREX: soviet, army, troop, gorbachev, communist, soldier, rebel, israel, africa, israeli 
+##       Lift: abductor, abu, afghanistan, africas, ahmed, alfredo, algeria, algerian, algiers, amal 
+##       Score: soviet, communist, police, gorbachev, troop, minister, guerrilla, palestinian, party, soldier 
+## Topic 5 Top Words:
+##       Highest Prob: bush, president, state, house, year, vote, new, go, say, make 
+##       FREX: bush, dukakis, republican, senate, budget, sen, democrat, rep, jackson, legislation 
+##       Lift: cavazos, dmass, sens, ad, legislation, marlin, nbc, abcs, accomplishment, adhere 
+##       Score: dukakis, bush, republican, tax, percent, campaign, poll, democratic, budget, vote</code></pre>
+<pre class="r"><code>proportions &lt;- stm_model$theta # Document-Topic Proportions
+round(proportions[1:10, ], 2)</code></pre>
+<pre><code>##       [,1] [,2] [,3] [,4] [,5]
+##  [1,] 0.86 0.05 0.00 0.08 0.01
+##  [2,] 0.27 0.04 0.18 0.48 0.02
+##  [3,] 0.83 0.02 0.04 0.09 0.01
+##  [4,] 0.35 0.04 0.11 0.34 0.15
+##  [5,] 0.57 0.04 0.02 0.02 0.35
+##  [6,] 0.01 0.24 0.01 0.25 0.50
+##  [7,] 0.11 0.44 0.27 0.13 0.05
+##  [8,] 0.01 0.01 0.02 0.17 0.79
+##  [9,] 0.06 0.81 0.04 0.05 0.04
+## [10,] 0.03 0.04 0.04 0.54 0.35</code></pre>
+<pre class="r"><code>topic_word_probs &lt;- exp(stm_model$beta$logbeta[[1]]) #Topic Word Probabilities
+head(round(topic_word_probs[,1:5], 5))</code></pre>
+<pre><code>##         [,1]    [,2]    [,3]    [,4]    [,5]
+## [1,] 0.00079 0.00044 0.00032 0.00026 0.00009
+## [2,] 0.00086 0.00000 0.00000 0.00014 0.00019
+## [3,] 0.00078 0.00079 0.00029 0.00011 0.00004
+## [4,] 0.00043 0.00041 0.00012 0.00000 0.00002
+## [5,] 0.00071 0.00055 0.00021 0.00016 0.00001</code></pre>
 </div>
 </div>
 
