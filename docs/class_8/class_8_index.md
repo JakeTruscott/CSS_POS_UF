@@ -1,6 +1,6 @@
 ---
 title: "Clustering and Topic Discovery"
-nav_order: 9
+nav_order: 10
 has_children: true
 ---
 
@@ -46,7 +46,7 @@ has_children: true
 </style>
 
 
-# Class Seven Checklist 
+# Class Eight Checklist 
 
 ## Readings
 - **GSR** Ch. 11-13
@@ -57,9 +57,9 @@ has_children: true
 
 ## Homework
 
-- Practice Set (Class 7)
+- Practice Set (Class 8)
 
-# Class Seven Learning Objectives: 
+# Class Eight Learning Objectives: 
 
 - Clustering Algorithms
 - Latent Dirichlet Allocation (LDA)

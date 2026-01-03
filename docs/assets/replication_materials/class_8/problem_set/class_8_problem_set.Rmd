@@ -1,5 +1,5 @@
 ---
-title: "Class 7 Problem Set"
+title: "Class 8 Problem Set"
 subtitle: "POS6933: Computational Social Science"
 author: "Truscott (Spring 2026)"
 output: html_document
