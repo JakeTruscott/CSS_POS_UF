@@ -49,7 +49,7 @@ has_children: true
 # Class Seven Checklist 
 
 ## Readings
-- **GRS** Ch. 17-19
+- **GRS** Ch. 17-20
 - Truscott, J. S. (2024). Analyzing the rhetoric of Supreme Court confirmation hearings. Journal of Law and Courts, 12(1), 45-66.
 - Clark, T. S., Staton, J. K., Wang, Y., & Agichtein, E. (2018). Using twitter to study public discourse in the wake of judicial decisions: public reactions to the supreme Court’s same-sex-marriage cases. Journal of Law and Courts, 6(1), 93-126.
 

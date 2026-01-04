@@ -1,5 +1,5 @@
 ---
-title: "Supervised Learning"
+title: "Supervised Classification"
 parent: "Supervised Learning"
 nav_order: 2
 ---
