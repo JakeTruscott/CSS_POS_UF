@@ -1,0 +1,6 @@
+"0","for (i in 1:length(imdb_files)){
+  load(i)
+}
+"
+"2","Error in load(i) : bad 'file' argument
+"

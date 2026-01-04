@@ -93,14 +93,86 @@ p(Sports\mid D_{New}) \propto p(Sports) \times \mu_{Sports,Game} \times \mu_{Spo
 $$
 $$
 p(Politics\mid D_{New}) \propto p(Politics) \times \mu_{Politics,Game} \times \mu_{Politics,Team}  \times  \mu_{Politics,Vote} \\
-\frac{1}{3} \times 0.167 \times 0.167 \times 0.667 \approx 0.0062
+\frac{1}{3} \times 0.167 \times 0.167 \times 0.667 \approx 0.0062 
+$$
+
+Normalizing the probabilities, we get: 
+
+$$
+p(Sport|D_{New}) = \frac{0.0145}{0.0145+0.0062} \approx 0.70 \\
+p(Politics|D_{New}) = \frac{0.0062}{0.0145+0.0062} \approx 0.299 \\
 $$
 
 Though the probabilities are both rather small, the document is nevertheless more likely to be *Sports* -- adding more words to the training will certainly improve our inferential power. 
 
-Also, while I don't do it here, we can add the arg max term by taking the log of both the priors and likelihoods, which will still produce a preference for *Sports* without the mess of tiny probabilities (even with Laplace smoothing). 
+While I haven’t done it here, we could also implement the argmax approach by taking the log of both the priors and likelihoods, which would preserve the preference for *Sports* while avoiding the computational issues caused by very small probabilities (even with Laplace smoothing).
 
 ### Larger Example Using R
 
+Now let's do an extended example in <code>R</code> using a dataset of <a href="https://tensorflow.rstudio.com/tutorials/keras/text_classification">hand-coded IMDB movie reviews</a>. 
+
+```{r load_imdb_files_nb, echo=FALSE}
+
+imdb_files <- list.files('../data', full.names = T)
+
+for (i in 1:length(imdb_files)){
+  load(imdb_files[i])
+}
+
+
+```
+
+```{r, naive_bayes_example}
+
+for (i in 1:length(imdb_files)){
+  load(imdb_files[i])
+} # Load Each IMDB file from Week 7 Data directory
+
+set.seed(1234) # Set Random Seed
+
+train_data <- bind_rows(imdb_train_pos, imdb_train_neg) # Combine Train Rows 
+test_data  <- bind_rows(imdb_test_pos, imdb_test_neg) # combine Test Rows
+
+train_data <- train_data[sample(nrow(train_data), size = 5000, replace = FALSE), ] # Sample Out
+test_data <- test_data[sample(nrow(test_data), size = 1000, replace = FALSE), ] # Sample Out
+
+train_corpus <- tm::VCorpus(VectorSource(train_data$text)) # Convert Train to Corpus
+test_corpus  <- tm::VCorpus(VectorSource(test_data$text)) # Convert tes tto Corpus
+
+reduce_complexity <- function(corpus){
+  corpus <- tm_map(corpus, content_transformer(tolower))       
+  corpus <- tm_map(corpus, removePunctuation)
+  corpus <- tm_map(corpus, removeNumbers)
+  corpus <- tm_map(corpus, removeWords, stopwords("english"))
+  corpus <- tm_map(corpus, stripWhitespace)
+  return(corpus)
+} # Pre-Process (Reduce Complexity)
+
+train_corpus <- reduce_complexity(train_corpus) # Apply Complexity Reduction
+test_corpus  <- reduce_complexity(test_corpus) # Apply Complexity Reduction
+
+train_dtm <- removeSparseTerms(DocumentTermMatrix(train_corpus), 0.995) # Convert to DTM - Only Keep Terms in At least 0.5% of Docs
+test_dtm  <- DocumentTermMatrix(test_corpus, control = list(dictionary = Terms(train_dtm))) # Control Ensures Same Terms in Test as Train
+
+train_matrix <- as.data.frame(as.matrix(train_dtm)) # Convert Back to DF for NB
+train_matrix$sentiment <- train_data$sentiment # Ensure Sentiment 
+
+test_matrix <- as.data.frame(as.matrix(test_dtm)) # Convert to DF
+test_matrix$sentiment <- test_data$sentiment # Ensure Sentiment (for comparison)
+
+head(train_matrix[,c(1:5)])
+
+nb_model <- e1071::naiveBayes(sentiment ~ ., data = train_matrix) # Run NB Model
+
+head(nb_model$tables) # Likelihood of Word Being Absent [,1] or Present [,2] Given a Class (+/-)
+
+predictions <- predict(nb_model, newdata = test_matrix) # Make Predictions on Test Data
+
+mean(predictions == test_matrix$sentiment) # Performance Accuracy
+
+table(Predicted = predictions, Actual = test_matrix$sentiment) # Confusion Matrix
+
+
+```
 
 

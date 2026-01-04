@@ -3,7 +3,7 @@
     "path": "C:/Users/jaketruscott/Github/CSS_POLS_UF/docs/assets/replication_materials/class_7/code/supervised_learning.Rmd",
     "project_path": "class_7/code/supervised_learning.Rmd",
     "type": "r_markdown",
-    "hash": "0",
+    "hash": "722111316",
     "contents": "",
     "dirty": false,
     "created": 1767544107096.0,
@@ -12,16 +12,16 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "0,0",
-        "scrollLine": "0",
+        "cursorPosition": "58,0",
+        "scrollLine": "47",
         "ignored_words": "intersubjectivity\n"
     },
     "folds": "",
-    "lastKnownWriteTime": 1767548388,
+    "lastKnownWriteTime": 1767559881,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1767548388694,
+    "last_content_update": 1767559881028,
     "read_only": false,
     "read_only_alternatives": []
 }
