@@ -171,6 +171,164 @@ pre code {
 <hr />
 <div id="naive-bayes" class="section level2">
 <h2>Naive Bayes</h2>
+<p><span class="math display">\[
+P(A\mid B) = \frac{P(B\mid A) P(A)}{P(B)} \quad \text{ Bayes Rule} \\
+\]</span></p>
+<p><em>Naive Bayes</em> is a canonical supervised classification model
+that leverages Bayes’ rule to recover the probability that an unseen
+document (<span class="math inline">\(D_i\)</span>) containing words
+(<span class="math inline">\(w_{i1},...,w_{ij}\)</span>) belongs to a
+certain classification (<span class="math inline">\(\pi_{ik}\)</span>),
+where <span class="math inline">\(\pi_{ik}\)</span> is represented as 0
+or 1 given the membership of <span class="math inline">\(D_i\)</span> in
+class <span class="math inline">\(k\)</span>. Using Bayes’ rule, the
+posterior probability that document <span
+class="math inline">\(i\)</span> belongs to class <span
+class="math inline">\(k\)</span> is:</p>
+<p><span class="math display">\[
+p(\pi_{ik}\mid D_i) = \frac{p(\pi_{ik} = 1)p(D_i\mid \pi_{ik}
+=1)}{p(D_i)} \quad \text{ Bayes&#39; Rule -- Conditional Probability} \\
+p(\pi_{ik} = 1) \quad \text{ Baseline Probability that } D_i \text{
+Belongs to Class } k \text{ Before Reading It} \\
+p(D_i\mid \pi_{ik} = 1) = \quad \text{ Probability of Observing }
+w_{i1}...w_{ij} \text{ if } D_i \text{ in Class } k \\
+p(D_i) \quad \text{ Probability of Observing } D_i \text{ in Any Class
+-- Will Use to Normalize At End}
+\]</span> <em>Naive Assumption</em>: Conditional on class, words are
+independent of each other – i.e., once you know the class of any
+document, learning that one appears in it tells you nothing additional
+about whether another word appears. This is almost certainty wrong
+(<em>more soon</em>), but (as <strong>GRS</strong> note) baking in this
+assumption makes estimation much easier and effective.</p>
+<p><span class="math display">\[
+W_i\mid \pi_{ik} = 1 \sim \text{ Multinomial}(\sum_jW_{ij},\mu_k) \\
+p(W_i\mid \pi_{ik} = 1) \propto \prod^j_{j=1}\mu_{kj}^{W_{ij}}, \\
+\hat{\mu}_{ik} = \frac{c + \sum^N_i \pi_{ik}W_{ij}}{Jc + \sum_i \sum_j
+\pi_{ik}W_{ij}}
+\]</span></p>
+<p>There’s a lot going on here, but the intuition is effectively that
+the probability of observing words <span
+class="math inline">\(W_{i...j}\)</span> in class <span
+class="math inline">\(k\)</span> is proportional to the vector of
+probabilities for drawing each word in class <span
+class="math inline">\(k\)</span>. What this means practically is that we
+essentially need to collect all of the documents assigned to class <span
+class="math inline">\(k\)</span> and calculate the frequency with which
+word <span class="math inline">\(W_i\)</span> is used (and we can aid
+problems re: sparse word usage with a similar strategy to Laplace
+smoothing by adding a constant <span class="math inline">\(c\)</span>).
+The final <em>Naive</em> algorithm is:</p>
+<p><span class="math display">\[
+p(\pi_{ik}=1\mid W_i) \propto \frac{\sum^N_i I(y_i=k)}{N} \prod^j_{j=1}
+\mu_{kj}^{ij}
+\]</span> Which means that the probability of document <span
+class="math inline">\(i\)</span> belonging to class <span
+class="math inline">\(k\)</span> is proportional to the baseline
+frequency of class <span class="math inline">\(k\)</span> times the
+probability of observing all the words in the document if it came from
+that class, where <span class="math inline">\(\frac{\sum^N_i
+I(y_i=k)}{N}\)</span> is the baseline prior and <span
+class="math inline">\(\prod^j_{j=1} \mu_{kj}^{ij}\)</span> is the
+likelihood term.</p>
+<p>Finally, since the probabilities for single words are often very
+small, the standard way to implement Naive Bayes is usually by adding an
+<span class="math inline">\(arg max\)</span> term, which effectively
+takes the log to convert probabilities into sums and make computation
+safe and easier.</p>
+<p><span class="math display">\[
+\hat{y}_i = \text{arg max}_k [\text{log}p(\pi_{ik} = 1) +
+\sum^J_j=1W_{ij}\text{log}\mu_{ik}]
+\]</span> Which essentially just means to pick the class (<span
+class="math inline">\(k\)</span>) with the largest value. In other
+words, the model adds up the contributions from the prior and all the
+words, then chooses the class that looks most likely — a process that
+becomes much simpler and more stable when we work with logs.</p>
+<div id="basic-naive-bayes-example" class="section level3">
+<h3>Basic Naive Bayes Example</h3>
+<p>Let’s suppose we are classifying stories from a popular newspaper and
+want to know what types of content these organizations are discussing.
+Let’s say we have two class – <em>Sports</em> and <em>Politics</em> –
+and just three words to consider – <em>Game</em>, <em>Team</em>, and
+<em>Vote</em>.</p>
+<p>We first construct a training set using a random sample of the
+observations, which produces:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Document</th>
+<th align="center">Class</th>
+<th align="center">Words (Counts)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">1</td>
+<td align="center">Sports</td>
+<td align="center">Game (2), Team (1), Vote (0)</td>
+</tr>
+<tr class="even">
+<td align="center">2</td>
+<td align="center">Sports</td>
+<td align="center">Game (1), Team (2), Vote (0)</td>
+</tr>
+<tr class="odd">
+<td align="center">3</td>
+<td align="center">Politics</td>
+<td align="center">Game (0), Team (0), Vote (3)</td>
+</tr>
+</tbody>
+</table>
+<p>The class (<span class="math inline">\(k\)</span>) priors (<span
+class="math inline">\(\frac{\sum^N_i I(y_i=k)}{N}\)</span>) would be
+<span class="math inline">\(p(\text{Sports}) = \frac{2}{3}\)</span> and
+<span class="math inline">\(p(\text{Politics}) = \frac{1}{3}\)</span>,
+because 2 of the 3 documents in the training set are labeled as
+<em>Sports</em>.</p>
+<p>Before we compute the word probabilities per class (<span
+class="math inline">\(\mu_{kj}\)</span>) with 6 total words observed in
+<em>Sports</em> and 3 in <em>Politics</em>, there are going to be terms
+that don’t appear in certain classes (e.g., <em>Vote</em> does not
+appear in any <em>Sports</em> documents), so we are going to add Laplace
+smoothing (<span class="math inline">\(c\)</span>). With <span
+class="math inline">\(c\)</span> = 1 and the total vocabulary (<span
+class="math inline">\(J\)</span>) = 3, <span
+class="math inline">\(\mu_{kj}\)</span> =</p>
+<ul>
+<li><span class="math inline">\(\mu_{Sports, Game} = \frac{3 + 1}{6 + 3}
+\approx 0.444\)</span></li>
+<li><span class="math inline">\(\mu_{Sports, Team} = \frac{4}{9} \approx
+0.444\)</span></li>
+<li><span class="math inline">\(\mu_{Sports, Vote} = \frac{1}{9} \approx
+0.111\)</span></li>
+<li><span class="math inline">\(\mu_{Politics, Game} = \frac{1}{6}
+\approx 0.167\)</span></li>
+<li><span class="math inline">\(\mu_{Politics, Team} = \frac{1}{6}
+\approx 0.167\)</span></li>
+<li><span class="math inline">\(\mu_{Politics, Vote} = \frac{4}{6}
+\approx 0.667\)</span></li>
+</ul>
+<p>Assuming we introduce a new document (<span
+class="math inline">\(D_{New}\)</span>) = (Game, Team, Vote):</p>
+<p><span class="math display">\[
+p(Sports\mid D_{New}) \propto p(Sports) \times \mu_{Sports,Game} \times
+\mu_{Sports,Team}  \times  \mu_{Sports,Vote} \\
+\frac{2}{3} \times 0.444 \times 0.444 \times 0.111 \approx 0.0145
+\]</span> <span class="math display">\[
+p(Politics\mid D_{New}) \propto p(Politics) \times \mu_{Politics,Game}
+\times \mu_{Politics,Team}  \times  \mu_{Politics,Vote} \\
+\frac{1}{3} \times 0.167 \times 0.167 \times 0.667 \approx 0.0062
+\]</span></p>
+<p>Though the probabilities are both rather small, the document is
+nevertheless more likely to be <em>Sports</em> – adding more words to
+the training will certainly improve our inferential power.</p>
+<p>Also, while I don’t do it here, we can add the arg max term by taking
+the log of both the priors and likelihoods, which will still produce a
+preference for <em>Sports</em> without the mess of tiny probabilities
+(even with Laplace smoothing).</p>
+</div>
+<div id="larger-example-using-r" class="section level3">
+<h3>Larger Example Using R</h3>
+</div>
 </div>
 
 
