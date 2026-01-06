@@ -50,8 +50,8 @@ has_children: true
 
 ## Readings
 - **GRS** Ch. 8
-- Rodriguez, P. L., \& Spirling, A. (2022). Word embeddings: What works, what doesn't, and how to tell the difference for applied research. The Journal of Politics, 84(1), 101-115.
-- Timoneda, J. C., \& Vera, S. V. (2025). BERT, RoBERTa, or DeBERTa? Comparing Performance Across Transformers Models in Political Science Text. The Journal of Politics, 87(1), 347-364.
+- Rodriguez, P. L., & Spirling, A. (2022). Word embeddings: What works, what doesn't, and how to tell the difference for applied research. The Journal of Politics, 84(1), 101-115.
+- Timoneda, J. C., & Vera, S. V. (2025). BERT, RoBERTa, or DeBERTa? Comparing Performance Across Transformers Models in Political Science Text. The Journal of Politics, 87(1), 347-364.
 
 ## Homework
 
