@@ -146,8 +146,10 @@ University of Florida \newline Spring 2026 \newline \newline \newline
 \begin{document}
 \frame{\titlepage}
 
+\section{Overview}\label{overview}
+
 \begin{frame}{Overview}
-\phantomsection\label{overview}
+\phantomsection\label{overview-1}
 \begin{itemize}
 \tightlist
 \item
@@ -277,7 +279,6 @@ Q of Clubs
 \begin{frame}{Generating Distributions}
 \phantomsection\label{generating-distributions}
 \begin{itemize}
-\tightlist
 \item
   What if we wanted to move beyond random selection where each draw or
   iteration exists with equal probability or within a uniform
@@ -351,5 +352,116 @@ Q of Clubs
 \end{frame}
 
 \section{Loops}\label{loops}
+
+\begin{frame}{Loops (Basics)}
+\phantomsection\label{loops-basics}
+\begin{itemize}
+\tightlist
+\item
+  Functions concern
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Games of Chance: Blackjack}
+\phantomsection\label{games-of-chance-blackjack}
+\centering
+
+\textbf{What are the basic rules of Blackjack?}
+
+\par \vspace{5mm}
+
+\includegraphics[width=9cm]{../../images/blackjack.png}
+\end{frame}
+
+\begin{frame}{Rules of Blackjack:}
+\phantomsection\label{rules-of-blackjack}
+\begin{itemize}
+\tightlist
+\item
+  Objective: Beat the dealer by getting closer to 21 without going over
+\item
+  Card values:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Number Cards = Face Value
+  \item
+    Face Cards = 10 (Aces = 1 \emph{or} 11)
+  \end{itemize}
+\item
+  Dealer Rules: Dealer reveals cards after players act and must hit
+  until \emph{at least} 17
+\item
+  Gameplay:
+
+  \begin{itemize}
+  \item
+    Go Over 21 = \textbf{BUST} (Loss)
+  \item
+    Tie w/ Dealer = Push (No Win/Loss)
+  \item
+    Standard Win = \textbf{1:1} (Win Bet x2)
+  \item
+    Blackjack (Ace + 10-Value Card = \textbf{3:2}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Blackjack Exercise}
+\phantomsection\label{blackjack-exercise}
+\begin{center}
+\textbf{Write an \texttt{R} routine to play a round of Blackjack. I will be the Dealer}
+\end{center} \par \vspace{5mm}
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{Hint}: Sample from all 52 cards without replacement\ldots{}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Blackjack Exercise (Cont.)}
+\phantomsection\label{blackjack-exercise-cont.}
+\begin{enumerate}
+\tightlist
+\item
+  What if we play with a four-deck shoe?
+
+  \par \vspace{2.5mm}
+\item
+  What if I wanted to repeat this process 1,000 times?
+
+  \par \vspace{2.5mm}
+\end{enumerate}
+
+\emph{Hint}: Use a loop!
+\end{frame}
+
+\begin{frame}{Blackjack Exercise (Cont.)}
+\phantomsection\label{blackjack-exercise-cont.-1}
+\begin{enumerate}
+\tightlist
+\item
+  Assume I begin with \$1000 every day and bet \$100 each game (though
+  I'll only play 10 hands\ldots). Over 100 days, approximately how much
+  money am I left with? \emph{Note}: If I run out of money on a given
+  day, I'm done -- also, each day restarts with \$1000 but previous
+  day's leftover sum is added to aggregate winnings.
+
+  \par \vspace{2.5mm}
+\item
+  What if I start with \$1000 but don't replace the money every
+  day\ldots{} How much will I have after 10 days? 50 days?
+
+  \par \vspace{2.5mm}
+\item
+  Take some time then play around with blackjack\_simulation.R
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Roulette Exercise}
+\phantomsection\label{roulette-exercise}
+\end{frame}
 
 \end{document}

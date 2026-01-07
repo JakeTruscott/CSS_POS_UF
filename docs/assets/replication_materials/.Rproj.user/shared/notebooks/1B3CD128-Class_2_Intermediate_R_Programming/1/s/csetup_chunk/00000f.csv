@@ -1,5 +1,24 @@
 "0","library(dplyr); library(ggplot2); library(cowplot); library(formatR)"
-"0",""
+"2","
+Attaching package: ‘dplyr’
+
+"
+"2","The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+"
+"2","Need help? Try Stackoverflow:
+https://stackoverflow.com/tags/ggplot2
+"
+"2","Warning:"
+"2"," package ‘formatR’ was built under R version 4.4.3
+"
 "0","knitr::opts_chunk$set("
 "0","  warning = FALSE, "
 "0","	fig.align = ""center"","

@@ -1,0 +1,226 @@
+#########################################################
+# Class 2: Intermediate Programming in R
+# Blackjack Simulation
+# Jake S. Truscott
+#########################################################
+
+#########################################################
+# Libraries & Seed
+#########################################################
+library(dplyr)
+set.seed(1234)
+
+#########################################################
+# Cards
+#########################################################
+
+suits <- c("Clubs_", "Spades_", "Hearts_", "Diamonds_")
+ranks <- c(2:10, "Jack", "Queen", "King", "Ace")
+
+card_values <- c(
+  "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "7" = 7,
+  "8" = 8, "9" = 9, "10" = 10,
+  "Jack" = 10, "Queen" = 10, "King" = 10, "Ace" = 1
+)
+
+deck <- paste0(rep(suits, each = length(ranks)), ranks)
+
+
+#########################################################
+# Elaborate Interconnected Function Series...
+#########################################################
+
+draw_card <- function(available_cards = NULL){
+
+  if (is.null(available_cards)){
+    return(sample(deck, 1, replace = F)) # If First Card
+  } else{
+    return(sample(available_cards, 1, replace = F)) # If Not First Card
+  }
+
+} # Draw Card -- Deck or Remaining Cards
+
+current_value <- function(current_cards){
+
+  current_card_values <- gsub('(Clubs\\_|Spades\\_|Hearts\\_|Diamonds\\_)', '', current_cards)
+
+  current_card_values <- as.numeric(sum(card_values[current_card_values]))
+
+  if (any(grepl('\\_Ace', current_cards))){ # IF an Ace
+
+    if (current_card_values <= 10){
+      return(paste0(current_card_values, ' or ', current_card_values + 10)) # 2 Options
+    } else if (current_card_values == 11){
+      return('21! Ace High') # Count = 11 + 10 = 21
+    } else if (current_card_values >= 22){
+      return(current_card_values)
+      } else {
+      return(current_card_values) # Ace But Current Count >= 12
+    }
+
+
+  } else {
+
+    return(current_card_values)
+
+  }
+
+} # Compile Current Value of Cards
+
+check_hand <- function(hand){
+
+  if (is.numeric(hand) & hand == 21){
+    return('Winner!') # 21!
+  } else if (is.numeric(hand) & hand <= 20){
+    return(as.character(hand)) # < 21
+  } else if (is.character(hand)){
+    return(as.character(hand))
+  } # Ace
+
+
+} # Recover Value of Hand
+
+hit_stay <- function(){
+  response <- readline("Hit or Stay? ")
+  if (tolower(response) %in% c('hit', 'Hit', 'hit me', 'Hit me')) {
+    draw_card()
+    return(response)
+  } else {
+    return('Done')
+  }
+} # Hit or Stay Interactive
+
+hit_stay_sim <- function(hand){
+
+  if (grepl('or', hand)){
+    hand <- as.numeric(unlist(stringr::str_split(hand, ' or ')))[2] # Split Ace (Take Higher Value)
+  }
+
+  prob_hit <- c(rep(100, 8), rev(seq(10, 100, 10)), 0.5)*(1/100) # Probs
+  prob_hit_value <- c(2:9, seq(10, 20, 1))
+  names(prob_hit) <- prob_hit_value
+
+  prob_hit <- prob_hit[names(prob_hit) == hand]
+
+  temp_hit_stay <- sample(c('Hit', 'Stay'), size = 1, prob = c(prob_hit, 1 - prob_hit))
+
+  if (temp_hit_stay == 'Hit'){
+    return('Hit')
+  } else {
+    return('Done')
+  }
+
+
+} # Simulate Hit or Stay Based on Probs
+
+play_blackjack <- function(role = 'player', cards, interactive = TRUE) {
+
+  hand_cards <- sample(cards, 2, replace = FALSE)
+  hand <- current_value(hand_cards)
+
+  if (grepl('21', hand)){
+    cat('Winner, Winner, Chicken Dinner! Blackjack!', '\n')
+    return(invisible(NULL)) # Stop if Blackjack!
+  }
+
+  repeat {
+
+    if (is.numeric(hand) && hand >= 22) {
+      cat('Bust! Hand Value:', hand)
+      return(invisible(NULL))  # Stop if Bust
+    }
+
+    if (is.numeric(hand) & hand == 21){
+      cat('Winner, Winner, Chicken Dinner!', '\n')
+      return(invisible(NULL)) # Stop if 21
+    } else if (is.character(hand) & hand == '21! Ace High'){
+      cat('Winner, Winner, Chicken Dinner! Ace High', '\n')
+      return(invisible(NULL)) # Stop if 21
+    }
+
+    if (is.numeric(hand) & role == 'dealer' & hand >= 17){
+      message('Dealer Stays at 17 or More!', '\n')
+      return(invisible(NULL))
+    }
+
+    cat('Current Hand:', check_hand(hand), '\n')
+
+    if (interactive == TRUE){
+      player_response <- hit_stay() # Hit or Stay
+    } else {
+      player_response <- hit_stay_sim(hand) # Hit or Stay from Assigned Probs
+    }
+
+    if (player_response == 'Done') {
+
+      if (grepl('or', hand)){
+        values <- max(as.numeric(unlist(stringr::str_split(hand, pattern = ' or '))))
+        hand <- paste0(values, ' (Ace High)')
+      }
+
+      cat('Final Hand Value:', hand, '\n')
+      break  # Stop if Stays
+    } else {
+      new_card <- sample(cards, 1)
+      hand_cards <- c(hand_cards, new_card)
+      hand <- current_value(hand_cards)
+    }
+  }
+
+  return(invisible(NULL))
+
+} # Play!
+
+
+#########################################################
+# 1 Deck
+#########################################################
+
+play_blackjack(role = 'player',
+               cards = deck) # Have Fun!
+
+
+#########################################################
+# Multiple Decks
+#########################################################
+
+play_blackjack(role = 'player',
+               cards = rep(deck, 4)) # 4 Deck Shoe!
+
+#########################################################
+# How Many Blackjacks Over 1,000 Iterations?
+#########################################################
+
+outcomes <- character(1000) # Empty Character Vector (x1000)
+
+for (i in seq_len(1000)) {
+
+  if (i %% 100 == 0) {
+    message("Completed ", i, "/1000 Games")
+  }
+
+  temp_out <- capture.output(
+    play_blackjack(
+      role = 'player',
+      cards = rep(deck, 4),
+      interactive = FALSE
+    )
+  )
+
+  last_line <- trimws(tail(temp_out, 1))
+
+  outcomes[i] <- if (grepl("Blackjack", last_line)) {
+    "Blackjack"
+  } else if (grepl("Winner", last_line)) {
+    "21"
+  } else {
+    gsub(".*Value:\\s*", "", gsub(' \\(.*', '', last_line))
+  }
+} # Run 1000 Times (Hit Stay Probs)
+
+data.frame(value = outcomes) %>%
+  mutate(value = ifelse(value %in% as.character(c(22:30)), 'Bust', value)) %>%
+  group_by(value) %>%
+  summarise(count = n()) %>%
+  ggplot(aes(x = value, y = count)) +
+  geom_col()

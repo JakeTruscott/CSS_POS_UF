@@ -1,0 +1,26 @@
+{
+    "id": "D51DBA9A",
+    "path": "C:/Users/jaketruscott/Github/CSS_POLS_UF/docs/assets/replication_materials/class_2/code/blackjack_simulation.R",
+    "project_path": "class_2/code/blackjack_simulation.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1767792210699.0,
+    "source_on_save": false,
+    "relative_order": 4,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "579,29",
+        "scrollLine": "466"
+    },
+    "folds": "32|46|40|0|\n42|41|67|0|\n69|29|80|0|\n82|23|90|0|\n92|31|113|0|\n115|72|171|0|\n189|57|190|44|\n197|26|220|0|\n251|32|286|0|\n338|25|422|2|\n469|28|574|0|\n488|25|566|2|\n",
+    "lastKnownWriteTime": 1767797698,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1767797698585,
+    "read_only": false,
+    "read_only_alternatives": []
+}

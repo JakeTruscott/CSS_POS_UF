@@ -1,0 +1,9 @@
+\frametitle{Generating Distributions (Exponential -- Ex)}
+\phantomsection\label{generating-distributions-exponential-ex-1}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{exp }\OtherTok{\textless{}{-}} \FunctionTok{rexp}\NormalTok{(}\DecValTok{1000}\NormalTok{, }\AttributeTok{rate =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/rexp_ex_figure-1} \end{center}
