@@ -1,9 +1,26 @@
-\frametitle{Generating Distributions (Exponential -- Ex)}
-\phantomsection\label{generating-distributions-exponential-ex-1}
+\frametitle{Loops (Basics, Cont.)}
+\phantomsection\label{loops-basics-cont.-3}
+\footnotesize
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{exp }\OtherTok{\textless{}{-}} \FunctionTok{rexp}\NormalTok{(}\DecValTok{1000}\NormalTok{, }\AttributeTok{rate =} \DecValTok{2}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (card }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{) \{}
+    \ControlFlowTok{for}\NormalTok{ (player }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{) \{}
+\NormalTok{        temp\_player\_card }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(deck, }\DecValTok{1}\NormalTok{, }\AttributeTok{replace =}\NormalTok{ F)}
+\NormalTok{        deck }\OtherTok{\textless{}{-}}\NormalTok{ deck[}\SpecialCharTok{!}\NormalTok{deck }\SpecialCharTok{\%in\%}\NormalTok{ temp\_player\_card]}
+\NormalTok{        hands[[player]][card] }\OtherTok{\textless{}{-}}\NormalTok{ temp\_player\_card}
+\NormalTok{    \}  }\CommentTok{\# For All 5 Players}
+\NormalTok{\}  }\CommentTok{\# For Both Cards}
+
+\FunctionTok{do.call}\NormalTok{(cbind, hands)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/rexp_ex_figure-1} \end{center}
+\begin{verbatim}
+     [,1]          [,2]            [,3]
+[1,] "3 of Spades" "4 of Diamonds" "J of Diamonds"
+[2,] "A of Clubs"  "10 of Hearts"  "6 of Hearts"
+     [,4]         [,5]
+[1,] "2 of Clubs" "10 of Clubs"
+[2,] "6 of Clubs" "7 of Diamonds"
+\end{verbatim}

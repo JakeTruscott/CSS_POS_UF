@@ -153,6 +153,8 @@ University of Florida \newline Spring 2026 \newline \newline \newline
 \begin{itemize}
 \tightlist
 \item
+  \textbf{Today's Goal}: Improve Effectiveness w/ \texttt{R} Programming
+\item
   Random Number Generation in \texttt{R} \vspace{2.5mm}
 \item
   Loops and Iteration \vspace{2.5mm}
@@ -168,19 +170,19 @@ University of Florida \newline Spring 2026 \newline \newline \newline
 \centering
 
 \textbf{What is the probability that any independent coin flip will land on heads?}
-\pause 
+\pause
 
 \par \vspace{5mm}
 
-\textbf{Does this change if I flip 50 times?} \pause 
+\textbf{Does this change if I flip 50 times?} \pause
 
 \par \vspace{5mm}
 
-\textbf{What about 100 times?}\pause 
+\textbf{What about 100 times?}\pause
 
 \par \vspace{5mm}
 
-\textbf{What about 1000 times?}\pause 
+\textbf{What about 1000 times?}\pause
 
 \par \vspace{5mm}
 
@@ -201,7 +203,7 @@ University of Florida \newline Spring 2026 \newline \newline \newline
 \item
   We can use \texttt{sample()} to randomly select elements from a vector
 \item
-  In this case, a coin flip where \(p(heads) = p(tails) = 0.5\)
+  In this case, a coin flip where \(p(heads) = p(tails) = 0.5\) \small
 \end{itemize}
 
 \begin{Shaded}
@@ -222,7 +224,7 @@ University of Florida \newline Spring 2026 \newline \newline \newline
 \begin{itemize}
 \tightlist
 \item
-  We can use the same approach to ``roll'' a six-sided die.
+  We can use the same approach to ``roll'' a six-sided die. \small
 \end{itemize}
 
 \begin{Shaded}
@@ -236,6 +238,8 @@ University of Florida \newline Spring 2026 \newline \newline \newline
 \begin{verbatim}
 Result of Single Roll: 1
 \end{verbatim}
+
+\small
 \end{frame}
 
 \begin{frame}[fragile]{Poker Hands}
@@ -351,15 +355,223 @@ Q of Clubs
 \begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/rexp_ex_figure-1} \end{center}
 \end{frame}
 
+\section{Functions}\label{functions}
+
+\begin{frame}{Functions (Basics)}
+\phantomsection\label{functions-basics}
+\begin{itemize}
+\tightlist
+\item
+  Functions are reusable blocks of code that perform a specific task
+  when called, helping avoid repetition.
+
+  \par \vspace{2.5mm}
+\item
+  They can take arguments (inputs) and return values (outputs), making
+  them flexible and generalizable.
+
+  \par \vspace{2.5mm}
+\item
+  They can also be combined, nested, and used within other functions to
+  build complex workflows in a clear, organized way.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Functions (Basic Syntax)}
+\phantomsection\label{functions-basic-syntax}
+\small
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{function\_name }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(input\_1, input\_2)\{}
+  
+\NormalTok{  Code to Assume Input\_1 and Input\_2 }
+  
+  \FunctionTok{return}\NormalTok{(Return Output Value or Object)}
+  
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{Functions (Example)}
+\phantomsection\label{functions-example}
+\small
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{add\_numbers }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x, y) \{}
+\NormalTok{    result }\OtherTok{\textless{}{-}}\NormalTok{ x }\SpecialCharTok{+}\NormalTok{ y}
+    \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{\}}
+
+\FunctionTok{add\_numbers}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}{Functions (Basics, Cont.)}
+\phantomsection\label{functions-basics-cont.}
+\begin{itemize}
+\tightlist
+\item
+  Take some time to try your own!
+\item
+  Try:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Random Number Generation
+  \item
+    Easy Task Completion (e.g., addition, subtraction, etc.)
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
 \section{Loops}\label{loops}
 
-\begin{frame}{Loops (Basics)}
+\begin{frame}[fragile]{Loops (Basics)}
 \phantomsection\label{loops-basics}
 \begin{itemize}
 \tightlist
 \item
-  Functions concern
+  In \texttt{R}, a for loop is a control structure used to repeat a
+  block of code a fixed number of times, iterating over a sequence of
+  values. The basic syntax is:
 \end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{for}\NormalTok{ (variable }\ControlFlowTok{in}\NormalTok{ sequence)\{}
+\NormalTok{   Repeating Code Routine}
+  \FunctionTok{return}\NormalTok{(Result Value or Object)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{Loops (Basics, Cont.)}
+\phantomsection\label{loops-basics-cont.}
+\begin{itemize}
+\tightlist
+\item
+  For example, we can complete basics rolls of six-sided dice:
+\end{itemize}
+
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rolls }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{()}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{) \{}
+
+\NormalTok{    temp\_roll }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{6}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{replace =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{prob =} \FunctionTok{rep}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\DecValTok{6}\NormalTok{,}
+        \DecValTok{6}\NormalTok{))}
+
+\NormalTok{    rolls }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(rolls, temp\_roll)}
+\NormalTok{\}}
+
+\NormalTok{rolls  }\CommentTok{\# Print}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+ [1] 6 6 1 4 3 4 3 1 6 3
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Loops (Basics, Cont.)}
+\phantomsection\label{loops-basics-cont.-1}
+\begin{itemize}
+\tightlist
+\item
+  We can also conditionally iterate through different values from the
+  \texttt{functions} example
+\end{itemize}
+
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{add\_numbers }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x, y) \{}
+\NormalTok{    result }\OtherTok{\textless{}{-}}\NormalTok{ x }\SpecialCharTok{+}\NormalTok{ y}
+    \FunctionTok{return}\NormalTok{(result)}
+\NormalTok{\}}
+
+\NormalTok{available\_values }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{)}
+\NormalTok{sums }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{()}
+
+\ControlFlowTok{for}\NormalTok{ (pair }\ControlFlowTok{in} \FunctionTok{seq}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{)) \{}
+\NormalTok{    temp\_pair }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(available\_values, }\DecValTok{2}\NormalTok{)}
+\NormalTok{    sums }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(sums, }\FunctionTok{add\_numbers}\NormalTok{(temp\_pair[}\DecValTok{1}\NormalTok{], temp\_pair[}\DecValTok{2}\NormalTok{]))}
+\NormalTok{\}}
+
+\NormalTok{sums}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+ [1] 12 14  9 16 13  9 15 13  8 14
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Loops (Basics, Cont.)}
+\phantomsection\label{loops-basics-cont.-2}
+\begin{itemize}
+\tightlist
+\item
+  I can also deal 5 hands from a standard 52-card deck for a game of
+  Texas Hold 'Em
+
+  \par \vspace{2.5mm}
+\item
+  Here's the setup -- What's Next?
+\end{itemize}
+
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1234}\NormalTok{)  }\CommentTok{\# Seed}
+\NormalTok{cards }\OtherTok{\textless{}{-}} \FunctionTok{as.character}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{2}\SpecialCharTok{:}\DecValTok{10}\NormalTok{, }\StringTok{"J"}\NormalTok{, }\StringTok{"Q"}\NormalTok{, }\StringTok{"K"}\NormalTok{, }\StringTok{"A"}\NormalTok{))}
+\NormalTok{suits }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Hearts"}\NormalTok{, }\StringTok{"Diamonds"}\NormalTok{, }\StringTok{"Spades"}\NormalTok{, }\StringTok{"Clubs"}\NormalTok{)}
+\NormalTok{deck }\OtherTok{\textless{}{-}} \FunctionTok{expand.grid}\NormalTok{(}\AttributeTok{value =}\NormalTok{ cards, }\AttributeTok{suit =}\NormalTok{ suits) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{card =} \FunctionTok{paste}\NormalTok{(value, }\StringTok{"of"}\NormalTok{, suit)) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{pull}\NormalTok{(card)  }\CommentTok{\# Create a Full Deck}
+
+\NormalTok{hands }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) x)}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{Loops (Basics, Cont.)}
+\phantomsection\label{loops-basics-cont.-3}
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{for}\NormalTok{ (card }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{) \{}
+    \ControlFlowTok{for}\NormalTok{ (player }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{) \{}
+\NormalTok{        temp\_player\_card }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(deck, }\DecValTok{1}\NormalTok{, }\AttributeTok{replace =}\NormalTok{ F)}
+\NormalTok{        deck }\OtherTok{\textless{}{-}}\NormalTok{ deck[}\SpecialCharTok{!}\NormalTok{deck }\SpecialCharTok{\%in\%}\NormalTok{ temp\_player\_card]}
+\NormalTok{        hands[[player]][card] }\OtherTok{\textless{}{-}}\NormalTok{ temp\_player\_card}
+\NormalTok{    \}  }\CommentTok{\# For All 5 Players}
+\NormalTok{\}  }\CommentTok{\# For Both Cards}
+
+\FunctionTok{do.call}\NormalTok{(cbind, hands)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+     [,1]          [,2]            [,3]           
+[1,] "3 of Spades" "4 of Diamonds" "J of Diamonds"
+[2,] "A of Clubs"  "10 of Hearts"  "6 of Hearts"  
+     [,4]         [,5]           
+[1,] "2 of Clubs" "10 of Clubs"  
+[2,] "6 of Clubs" "7 of Diamonds"
+\end{verbatim}
 \end{frame}
 
 \begin{frame}{Games of Chance: Blackjack}
@@ -424,7 +636,6 @@ Q of Clubs
 \begin{frame}{Blackjack Exercise (Cont.)}
 \phantomsection\label{blackjack-exercise-cont.}
 \begin{enumerate}
-\tightlist
 \item
   What if we play with a four-deck shoe?
 
@@ -441,7 +652,6 @@ Q of Clubs
 \begin{frame}{Blackjack Exercise (Cont.)}
 \phantomsection\label{blackjack-exercise-cont.-1}
 \begin{enumerate}
-\tightlist
 \item
   Assume I begin with \$1000 every day and bet \$100 each game (though
   I'll only play 10 hands\ldots). Over 100 days, approximately how much
@@ -462,6 +672,24 @@ Q of Clubs
 
 \begin{frame}{Roulette Exercise}
 \phantomsection\label{roulette-exercise}
+\begin{itemize}
+\tightlist
+\item
+  Head over to Course GitHub (Intermediate Programming in \texttt{R})
+\item
+  Bottom of \texttt{Number Generation \& Loops}
+\end{itemize}
+\end{frame}
+
+\section{Data Visualization
+(ggplot::())}\label{data-visualization-ggplot}
+
+\begin{frame}{ggplot::()}
+\phantomsection\label{ggplot}
+\begin{itemize}
+\tightlist
+\item
+\end{itemize}
 \end{frame}
 
 \end{document}

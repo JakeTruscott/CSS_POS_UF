@@ -1,31 +1,13 @@
 "0","library(dplyr); library(ggplot2); library(cowplot); library(formatR)"
-"2","
-Attaching package: ‘dplyr’
-
-"
-"2","The following objects are masked from ‘package:stats’:
-
-    filter, lag
-
-"
-"2","The following objects are masked from ‘package:base’:
-
-    intersect, setdiff, setequal, union
-
-"
-"2","Need help? Try Stackoverflow:
-https://stackoverflow.com/tags/ggplot2
-"
-"2","Warning:"
-"2"," package ‘formatR’ was built under R version 4.4.3
-"
+"0",""
 "0","knitr::opts_chunk$set("
 "0","  warning = FALSE, "
 "0","	fig.align = ""center"","
 "0","	comment = NA,"
 "0","	dev = ""pdf"","
 "0","	size = ""tiny"","
-"0","	tidy = TRUE"
+"0","	tidy = TRUE, "
+"0","  tidy.opts=list(width.cutoff=50)"
 "0",")"
 "0",""
 "0","default_ggplot_theme  <- theme_minimal(base_size = 12) +"
