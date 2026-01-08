@@ -174,6 +174,136 @@ id="embeddings-or-how-i-learned-to-stop-worrying-and-love-words-as-numbers"
 class="section level2">
 <h2>Embeddings: Or, How I Learned to Stop Worrying and Love Words as
 Numbers</h2>
+<p>To this point, our analyses of text have largely relied on one-hot
+encoding. From rudimentary co-occurrence measures using dictionaries to
+more advanced approaches like Naive Bayes, we have remained firmly
+within the Bag-of-Words (BoW) framework. As we noted when first
+introducing BoW, even with careful preprocessing and complexity
+reduction, this approach has an important limitation: it provides no way
+to represent similarity between words.</p>
+<p>Consider the matrix below, which represents a one-hot encoding of a
+small vocabulary:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center"></th>
+<th align="center">Dog</th>
+<th align="center">Cat</th>
+<th align="center">Horse</th>
+<th align="center">Pig</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>Dog</strong></td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Cat</strong></td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>Horse</strong></td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Pig</strong></td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+</tr>
+</tbody>
+</table>
+<p>Notwithstanding the diagonal, all entries are zero. The vector for
+<em>cat</em> would then be <span class="math inline">\(\text{cat} = (0,
+1, 0, 0)\)</span>, which conveys only the fact that the word is cat and
+nothing else. For some tasks – e.g., identifying whether a document from
+a veterinary hospital discusses a particular animal, this may be
+sufficient.</p>
+<p>But what if we have a vocabulary like this?</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center"></th>
+<th align="center">Dog</th>
+<th align="center">Pooch</th>
+<th align="center">K9</th>
+<th align="center">Fire Truck</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>Dog</strong></td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Pooch</strong></td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>K9</strong></td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Fire Truck</strong></td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+</tr>
+</tbody>
+</table>
+<p>Suddenly we’re at risk of some information loss – because
+<em>Dog</em>, <em>Pooch</em>, and <em>K9</em> are reasonably describing
+the same thing. Put a different way, if we were to approach this as a
+clustering task, how would we organize this vocabulary? Certainly we
+wouldn’t want to say each word represents it’s own cluster center.
+Rather, the assortment would probably be <span
+class="math inline">\(K_{1} = (\text{Dog, Pooch, K9})\)</span> and <span
+class="math inline">\(K_{2} = (\text{Fire Truck})\)</span>. Yet this
+structure is invisible in a one-hot representation, where all distinct
+words are equally dissimilar.</p>
+<p>So, I am going to posit we consider a few things:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Words have similar meaning</strong>. Recall that we
+discussed a few classes ago just how broad and diverse the English
+language is. Move from a dictionary to a thesaurus and you’ll quickly
+realize that virtually every word has a worthy synonym to replace it
+given syntax or other some reasoning. Word choice is certainly an
+important indicator of author’s intent (it was good enough to attribute
+authorship of disputed <em>Federalist Papers</em>!), but treating each
+word as entirely distinct is often too restrictive. Moreover, many words
+are polysemous, taking on different meanings depending on context. A
+good example (I think) from my own research is <em>Judge</em> – which,
+given context as a verb (<em>to judge</em>) versus a noun (<em>a
+judge</em>) can prescribe very different meanings.</p></li>
+<li><p><strong>Similarity is not fully captured in word
+co-occurrence</strong>: Rather than asking whether two words are exactly
+the same, a more useful question is whether they tend to appear in
+similar contexts. If we were to compare words across a corpus, we would
+expect <em>Pooch</em> to appear in usage settings much closer to
+<em>Dog</em> than to <em>Fire Truck</em>. One-hot encodings cannot
+represent this graded notion of similarity.</p></li>
+</ol>
 </div>
 
 
