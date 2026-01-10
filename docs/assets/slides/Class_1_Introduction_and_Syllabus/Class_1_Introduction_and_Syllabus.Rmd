@@ -208,6 +208,10 @@ Expectations are fairly simple: \par \vspace{5mm}
 # Downloading \texttt{R} & \texttt{Python}
 
 ### Downloading \texttt{R} \hspace{1.5mm} \includegraphics[width=5mm]{../../images/R_logo.png}
+\centering 
+\Large Downloading \texttt{R} \hspace{1.5mm} \includegraphics[width=5mm]{../../images/R_logo.png}
+
+### Downloading \texttt{R} \hspace{1.5mm} \includegraphics[width=5mm]{../../images/R_logo.png}
 
 \begin{itemize}
   
@@ -248,7 +252,9 @@ Expectations are fairly simple: \par \vspace{5mm}
 
 
 
-
+### Downloading \texttt{Python} \hspace{1.5mm} \includegraphics[width=5mm]{../../images/Python_logo.png}
+\centering 
+\Large Downloading \texttt{Python} \hspace{1.5mm} \includegraphics[width=5mm]{../../images/Python_logo.png}
 
 
 
