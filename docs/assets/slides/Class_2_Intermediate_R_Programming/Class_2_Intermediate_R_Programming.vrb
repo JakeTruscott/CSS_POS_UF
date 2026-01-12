@@ -1,26 +1,21 @@
-\frametitle{Loops (Basics, Cont.)}
-\phantomsection\label{loops-basics-cont.-3}
-\footnotesize
-
+\frametitle{ggplot::()}
+\phantomsection\label{ggplot}
 \begin{Shaded}
 \begin{Highlighting}[]
-\ControlFlowTok{for}\NormalTok{ (card }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{) \{}
-    \ControlFlowTok{for}\NormalTok{ (player }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{) \{}
-\NormalTok{        temp\_player\_card }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(deck, }\DecValTok{1}\NormalTok{, }\AttributeTok{replace =}\NormalTok{ F)}
-\NormalTok{        deck }\OtherTok{\textless{}{-}}\NormalTok{ deck[}\SpecialCharTok{!}\NormalTok{deck }\SpecialCharTok{\%in\%}\NormalTok{ temp\_player\_card]}
-\NormalTok{        hands[[player]][card] }\OtherTok{\textless{}{-}}\NormalTok{ temp\_player\_card}
-\NormalTok{    \}  }\CommentTok{\# For All 5 Players}
-\NormalTok{\}  }\CommentTok{\# For Both Cards}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
 
-\FunctionTok{do.call}\NormalTok{(cbind, hands)}
+\NormalTok{df }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}\AttributeTok{x =} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{10}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{100}\NormalTok{), }\AttributeTok{y =} \DecValTok{2} \SpecialCharTok{*}
+\NormalTok{    x }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{, }\AttributeTok{sd =} \DecValTok{3}\NormalTok{))}
+
+\FunctionTok{ggplot}\NormalTok{(df, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{y =}\NormalTok{ y)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.6}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{method =} \StringTok{"lm"}\NormalTok{, }\AttributeTok{se =} \ConstantTok{FALSE}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Linear Relationship with Noise"}\NormalTok{,}
+    \AttributeTok{subtitle =} \StringTok{"Points + fitted line are separate layers"}\NormalTok{,}
+    \AttributeTok{x =} \StringTok{"X"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Y"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-     [,1]          [,2]            [,3]
-[1,] "3 of Spades" "4 of Diamonds" "J of Diamonds"
-[2,] "A of Clubs"  "10 of Hearts"  "6 of Hearts"
-     [,4]         [,5]
-[1,] "2 of Clubs" "10 of Clubs"
-[2,] "6 of Clubs" "7 of Diamonds"
+`geom_smooth()` using formula = 'y ~ x'
 \end{verbatim}
+
+\begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/ggplot_example-1} \end{center}

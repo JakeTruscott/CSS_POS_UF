@@ -89,10 +89,10 @@ default_ggplot_theme  <- theme_minimal(base_size = 12) +
 ### Computational Social Science (Cont.)
 - By the end of the semester, you should be able to: \par \vspace{2.5mm}
   - Conduct advanced computing routines, including multi-layered and hierarchical coding structures \footnotesize (e.g., iterative loops, data organization and manipulation, functions, package construction, etc.) \par \vspace{1.5mm}
-  - Retrieve, process, and organize non-traditional data sources (e.g., text) for classification tasks using a combination of natural language processes (e.g., supervised, unsupervised, and self-supervised learning
+  - Retrieve, process, and organize non-traditional data sources (e.g., text) for classification tasks using a combination of natural language processes (e.g., supervised and unsupervised learning
 models) \par \vspace{1.5mm}
   - Create informative representations of data and other summary findings (e.g., tables and figures) \par \vspace{1.5mm}
-  - Produce replicable coding routines using compilation suites in R, Python, and LaTex(Beamer) \par \vspace{1.5mm} 
+  - Produce replicable coding routines using compilation suites in R, Python, and LaTex (Beamer) \par \vspace{1.5mm} 
 
 
 ### Materials and Evaluation -- Textbooks and Readings

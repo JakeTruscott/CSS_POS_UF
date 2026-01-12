@@ -193,11 +193,32 @@ University of Florida \newline Spring 2026 \newline \newline \newline
 \phantomsection\label{coin-flips-cont.}
 \small
 
-\begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/coin_flips_sim-1} \end{center}
+\begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/coin_10-1} \end{center}
+\end{frame}
+
+\begin{frame}{Coin Flips (Cont.)}
+\phantomsection\label{coin-flips-cont.-1}
+\small
+
+\begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/coin_100-1} \end{center}
+\end{frame}
+
+\begin{frame}{Coin Flips (Cont.)}
+\phantomsection\label{coin-flips-cont.-2}
+\small
+
+\begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/coin_1k-1} \end{center}
+\end{frame}
+
+\begin{frame}{Coin Flips (Cont.)}
+\phantomsection\label{coin-flips-cont.-3}
+\small
+
+\begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/coin_10k-1} \end{center}
 \end{frame}
 
 \begin{frame}[fragile]{Coin Flips (Cont.)}
-\phantomsection\label{coin-flips-cont.-1}
+\phantomsection\label{coin-flips-cont.-4}
 \begin{itemize}
 \tightlist
 \item
@@ -215,7 +236,7 @@ University of Florida \newline Spring 2026 \newline \newline \newline
 \end{Shaded}
 
 \begin{verbatim}
-[1] "Heads"
+[1] "Tails"
 \end{verbatim}
 \end{frame}
 
@@ -236,7 +257,7 @@ University of Florida \newline Spring 2026 \newline \newline \newline
 \end{Shaded}
 
 \begin{verbatim}
-Result of Single Roll: 1
+Result of Single Roll: 2
 \end{verbatim}
 
 \small
@@ -272,11 +293,11 @@ Result of Single Roll: 1
 \phantomsection\label{poker-hands-cont.}
 \begin{verbatim}
 Hand: 
-9 of Clubs
-Q of Clubs
-6 of Clubs
+3 of Diamonds
+5 of Hearts
+10 of Diamonds
 2 of Diamonds
-6 of Hearts
+Q of Diamonds
 \end{verbatim}
 \end{frame}
 
@@ -478,7 +499,7 @@ Q of Clubs
 \end{Shaded}
 
 \begin{verbatim}
- [1] 6 6 1 4 3 4 3 1 6 3
+ [1] 4 6 3 1 2 2 3 2 5 5
 \end{verbatim}
 \end{frame}
 
@@ -513,7 +534,7 @@ Q of Clubs
 \end{Shaded}
 
 \begin{verbatim}
- [1] 12 14  9 16 13  9 15 13  8 14
+ [1]  9  7  9  9 12 15 19 15  8 13
 \end{verbatim}
 \end{frame}
 
@@ -684,12 +705,27 @@ Q of Clubs
 \section{Data Visualization
 (ggplot::())}\label{data-visualization-ggplot}
 
-\begin{frame}{ggplot::()}
+\begin{frame}[fragile]{ggplot::()}
 \phantomsection\label{ggplot}
-\begin{itemize}
-\tightlist
-\item
-\end{itemize}
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+
+\NormalTok{df }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}\AttributeTok{x =} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{10}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{100}\NormalTok{), }\AttributeTok{y =} \DecValTok{2} \SpecialCharTok{*}
+\NormalTok{    x }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{, }\AttributeTok{sd =} \DecValTok{3}\NormalTok{))}
+
+\FunctionTok{ggplot}\NormalTok{(df, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{y =}\NormalTok{ y)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.6}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{method =} \StringTok{"lm"}\NormalTok{, }\AttributeTok{se =} \ConstantTok{FALSE}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Linear Relationship with Noise"}\NormalTok{,}
+    \AttributeTok{subtitle =} \StringTok{"Points + fitted line are separate layers"}\NormalTok{,}
+    \AttributeTok{x =} \StringTok{"X"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Y"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+`geom_smooth()` using formula = 'y ~ x'
+\end{verbatim}
+
+\begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/ggplot_example-1} \end{center}
 \end{frame}
 
 \end{document}

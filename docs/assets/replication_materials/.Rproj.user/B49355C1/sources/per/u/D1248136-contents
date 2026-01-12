@@ -1,0 +1,8 @@
+library(reticulate)
+
+use_virtualenv("r-reticulate", required = TRUE)
+py_config()
+py_install("numpy<2", envname = "r-reticulate")
+import("numpy")
+
+reticulate::py_eval("print('This is a test')")
