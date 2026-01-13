@@ -13,8 +13,10 @@ output:
     keep_tex: true
     toc: false
 header-includes:
+  - \PassOptionsToClass{aspectratio=169}{beamer}
   - \usepackage{../../beamer_style/beamer_style}
 ---
+
 
 ```{r setup, include=FALSE}
 library(dplyr); library(ggplot2); library(cowplot); library(formatR)
@@ -98,7 +100,7 @@ models) \par \vspace{1.5mm}
 ### Materials and Evaluation -- Textbooks and Readings
 
 \begin{columns}[T] % top-aligned columns
-  \begin{column}{0.65\textwidth}
+  \begin{column}{0.75\textwidth}
   \par \vspace{2.5mm}
   
   \begin{itemize}
@@ -107,15 +109,19 @@ models) \par \vspace{1.5mm}
   
   \item \textbf{Recommended}: Llaudet, E., \& Imai, K. (2023). \emph{Data analysis for social science: A friendly and practical introduction}. Princeton University Press. \par \vspace{2.5mm}
   
-  \item Articles Posted to Canvas (Have all readings complete before coming to class!)
+  \item Articles Posted to Canvas 
+  
+   \begin{itemize}
+  \item \footnotesize Have all readings complete before coming to class!
+  \end{itemize}
   
   \end{itemize}
   \end{column}
 
-  \begin{column}{0.35\textwidth}
+  \begin{column}{0.25\textwidth}
     \centering
-    \includegraphics[width=0.55\linewidth]{../../images/text_as_data.jpg} \par \vspace{1mm}
-    \includegraphics[width=0.55\linewidth]{../../images/data_analysis_for_social_science.jpg}
+    \includegraphics[width=0.85\linewidth]{../../images/text_as_data.jpg} \par \vspace{1mm}
+    \includegraphics[width=0.85\linewidth]{../../images/data_analysis_for_social_science.jpg}
 
   \end{column}
 \end{columns}
@@ -142,6 +148,14 @@ Final Project \& Presentation \dotfill 50\% \par \vspace{1.5mm}
 - We will spend the first 30min-1hr of each class period reviewing the problem set from the week before. 
 
 
+### Materials and Evaluation -- Evaluation (Final Project)
+
+- Topic Selection Due Sunday (2/8) \par \vspace{1.5mm}
+ 
+- Submission needs to emphasize some element(s) of course material \par \vspace{1.5mm}
+
+- Instructor assessment \& peer review
+
 ### Materials and Evaluation -- Expectations 
 
 Expectations are fairly simple: \par \vspace{5mm}
@@ -150,10 +164,9 @@ Expectations are fairly simple: \par \vspace{5mm}
 
 \item Come to Class Prepared \& Ready to Learn  \par \vspace{2.5mm}
 
-\item Don't Be Afraid to Ask for Help  \par \vspace{2.5mm}
+\item Don't Be Afraid to Ask for Help -- We have a \textbf{ton} of flexibility  \par \vspace{2.5mm}
 
 \item Embrace the Learning Curve
-
 
 \end{enumerate}
 
@@ -201,7 +214,7 @@ Expectations are fairly simple: \par \vspace{5mm}
 ### About You
 
 - Name \par \vspace{2.5mm}
-- Research Focus \par \vspace{2.5mm}
+- Research Focus or Major \par \vspace{2.5mm}
 - Fun Fact or Hot Take \par \vspace{2.5mm}
 
 
@@ -237,7 +250,7 @@ Expectations are fairly simple: \par \vspace{5mm}
 
 - Even when we shift to tools better suited for \texttt{Python}, I will show you how can implement through \texttt{R} \par \vspace{2.5mm}
 
-- To download \texttt{R} and its companion IDE \texttt{RStudio}, visit: \url{https://jaketruscott.github.io/CSS_POS_UF/class_1/downloading_R.html} \par \vspace{2.5mm}
+- To download \texttt{Python}, visit: \url{https://jaketruscott.github.io/CSS_POS_UF/class_1/downloading_Python.html} \par \vspace{2.5mm}
 
 
 
