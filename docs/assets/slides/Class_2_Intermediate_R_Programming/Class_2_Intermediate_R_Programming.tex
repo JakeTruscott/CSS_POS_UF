@@ -120,7 +120,9 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\PassOptionsToClass{aspectratio=169}{beamer}
 \usepackage{../../beamer_style/beamer_style}
+\setbeamersize{text margin left=3.5mm,text margin right=3.5mm}
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
@@ -151,13 +153,18 @@ University of Florida \newline Spring 2026 \newline \newline \newline
 \begin{frame}{Overview}
 \phantomsection\label{overview-1}
 \begin{itemize}
-\tightlist
 \item
   \textbf{Today's Goal}: Improve Effectiveness w/ \texttt{R} Programming
+
+  \par \vspace{2.5mm}
 \item
-  Random Number Generation in \texttt{R} \vspace{2.5mm}
+  Random Number Generation in \texttt{R}
+
+  \par  \vspace{2.5mm}
 \item
   Loops and Iteration \vspace{2.5mm}
+
+  \par
 \item
   Visualizing Data and Relationships Using \texttt{ggplot::()}
 \end{itemize}
@@ -279,8 +286,8 @@ Result of Single Roll: 2
 \NormalTok{suits }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Hearts"}\NormalTok{, }\StringTok{"Diamonds"}\NormalTok{, }\StringTok{"Spades"}\NormalTok{, }\StringTok{"Clubs"}\NormalTok{)}
 \CommentTok{\# Suits}
 
-\NormalTok{deck }\OtherTok{\textless{}{-}} \FunctionTok{expand.grid}\NormalTok{(}\AttributeTok{value =}\NormalTok{ cards, }\AttributeTok{suit =}\NormalTok{ suits) }\SpecialCharTok{|\textgreater{}}
-    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{card =} \FunctionTok{paste}\NormalTok{(value, }\StringTok{"of"}\NormalTok{, suit)) }\SpecialCharTok{|\textgreater{}}
+\NormalTok{deck }\OtherTok{\textless{}{-}} \FunctionTok{expand.grid}\NormalTok{(}\AttributeTok{value =}\NormalTok{ cards, }\AttributeTok{suit =}\NormalTok{ suits) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{card =} \FunctionTok{paste}\NormalTok{(value, }\StringTok{"of"}\NormalTok{, suit)) }\SpecialCharTok{\%\textgreater{}\%}
     \FunctionTok{pull}\NormalTok{(card)  }\CommentTok{\# Create a Full Deck}
 
 \NormalTok{random\_draw }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(deck, }\AttributeTok{size =} \DecValTok{5}\NormalTok{, }\AttributeTok{replace =}\NormalTok{ F)}
@@ -381,7 +388,6 @@ Q of Diamonds
 \begin{frame}{Functions (Basics)}
 \phantomsection\label{functions-basics}
 \begin{itemize}
-\tightlist
 \item
   Functions are reusable blocks of code that perform a specific task
   when called, helping avoid repetition.
@@ -404,12 +410,12 @@ Q of Diamonds
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{function\_name }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(input\_1, input\_2)\{}
-  
-\NormalTok{  Code to Assume Input\_1 and Input\_2 }
-  
-  \FunctionTok{return}\NormalTok{(Return Output Value or Object)}
-  
+\NormalTok{function\_name }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(input\_1, input\_2) \{}
+
+    \CommentTok{\# Code to Assume Input\_1 and Input\_2}
+
+    \CommentTok{\# return(Return Output Value or Object)}
+
 \NormalTok{\}}
 \end{Highlighting}
 \end{Shaded}
@@ -464,9 +470,9 @@ Q of Diamonds
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\ControlFlowTok{for}\NormalTok{ (variable }\ControlFlowTok{in}\NormalTok{ sequence)\{}
-\NormalTok{   Repeating Code Routine}
-  \FunctionTok{return}\NormalTok{(Result Value or Object)}
+\ControlFlowTok{for}\NormalTok{ (variable }\ControlFlowTok{in}\NormalTok{ sequence) \{}
+    \CommentTok{\# Repeating Code Routine return(Result Value}
+    \CommentTok{\# or Object)}
 \NormalTok{\}}
 \end{Highlighting}
 \end{Shaded}
@@ -541,7 +547,6 @@ Q of Diamonds
 \begin{frame}[fragile]{Loops (Basics, Cont.)}
 \phantomsection\label{loops-basics-cont.-2}
 \begin{itemize}
-\tightlist
 \item
   I can also deal 5 hands from a standard 52-card deck for a game of
   Texas Hold 'Em
@@ -644,7 +649,7 @@ Q of Diamonds
 \begin{frame}{Blackjack Exercise}
 \phantomsection\label{blackjack-exercise}
 \begin{center}
-\textbf{Write an \texttt{R} routine to play a round of Blackjack. I will be the Dealer}
+\textbf{Write an \texttt{R} routine to play a round of Blackjack. I will do the same.}
 \end{center} \par \vspace{5mm}
 
 \begin{itemize}
@@ -658,7 +663,7 @@ Q of Diamonds
 \phantomsection\label{blackjack-exercise-cont.}
 \begin{enumerate}
 \item
-  What if we play with a four-deck shoe?
+  What if we play with a four-deck shoe? \pause
 
   \par \vspace{2.5mm}
 \item
@@ -702,30 +707,324 @@ Q of Diamonds
 \end{itemize}
 \end{frame}
 
-\section{Data Visualization
-(ggplot::())}\label{data-visualization-ggplot}
+\section{Data Visualization}\label{data-visualization}
 
-\begin{frame}[fragile]{ggplot::()}
-\phantomsection\label{ggplot}
+\begin{frame}{Data Visualization}
+\begin{itemize}
+\item
+  \texttt{ggplot()} is an incredibly flexible visualization tool
+
+  \par \vspace{2.5mm}
+\item
+  There's a balance between professional \& \textit{noisy}
+  visualizations
+
+  \par \vspace{2.5mm}
+\item
+  Some journals \& reviewers are more critical than others
+
+  \par \vspace{2.5mm}
+\item
+  \textbf{Goal}: \textit{Publication-ready} visualizations capable of
+  relaying inferential value on its own
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{My Default ggplot() Aesthetics}
+\phantomsection\label{my-default-ggplot-aesthetics}
+\scriptsize
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{default\_ggplot\_theme  }\OtherTok{\textless{}{-}} \FunctionTok{theme\_minimal}\NormalTok{(}\AttributeTok{base\_size =} \DecValTok{12}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}
+    \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{, }\AttributeTok{size =} \DecValTok{12}\NormalTok{),}
+    
+    \AttributeTok{axis.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{12}\NormalTok{, }\AttributeTok{colour =} \StringTok{\textquotesingle{}black\textquotesingle{}}\NormalTok{),}
+    
+    \AttributeTok{axis.text =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{10}\NormalTok{, }\AttributeTok{colour =} \StringTok{\textquotesingle{}black\textquotesingle{}}\NormalTok{),}
+    
+    \AttributeTok{panel.background =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{linewidth =} \DecValTok{1}\NormalTok{, }\AttributeTok{colour =} \StringTok{\textquotesingle{}black\textquotesingle{}}\NormalTok{, }\AttributeTok{fill =} \ConstantTok{NA}\NormalTok{), }
+    
+    \AttributeTok{legend.position =} \StringTok{\textquotesingle{}bottom\textquotesingle{}}\NormalTok{, }
+    
+    \AttributeTok{legend.background =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{linewidth =} \DecValTok{1}\NormalTok{, }\AttributeTok{colour =} \StringTok{\textquotesingle{}black\textquotesingle{}}\NormalTok{, }\AttributeTok{fill =} \ConstantTok{NA}\NormalTok{), }
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
 
-\NormalTok{df }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}\AttributeTok{x =} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{10}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{100}\NormalTok{), }\AttributeTok{y =} \DecValTok{2} \SpecialCharTok{*}
-\NormalTok{    x }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{, }\AttributeTok{sd =} \DecValTok{3}\NormalTok{))}
+\begin{frame}[fragile]{My Default ggplot() Aesthetics}
+\phantomsection\label{my-default-ggplot-aesthetics-1}
+\scriptsize
 
-\FunctionTok{ggplot}\NormalTok{(df, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{y =}\NormalTok{ y)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.6}\NormalTok{) }\SpecialCharTok{+}
-    \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{method =} \StringTok{"lm"}\NormalTok{, }\AttributeTok{se =} \ConstantTok{FALSE}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Linear Relationship with Noise"}\NormalTok{,}
-    \AttributeTok{subtitle =} \StringTok{"Points + fitted line are separate layers"}\NormalTok{,}
-    \AttributeTok{x =} \StringTok{"X"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Y"}\NormalTok{)}
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1234}\NormalTok{)}
+
+\NormalTok{sample\_data }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}\AttributeTok{x =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{100}\NormalTok{), }\AttributeTok{y =} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{,}
+    \AttributeTok{mean =} \FloatTok{0.75}\NormalTok{, }\AttributeTok{sd =} \FloatTok{0.33}\NormalTok{))}
+
+\FunctionTok{summary}\NormalTok{(sample\_data)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-`geom_smooth()` using formula = 'y ~ x'
+       x                y           
+ Min.   :  1.00   Min.   :-0.02408  
+ 1st Qu.: 25.75   1st Qu.: 0.45454  
+ Median : 50.50   Median : 0.62307  
+ Mean   : 50.50   Mean   : 0.69827  
+ 3rd Qu.: 75.25   3rd Qu.: 0.90550  
+ Max.   :100.00   Max.   : 1.59117  
 \end{verbatim}
+\end{frame}
 
-\begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/ggplot_example-1} \end{center}
+\begin{frame}[fragile]{My Default ggplot() Aesthetics}
+\phantomsection\label{my-default-ggplot-aesthetics-2}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sample\_data }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{y =}\NormalTok{ y)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{method =} \StringTok{"lm"}\NormalTok{,}
+    \AttributeTok{formula =} \StringTok{"y\textasciitilde{}x"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/default_ggplot_application_2-1} \end{center}
+\end{frame}
+
+\begin{frame}{Adding Default Aes}
+\phantomsection\label{adding-default-aes}
+\scriptsize
+
+\begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/default_ggplot_application_3-1} \end{center}
+\end{frame}
+
+\section{Stargazer}\label{stargazer}
+
+\begin{frame}[fragile]{Stargazer}
+\phantomsection\label{stargazer-1}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(stargazer)}
+\NormalTok{temp\_lm }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Sepal.Length }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Sepal.Width }\SpecialCharTok{+}\NormalTok{ Petal.Length }\SpecialCharTok{+}
+\NormalTok{    Petal.Width, }\AttributeTok{data =}\NormalTok{ iris)}
+
+\NormalTok{stargazer}\SpecialCharTok{::}\FunctionTok{stargazer}\NormalTok{(temp\_lm, }\AttributeTok{type =} \StringTok{"text"}\NormalTok{, }\AttributeTok{omit.stat =} \FunctionTok{c}\NormalTok{(}\StringTok{"ser"}\NormalTok{,}
+    \StringTok{"f"}\NormalTok{, }\StringTok{"adj.rsq"}\NormalTok{), }\AttributeTok{dep.var.caption =} \StringTok{""}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{Stargazer -- Text Example}
+\phantomsection\label{stargazer-text-example}
+\scriptsize
+
+\begin{verbatim}
+
+========================================
+                    Sepal.Length        
+----------------------------------------
+Sepal.Width           0.651***          
+                       (0.067)          
+                                        
+Petal.Length          0.709***          
+                       (0.057)          
+                                        
+Petal.Width           -0.556***         
+                       (0.128)          
+                                        
+Constant              1.856***          
+                       (0.251)          
+                                        
+----------------------------------------
+Observations             150            
+R2                      0.859           
+========================================
+Note:        *p<0.1; **p<0.05; ***p<0.01
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Stargazer -- Latex Example (type = `latex')}
+\phantomsection\label{stargazer-latex-example-type-latex}
+\tiny
+
+\begin{verbatim}
+
+% Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+% Date and time: Fri, Jan 23, 2026 - 10:11:48 AM
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\\[-1.8ex] & Sepal.Length \\ 
+\hline \\[-1.8ex] 
+ Sepal.Width & 0.651$^{***}$ \\ 
+  & (0.067) \\ 
+  & \\ 
+ Petal.Length & 0.709$^{***}$ \\ 
+  & (0.057) \\ 
+  & \\ 
+ Petal.Width & $-$0.556$^{***}$ \\ 
+  & (0.128) \\ 
+  & \\ 
+ Constant & 1.856$^{***}$ \\ 
+  & (0.251) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 150 \\ 
+R$^{2}$ & 0.859 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Stargazer -- Latex Example Rendered}
+\phantomsection\label{stargazer-latex-example-rendered}
+\tiny
+\begin{table}[!htbp] \centering 
+  \caption{Rendered \texttt{stargazer} Table} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\\[-1.8ex] & Sepal.Length \\ 
+\hline \\[-1.8ex] 
+ Sepal.Width & 0.651$^{***}$ \\ 
+  & (0.067) \\ 
+  & \\ 
+ Petal.Length & 0.709$^{***}$ \\ 
+  & (0.057) \\ 
+  & \\ 
+ Petal.Width & $-$0.556$^{***}$ \\ 
+  & (0.128) \\ 
+  & \\ 
+ Constant & 1.856$^{***}$ \\ 
+  & (0.251) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 150 \\ 
+R$^{2}$ & 0.859 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table}
+\end{frame}
+
+\begin{frame}{Stargazer -- Multiple Models}
+\phantomsection\label{stargazer-multiple-models}
+\tiny
+\begin{table}[!htbp] \centering 
+  \caption{Rendered \texttt{stargazer} Table with 2 Models} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lcc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\\[-1.8ex] & \multicolumn{2}{c}{Sepal.Length} \\ 
+\\[-1.8ex] & (1) & (2)\\ 
+\hline \\[-1.8ex] 
+ Sepal.Width & 0.651$^{***}$ &  \\ 
+  & (0.067) &  \\ 
+  & & \\ 
+ Petal.Length & 0.709$^{***}$ &  \\ 
+  & (0.057) &  \\ 
+  & & \\ 
+ Petal.Width & $-$0.556$^{***}$ & $-$0.311$^{***}$ \\ 
+  & (0.128) & (0.114) \\ 
+  & & \\ 
+ Sepal.Width:Petal.Length &  & 0.185$^{***}$ \\ 
+  &  & (0.017) \\ 
+  & & \\ 
+ Constant & 1.856$^{***}$ & 4.150$^{***}$ \\ 
+  & (0.251) & (0.078) \\ 
+  & & \\ 
+\hline \\[-1.8ex] 
+Observations & 150 & 150 \\ 
+R$^{2}$ & 0.859 & 0.821 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{2}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table}
+\end{frame}
+
+\begin{frame}[fragile]{Stargazer -- Summary Data}
+\phantomsection\label{stargazer-summary-data}
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{stargazer}\NormalTok{(iris, }\AttributeTok{type =} \StringTok{"text"}\NormalTok{, }\AttributeTok{summary =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{title =} \StringTok{"Summary of Iris Dataset"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+Summary of Iris Dataset
+===========================================
+Statistic     N  Mean  St. Dev.  Min   Max 
+-------------------------------------------
+Sepal.Length 150 5.843  0.828   4.300 7.900
+Sepal.Width  150 3.057  0.436   2.000 4.400
+Petal.Length 150 3.758  1.765   1.000 6.900
+Petal.Width  150 1.199  0.762   0.100 2.500
+-------------------------------------------
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Visualization Example}
+\phantomsection\label{visualization-example}
+\begin{itemize}
+\tightlist
+\item
+  Using the \texttt{mtcars} dataset -- \texttt{library(mtcars)} --
+  complete the following:
+
+  \par \vspace{2.5mm}
+
+  \begin{enumerate}
+  \tightlist
+  \item
+    Using \texttt{mpg} as the dependent variable, compile two models
+    using \texttt{cyl}, \texttt{disp}, \texttt{hp}, and \texttt{wt} --
+    the second should have an interaction between \texttt{disp} and
+    \texttt{wt}.
+
+    \par \vspace{1.5mm}
+  \item
+    Produce a table using \texttt{stargazer} of the resulting models.
+
+    \par \vspace{1.5mm}
+  \item
+    Use \texttt{ggplot} to illustrate the distribution of each of the
+    variables listed in (1).
+  \end{enumerate}
+\end{itemize}
+\end{frame}
+
+\section{Looking Forward}\label{looking-forward}
+
+\begin{frame}{Looking Forward}
+\phantomsection\label{looking-forward-1}
+\begin{itemize}
+\tightlist
+\item
+  Homework: Problem Set (Class 2)
+
+  \par \vspace{2.5mm}
+\item
+  Next Class: Parallel Computing
+\end{itemize}
 \end{frame}
 
 \end{document}
