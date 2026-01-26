@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.19)  23 JAN 2026 10:11
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.19)  26 JAN 2026 12:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -920,12 +920,12 @@ LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 14
 (c:/Users/jaketruscott/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-<../../beamer_style/UF.png, id=127, 376.40625pt x 376.40625pt>
+<../../beamer_style/UF.png, id=129, 376.40625pt x 376.40625pt>
 File: ../../beamer_style/UF.png Graphic file (type png)
 <use ../../beamer_style/UF.png>
 Package pdftex.def Info: ../../beamer_style/UF.png  used on input line 149.
 (pdftex.def)             Requested size: 85.35826pt x 85.35973pt.
-<../../images/CSS_POLS_UF_Logo.png, id=129, 818.05624pt x 818.05624pt>
+<../../images/CSS_POLS_UF_Logo.png, id=131, 818.05624pt x 818.05624pt>
 File: ../../images/CSS_POLS_UF_Logo.png Graphic file (type png)
 <use ../../images/CSS_POLS_UF_Logo.png>
 Package pdftex.def Info: ../../images/CSS_POLS_UF_Logo.png  used on input line 149.
@@ -985,53 +985,55 @@ LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <6> not available
 
 ] [7
 
+] [8
+
 ]
-<Class_2_Intermediate_R_Programming_files/figure-beamer/coin_10-1.pdf, id=747, 289.08pt x 216.81pt>
+<Class_2_Intermediate_R_Programming_files/figure-beamer/coin_10-1.pdf, id=871, 289.08pt x 216.81pt>
 File: Class_2_Intermediate_R_Programming_files/figure-beamer/coin_10-1.pdf Graphic file (type pdf)
 <use Class_2_Intermediate_R_Programming_files/figure-beamer/coin_10-1.pdf>
-Package pdftex.def Info: Class_2_Intermediate_R_Programming_files/figure-beamer/coin_10-1.pdf  used on input line 204.
+Package pdftex.def Info: Class_2_Intermediate_R_Programming_files/figure-beamer/coin_10-1.pdf  used on input line 224.
 (pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
 
-Overfull \vbox (4.48476pt too high) detected at line 204
- []
-
-[8
-
- <./Class_2_Intermediate_R_Programming_files/figure-beamer/coin_10-1.pdf>]
-<Class_2_Intermediate_R_Programming_files/figure-beamer/coin_100-1.pdf, id=862, 289.08pt x 216.81pt>
-File: Class_2_Intermediate_R_Programming_files/figure-beamer/coin_100-1.pdf Graphic file (type pdf)
-<use Class_2_Intermediate_R_Programming_files/figure-beamer/coin_100-1.pdf>
-Package pdftex.def Info: Class_2_Intermediate_R_Programming_files/figure-beamer/coin_100-1.pdf  used on input line 211.
-(pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
-
-Overfull \vbox (4.48476pt too high) detected at line 211
+Overfull \vbox (4.48476pt too high) detected at line 224
  []
 
 [9
 
- <./Class_2_Intermediate_R_Programming_files/figure-beamer/coin_100-1.pdf>]
-<Class_2_Intermediate_R_Programming_files/figure-beamer/coin_1k-1.pdf, id=978, 289.08pt x 216.81pt>
-File: Class_2_Intermediate_R_Programming_files/figure-beamer/coin_1k-1.pdf Graphic file (type pdf)
-<use Class_2_Intermediate_R_Programming_files/figure-beamer/coin_1k-1.pdf>
-Package pdftex.def Info: Class_2_Intermediate_R_Programming_files/figure-beamer/coin_1k-1.pdf  used on input line 218.
+ <./Class_2_Intermediate_R_Programming_files/figure-beamer/coin_10-1.pdf>]
+<Class_2_Intermediate_R_Programming_files/figure-beamer/coin_100-1.pdf, id=989, 289.08pt x 216.81pt>
+File: Class_2_Intermediate_R_Programming_files/figure-beamer/coin_100-1.pdf Graphic file (type pdf)
+<use Class_2_Intermediate_R_Programming_files/figure-beamer/coin_100-1.pdf>
+Package pdftex.def Info: Class_2_Intermediate_R_Programming_files/figure-beamer/coin_100-1.pdf  used on input line 231.
 (pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
 
-Overfull \vbox (4.48476pt too high) detected at line 218
+Overfull \vbox (4.48476pt too high) detected at line 231
  []
 
 [10
 
- <./Class_2_Intermediate_R_Programming_files/figure-beamer/coin_1k-1.pdf>]
-<Class_2_Intermediate_R_Programming_files/figure-beamer/coin_10k-1.pdf, id=1093, 289.08pt x 216.81pt>
-File: Class_2_Intermediate_R_Programming_files/figure-beamer/coin_10k-1.pdf Graphic file (type pdf)
-<use Class_2_Intermediate_R_Programming_files/figure-beamer/coin_10k-1.pdf>
-Package pdftex.def Info: Class_2_Intermediate_R_Programming_files/figure-beamer/coin_10k-1.pdf  used on input line 225.
+ <./Class_2_Intermediate_R_Programming_files/figure-beamer/coin_100-1.pdf>]
+<Class_2_Intermediate_R_Programming_files/figure-beamer/coin_1k-1.pdf, id=1106, 289.08pt x 216.81pt>
+File: Class_2_Intermediate_R_Programming_files/figure-beamer/coin_1k-1.pdf Graphic file (type pdf)
+<use Class_2_Intermediate_R_Programming_files/figure-beamer/coin_1k-1.pdf>
+Package pdftex.def Info: Class_2_Intermediate_R_Programming_files/figure-beamer/coin_1k-1.pdf  used on input line 238.
 (pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
 
-Overfull \vbox (4.48476pt too high) detected at line 225
+Overfull \vbox (4.48476pt too high) detected at line 238
  []
 
 [11
+
+ <./Class_2_Intermediate_R_Programming_files/figure-beamer/coin_1k-1.pdf>]
+<Class_2_Intermediate_R_Programming_files/figure-beamer/coin_10k-1.pdf, id=1224, 289.08pt x 216.81pt>
+File: Class_2_Intermediate_R_Programming_files/figure-beamer/coin_10k-1.pdf Graphic file (type pdf)
+<use Class_2_Intermediate_R_Programming_files/figure-beamer/coin_10k-1.pdf>
+Package pdftex.def Info: Class_2_Intermediate_R_Programming_files/figure-beamer/coin_10k-1.pdf  used on input line 245.
+(pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
+
+Overfull \vbox (4.48476pt too high) detected at line 245
+ []
+
+[12
 
  <./Class_2_Intermediate_R_Programming_files/figure-beamer/coin_10k-1.pdf>]
 \openout4 = `Class_2_Intermediate_R_Programming.vrb'.
@@ -1039,14 +1041,9 @@ Overfull \vbox (4.48476pt too high) detected at line 225
 (./Class_2_Intermediate_R_Programming.vrb
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10.95> not available
 (Font)              Font shape `T1/lmtt/b/n' tried instead on input line 13.
-) [12
+) [13
 
 {c:/Users/jaketruscott/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{c:/Users/jaketruscott/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}]
-\openout4 = `Class_2_Intermediate_R_Programming.vrb'.
-
-(./Class_2_Intermediate_R_Programming.vrb) [13
-
-]
 \openout4 = `Class_2_Intermediate_R_Programming.vrb'.
 
 (./Class_2_Intermediate_R_Programming.vrb) [14
@@ -1056,46 +1053,51 @@ LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10.95> not available
 
 (./Class_2_Intermediate_R_Programming.vrb) [15
 
-] [16
+]
+\openout4 = `Class_2_Intermediate_R_Programming.vrb'.
+
+(./Class_2_Intermediate_R_Programming.vrb) [16
+
+] [17
 
 ]
 \openout4 = `Class_2_Intermediate_R_Programming.vrb'.
 
 (./Class_2_Intermediate_R_Programming.vrb
-<Class_2_Intermediate_R_Programming_files/figure-beamer/normal_distribution_figure-1.pdf, id=2023, 216.81pt x 144.54pt>
+<Class_2_Intermediate_R_Programming_files/figure-beamer/normal_distribution_figure-1.pdf, id=2171, 216.81pt x 144.54pt>
 File: Class_2_Intermediate_R_Programming_files/figure-beamer/normal_distribution_figure-1.pdf Graphic file (type pdf)
 <use Class_2_Intermediate_R_Programming_files/figure-beamer/normal_distribution_figure-1.pdf>
 Package pdftex.def Info: Class_2_Intermediate_R_Programming_files/figure-beamer/normal_distribution_figure-1.pdf  used on input line 16.
 (pdftex.def)             Requested size: 216.80946pt x 144.53963pt.
-) [17
+) [18
 
- <./Class_2_Intermediate_R_Programming_files/figure-beamer/normal_distribution_figure-1.pdf>] [18
+ <./Class_2_Intermediate_R_Programming_files/figure-beamer/normal_distribution_figure-1.pdf>] [19
 
 ]
 \openout4 = `Class_2_Intermediate_R_Programming.vrb'.
 
 (./Class_2_Intermediate_R_Programming.vrb
-<Class_2_Intermediate_R_Programming_files/figure-beamer/normal_distribution_ex_figure-1.pdf, id=2303, 234.8775pt x 162.6075pt>
+<Class_2_Intermediate_R_Programming_files/figure-beamer/normal_distribution_ex_figure-1.pdf, id=2457, 234.8775pt x 162.6075pt>
 File: Class_2_Intermediate_R_Programming_files/figure-beamer/normal_distribution_ex_figure-1.pdf Graphic file (type pdf)
 <use Class_2_Intermediate_R_Programming_files/figure-beamer/normal_distribution_ex_figure-1.pdf>
 Package pdftex.def Info: Class_2_Intermediate_R_Programming_files/figure-beamer/normal_distribution_ex_figure-1.pdf  used on input line 9.
 (pdftex.def)             Requested size: 234.87692pt x 162.6071pt.
-) [19
+) [20
 
- <./Class_2_Intermediate_R_Programming_files/figure-beamer/normal_distribution_ex_figure-1.pdf>] [20
+ <./Class_2_Intermediate_R_Programming_files/figure-beamer/normal_distribution_ex_figure-1.pdf>] [21
 
 ]
 \openout4 = `Class_2_Intermediate_R_Programming.vrb'.
 
 (./Class_2_Intermediate_R_Programming.vrb
-<Class_2_Intermediate_R_Programming_files/figure-beamer/rexp_ex_figure-1.pdf, id=2584, 234.8775pt x 162.6075pt>
+<Class_2_Intermediate_R_Programming_files/figure-beamer/rexp_ex_figure-1.pdf, id=2742, 234.8775pt x 162.6075pt>
 File: Class_2_Intermediate_R_Programming_files/figure-beamer/rexp_ex_figure-1.pdf Graphic file (type pdf)
 <use Class_2_Intermediate_R_Programming_files/figure-beamer/rexp_ex_figure-1.pdf>
 Package pdftex.def Info: Class_2_Intermediate_R_Programming_files/figure-beamer/rexp_ex_figure-1.pdf  used on input line 9.
 (pdftex.def)             Requested size: 234.87692pt x 162.6071pt.
-) [21
+) [22
 
- <./Class_2_Intermediate_R_Programming_files/figure-beamer/rexp_ex_figure-1.pdf>] [22
+ <./Class_2_Intermediate_R_Programming_files/figure-beamer/rexp_ex_figure-1.pdf>] [23
 
 ]
 \openout4 = `Class_2_Intermediate_R_Programming.vrb'.
@@ -1103,32 +1105,32 @@ Package pdftex.def Info: Class_2_Intermediate_R_Programming_files/figure-beamer/
 (./Class_2_Intermediate_R_Programming.vrb
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
 (Font)              Font shape `T1/lmtt/b/n' tried instead on input line 7.
-) [23
+) [24
 
 ]
 \openout4 = `Class_2_Intermediate_R_Programming.vrb'.
 
-(./Class_2_Intermediate_R_Programming.vrb) [24
+(./Class_2_Intermediate_R_Programming.vrb) [25
 
 ]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 457.
+(Font)              <10> on input line 477.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 457.
+(Font)              <7> on input line 477.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 457.
+(Font)              <5> on input line 477.
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 457.
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 477.
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <7> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 457.
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 477.
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <5> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 457.
-[25
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 477.
+[26
 
 ]
 \openout4 = `Class_2_Intermediate_R_Programming.vrb'.
 
-(./Class_2_Intermediate_R_Programming.vrb) [26
+(./Class_2_Intermediate_R_Programming.vrb) [27
 
 ]
 \openout4 = `Class_2_Intermediate_R_Programming.vrb'.
@@ -1136,12 +1138,7 @@ LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <5> not available
 (./Class_2_Intermediate_R_Programming.vrb
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <9> not available
 (Font)              Font shape `T1/lmtt/b/n' tried instead on input line 13.
-) [27
-
-]
-\openout4 = `Class_2_Intermediate_R_Programming.vrb'.
-
-(./Class_2_Intermediate_R_Programming.vrb) [28
+) [28
 
 ]
 \openout4 = `Class_2_Intermediate_R_Programming.vrb'.
@@ -1154,16 +1151,19 @@ LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <9> not available
 (./Class_2_Intermediate_R_Programming.vrb) [30
 
 ]
-<../../images/blackjack.png, id=4057, 684.75826pt x 421.575pt>
+\openout4 = `Class_2_Intermediate_R_Programming.vrb'.
+
+(./Class_2_Intermediate_R_Programming.vrb) [31
+
+]
+<../../images/blackjack.png, id=4243, 684.75826pt x 421.575pt>
 File: ../../images/blackjack.png Graphic file (type png)
 <use ../../images/blackjack.png>
-Package pdftex.def Info: ../../images/blackjack.png  used on input line 612.
+Package pdftex.def Info: ../../images/blackjack.png  used on input line 632.
 (pdftex.def)             Requested size: 256.0748pt x 157.6528pt.
-[31
+[32
 
- <../../images/blackjack.png>] [32
-
-] [33
+ <../../images/blackjack.png>] [33
 
 ] [34
 
@@ -1175,6 +1175,8 @@ Package pdftex.def Info: ../../images/blackjack.png  used on input line 612.
 
 ] [38
 
+] [39
+
 ]
 \openout4 = `Class_2_Intermediate_R_Programming.vrb'.
 
@@ -1184,49 +1186,49 @@ LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <8> not available
 LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 11.
 (c:/Users/jaketruscott/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ts1lmtt.fd
 File: ts1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)) [39
+)) [40
 
 {c:/Users/jaketruscott/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}]
 \openout4 = `Class_2_Intermediate_R_Programming.vrb'.
 
-(./Class_2_Intermediate_R_Programming.vrb) [40
+(./Class_2_Intermediate_R_Programming.vrb) [41
 
 ]
 \openout4 = `Class_2_Intermediate_R_Programming.vrb'.
 
 (./Class_2_Intermediate_R_Programming.vrb
-<Class_2_Intermediate_R_Programming_files/figure-beamer/default_ggplot_application_2-1.pdf, id=5262, 252.945pt x 180.675pt>
+<Class_2_Intermediate_R_Programming_files/figure-beamer/default_ggplot_application_2-1.pdf, id=5469, 252.945pt x 180.675pt>
 File: Class_2_Intermediate_R_Programming_files/figure-beamer/default_ggplot_application_2-1.pdf Graphic file (type pdf)
 <use Class_2_Intermediate_R_Programming_files/figure-beamer/default_ggplot_application_2-1.pdf>
 Package pdftex.def Info: Class_2_Intermediate_R_Programming_files/figure-beamer/default_ggplot_application_2-1.pdf  used on input line 13.
 (pdftex.def)             Requested size: 252.94438pt x 180.67455pt.
 )
-Overfull \vbox (8.1048pt too high) detected at line 796
- []
-
-[41
-
- <./Class_2_Intermediate_R_Programming_files/figure-beamer/default_ggplot_application_2-1.pdf>]
-<Class_2_Intermediate_R_Programming_files/figure-beamer/default_ggplot_application_3-1.pdf, id=5380, 289.08pt x 216.81pt>
-File: Class_2_Intermediate_R_Programming_files/figure-beamer/default_ggplot_application_3-1.pdf Graphic file (type pdf)
-<use Class_2_Intermediate_R_Programming_files/figure-beamer/default_ggplot_application_3-1.pdf>
-Package pdftex.def Info: Class_2_Intermediate_R_Programming_files/figure-beamer/default_ggplot_application_3-1.pdf  used on input line 803.
-(pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
-
-Overfull \vbox (4.48476pt too high) detected at line 803
+Overfull \vbox (8.1048pt too high) detected at line 816
  []
 
 [42
 
+ <./Class_2_Intermediate_R_Programming_files/figure-beamer/default_ggplot_application_2-1.pdf>]
+<Class_2_Intermediate_R_Programming_files/figure-beamer/default_ggplot_application_3-1.pdf, id=5589, 289.08pt x 216.81pt>
+File: Class_2_Intermediate_R_Programming_files/figure-beamer/default_ggplot_application_3-1.pdf Graphic file (type pdf)
+<use Class_2_Intermediate_R_Programming_files/figure-beamer/default_ggplot_application_3-1.pdf>
+Package pdftex.def Info: Class_2_Intermediate_R_Programming_files/figure-beamer/default_ggplot_application_3-1.pdf  used on input line 823.
+(pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
+
+Overfull \vbox (4.48476pt too high) detected at line 823
+ []
+
+[43
+
  <./Class_2_Intermediate_R_Programming_files/figure-beamer/default_ggplot_application_3-1.pdf>]
 \openout4 = `Class_2_Intermediate_R_Programming.vrb'.
 
-(./Class_2_Intermediate_R_Programming.vrb) [43
+(./Class_2_Intermediate_R_Programming.vrb) [44
 
 ]
 \openout4 = `Class_2_Intermediate_R_Programming.vrb'.
 
-(./Class_2_Intermediate_R_Programming.vrb) [44
+(./Class_2_Intermediate_R_Programming.vrb) [45
 
 ]
 \openout4 = `Class_2_Intermediate_R_Programming.vrb'.
@@ -1237,31 +1239,31 @@ Overfull \hbox (12.72154pt too wide) in paragraph at lines 37--37
  []
 
 )
-Overfull \vbox (4.1753pt too high) detected at line 889
+Overfull \vbox (4.1753pt too high) detected at line 909
  []
-
-[45
-
-]
-
-Package hyperref Warning: Ignoring empty anchor on input line 922.
 
 [46
 
 ]
 
-Package hyperref Warning: Ignoring empty anchor on input line 959.
+Package hyperref Warning: Ignoring empty anchor on input line 942.
 
 [47
 
 ]
+
+Package hyperref Warning: Ignoring empty anchor on input line 979.
+
+[48
+
+]
 \openout4 = `Class_2_Intermediate_R_Programming.vrb'.
 
-(./Class_2_Intermediate_R_Programming.vrb) [48
-
-] [49
+(./Class_2_Intermediate_R_Programming.vrb) [49
 
 ] [50
+
+] [51
 
 ]
 \tf@nav=\write6
@@ -1283,18 +1285,18 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 26860 strings out of 469519
- 529606 string characters out of 5467611
- 910091 words of memory out of 5000000
- 54738 multiletter control sequences out of 15000+600000
+ 26866 strings out of 469519
+ 529675 string characters out of 5467611
+ 911030 words of memory out of 5000000
+ 54741 multiletter control sequences out of 15000+600000
  704160 words of font info for 106 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  101i,20n,107p,489b,798s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/Users/jaketruscott/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb><c:/Users/jaketruscott/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi6.pfb><c:/Users/jaketruscott/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmss10.pfb><c:/Users/jaketruscott/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmss12.pfb><c:/Users/jaketruscott/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmss8.pfb><c:/Users/jaketruscott/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb><c:/Users/jaketruscott/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsso10.pfb><c:/Users/jaketruscott/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsso8.pfb><c:/Users/jaketruscott/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb><c:/Users/jaketruscott/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy5.pfb><c:/Users/jaketruscott/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy6.pfb><c:/Users/jaketruscott/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb><c:/Users/jaketruscott/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb><c:/Users/jaketruscott/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt12.pfb><c:/Users/jaketruscott/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt8.pfb><c:/Users/jaketruscott/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt9.pfb><c:/Users/jaketruscott/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtti10.pfb>
-Output written on Class_2_Intermediate_R_Programming.pdf (50 pages, 2623816 bytes).
+Output written on Class_2_Intermediate_R_Programming.pdf (51 pages, 2628972 bytes).
 PDF statistics:
- 6680 PDF objects out of 7423 (max. 8388607)
- 3042 compressed objects within 31 object streams
- 151 named destinations out of 1000 (max. 500000)
+ 6910 PDF objects out of 7423 (max. 8388607)
+ 3150 compressed objects within 32 object streams
+ 154 named destinations out of 1000 (max. 500000)
  189 words of extra memory for PDF output out of 10000 (max. 10000000)
 

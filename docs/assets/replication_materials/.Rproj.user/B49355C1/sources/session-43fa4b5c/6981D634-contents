@@ -1,0 +1,13 @@
+
+dir.create(file.path('code', 'class_2'))
+
+download.file(
+  "https://raw.githubusercontent.com/JakeTruscott/CSS_POS_UF/refs/heads/main/docs/assets/replication_materials/class_2/code/class_2_intermediate_programming_in_R.R",
+  destfile = file.path('code', 'class_2', 'intermediate_coding_in_R.R')
+)
+
+download.file(
+  "https://raw.githubusercontent.com/JakeTruscott/CSS_POS_UF/main/docs/assets/replication_materials/class_2/code/blackjack_simulation.R",
+  destfile = file.path('code', 'class_2', 'blackjack.R')
+)
+
