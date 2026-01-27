@@ -13,6 +13,7 @@ output:
     slide_level: 3
     keep_tex: true
     toc: false
+classoption: aspectratio=169  
 header-includes:
   - \PassOptionsToClass{aspectratio=169}{beamer}
   - \usepackage{../../beamer_style/beamer_style}
@@ -60,7 +61,7 @@ default_ggplot_theme  <- theme_minimal(base_size = 12) +
 
     \par
 
--   Visualizing Data and Relationships Using \texttt{ggplot::()}
+-   Visualizing Data and Relationships Using \texttt{ggplot::()} \& \texttt{Stargazer}
 
 ### Getting Started
 
@@ -636,7 +637,6 @@ stargazer::stargazer(temp_lm, type = 'text', omit.stat = c("ser", 'f', 'adj.rsq'
 ### Stargazer -- Latex Example (type = 'latex')
 
 \tiny
-
 ```{r stargazer_3, echo=FALSE, message=FALSE, warning=FALSE, tidy=TRUE}
 
 temp_lm <- lm(Sepal.Length ~ Sepal.Width + Petal.Length + Petal.Width, data = iris)

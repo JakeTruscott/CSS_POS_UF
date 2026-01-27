@@ -3,24 +3,24 @@
     "path": "C:/Users/jaketruscott/Github/CSS_POLS_UF/docs/assets/replication_materials/class_2/code/blackjack_simulation.R",
     "project_path": "class_2/code/blackjack_simulation.R",
     "type": "r_source",
-    "hash": "0",
+    "hash": "1961396669",
     "contents": "",
     "dirty": false,
     "created": 1767792210699.0,
     "source_on_save": false,
-    "relative_order": 4,
+    "relative_order": 2,
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "25,42",
-        "scrollLine": "0"
+        "cursorPosition": "584,0",
+        "scrollLine": "462"
     },
-    "folds": "32|46|40|0|\n42|41|67|0|\n69|29|80|0|\n82|23|90|0|\n92|31|113|0|\n115|72|171|0|\n189|57|190|44|\n197|26|220|0|\n251|32|286|0|\n338|25|422|2|\n469|28|574|0|\n488|25|566|2|\n",
-    "lastKnownWriteTime": 1767797698,
+    "folds": "33|46|41|0|\n43|41|68|0|\n70|29|81|0|\n83|23|91|0|\n93|31|114|0|\n116|72|172|0|\n252|32|287|0|\n339|25|423|2|\n470|28|575|0|\n489|25|567|2|\n",
+    "lastKnownWriteTime": 1769518763,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1767797698585,
+    "last_content_update": 1769518763640,
     "read_only": false,
     "read_only_alternatives": []
 }

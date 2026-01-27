@@ -13,36 +13,14 @@ output:
     slide_level: 3
     keep_tex: true
     toc: false
+classoption: aspectratio=169  
 header-includes:
   - \PassOptionsToClass{aspectratio=169}{beamer}
   - \usepackage{../../beamer_style/beamer_style}
   - \setbeamersize{text margin left=3.5mm,text margin right=3.5mm}
 ---
 
-```{r setup, include=FALSE}
-library(dplyr); library(ggplot2); library(cowplot); library(formatR); library(stargazer)
 
-knitr::opts_chunk$set(
-  warning = FALSE, 
-	fig.align = "center",
-	comment = NA,
-	dev = "pdf",
-	size = "tiny",
-	tidy = TRUE, 
-  tidy.opts=list(width.cutoff=50)
-)
-
-default_ggplot_theme  <- theme_minimal(base_size = 12) +
-  theme(
-    plot.title = element_text(hjust = 0.5, size = 12),
-    axis.title = element_text(size = 12, colour = 'black'),
-    axis.text = element_text(size = 10, colour = 'black'),
-    panel.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
-    legend.position = 'bottom', 
-    legend.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
-  )
-
-```
 
 # Overview
 
@@ -60,7 +38,7 @@ default_ggplot_theme  <- theme_minimal(base_size = 12) +
 
     \par
 
--   Visualizing Data and Relationships Using \texttt{ggplot::()}
+-   Visualizing Data and Relationships Using \texttt{ggplot::()} \& \texttt{Stargazer}
 
 ### Getting Started
 
@@ -96,97 +74,59 @@ default_ggplot_theme  <- theme_minimal(base_size = 12) +
 
 \small
 
-```{r coin_10, echo=FALSE, fig.height=3, fig.width=4, tidy=TRUE}
-options(width = 55)
-set.seed(1234) # Set Random Seed
-coin_10 <- data.frame(side = sample(c('Heads', 'Tails'), size = 10, replace = TRUE)) %>%
-  ggplot(aes(x = side, group = side)) + 
-  geom_bar(aes(fill = side), colour = 'black') + labs(x ='', y = '', title = '10 Flips') + 
-  geom_hline(yintercept = 0) + default_ggplot_theme + theme(legend.position = 'none', axis.text.y = element_blank())+ 
-  scale_y_continuous(expand = expansion(mult = c(0, 0.25))) + 
-  geom_label(stat = "count", aes(label = after_stat(count)), vjust = 1.5)
 
-coin_10
-
-```
+\begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/coin_10-1} \end{center}
 
 ### Coin Flips (Cont.)
 
 \small
 
-```{r coin_100, echo=FALSE, fig.height=3, fig.width=4, tidy=TRUE}
-options(width = 55)
-set.seed(1234) # Set Random Seed
-coin_100 <- data.frame(side = sample(c('Heads', 'Tails'), size = 100, replace = TRUE)) %>%
-  ggplot(aes(x = side, group = side)) + 
-  geom_bar(aes(fill = side), colour = 'black') + labs(x ='', y = '', title = '100 Flips') + 
-  geom_hline(yintercept = 0) + default_ggplot_theme + theme(legend.position = 'none', axis.text.y = element_blank())+ 
-  scale_y_continuous(expand = expansion(mult = c(0, 0.25))) + 
-  geom_label(stat = "count", aes(label = after_stat(count)), vjust = 1.5)
 
-coin_100
-
-```
+\begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/coin_100-1} \end{center}
 
 ### Coin Flips (Cont.)
 
 \small
 
-```{r coin_1k, echo=FALSE, fig.height=3, fig.width=4, tidy=TRUE}
-options(width = 55)
-set.seed(1234) # Set Random Seed
 
-coin_1k <- data.frame(side = sample(c('Heads', 'Tails'), size = 1000, replace = TRUE)) %>%
-  ggplot(aes(x = side, group = side)) + 
-  geom_bar(aes(fill = side), colour = 'black') + labs(x ='', y = '', title = '1k Flips') + 
-  geom_hline(yintercept = 0) + default_ggplot_theme + theme(legend.position = 'none', axis.text.y = element_blank())+ 
-  scale_y_continuous(expand = expansion(mult = c(0, 0.25))) + 
-  geom_label(stat = "count", aes(label = after_stat(count)), vjust = 1.5)
-
-
-coin_1k
-
-```
+\begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/coin_1k-1} \end{center}
 
 ### Coin Flips (Cont.)
 
 \small
 
-```{r coin_10k, echo=FALSE, fig.height=3, fig.width=4, tidy=TRUE}
-options(width = 55)
-set.seed(1234) # Set Random Seed
-coin_10k <- data.frame(side = sample(c('Heads', 'Tails'), size = 10000, replace = TRUE)) %>%
-  ggplot(aes(x = side, group = side)) + 
-  geom_bar(aes(fill = side), colour = 'black') + labs(x ='', y = '', title = '10k Flips') + 
-  geom_hline(yintercept = 0) + default_ggplot_theme + theme(legend.position = 'none', axis.text.y = element_blank()) + 
-  scale_y_continuous(expand = expansion(mult = c(0, 0.25))) + 
-  geom_label(stat = "count", aes(label = after_stat(count)), vjust = 1.5)
 
-coin_10k
-
-```
+\begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/coin_10k-1} \end{center}
 
 ### Coin Flips (Cont.)
 
 -   We can use \texttt{sample()} to randomly select elements from a vector
 -   In this case, a coin flip where $p(heads) = p(tails) = 0.5$ \small
 
-```{r uniform_distribution, tidy=TRUE}
-sides <- c('Heads', 'Tails') # Flip Options
-single_flip <- sample(sides, size = 1) # Single Draw
-print(single_flip) 
+
+``` r
+sides <- c("Heads", "Tails")  # Flip Options
+single_flip <- sample(sides, size = 1)  # Single Draw
+print(single_flip)
+```
+
+```
+[1] "Tails"
 ```
 
 ### 6-Sided Die
 
 -   We can use the same approach to "roll" a six-sided die. \small
 
-```{r six_sided_die, tidy=TRUE}
 
-sides <- c(1:6) # 1, 2, 3, 4, 5, 6
-single_roll <- sample(sides, size = 1) # Single Roll
-message('Result of Single Roll: ', single_roll)
+``` r
+sides <- c(1:6)  # 1, 2, 3, 4, 5, 6
+single_roll <- sample(sides, size = 1)  # Single Roll
+message("Result of Single Roll: ", single_roll)
+```
 
+```
+Result of Single Roll: 2
 ```
 
 \small
@@ -195,26 +135,31 @@ message('Result of Single Roll: ', single_roll)
 
 -   We can even use it to do more complex operations like simulate a random draw from 5-card Poker \tiny
 
-```{r poker, tidy=TRUE}
 
-cards <- as.character(c(2:10, 'J', 'Q', 'K', 'A')) 
+``` r
+cards <- as.character(c(2:10, "J", "Q", "K", "A"))
 # All Card Values
-suits <- c('Hearts', 'Diamonds', 'Spades', 'Clubs') 
+suits <- c("Hearts", "Diamonds", "Spades", "Clubs")
 # Suits
 
-deck <- expand.grid(value = cards, 
-                               suit = suits) %>%
-  mutate(card = paste(value, "of", suit)) %>%
-  pull(card) # Create a Full Deck
+deck <- expand.grid(value = cards, suit = suits) %>%
+    mutate(card = paste(value, "of", suit)) %>%
+    pull(card)  # Create a Full Deck
 
-random_draw <- sample(deck, size = 5, replace = F) 
+random_draw <- sample(deck, size = 5, replace = F)
 # Random 5-Card Draw w/out Replacement
 ```
 
 ### Poker Hands (Cont.) {.fragile}
 
-```{r print_random_draw, echo=FALSE, tidy=TRUE}
-message('Hand: \n', paste(random_draw, collapse = '\n'))
+
+```
+Hand: 
+3 of Diamonds
+5 of Hearts
+10 of Diamonds
+2 of Diamonds
+Q of Diamonds
 ```
 
 ### Generating Distributions
@@ -229,25 +174,13 @@ message('Hand: \n', paste(random_draw, collapse = '\n'))
 
 -   Let's start with 1000 samples from a standard normal distribution where $\mu$ = 50 and $\sigma$ = 10
 
-```{r normal_distribution, echo=TRUE, tidy=TRUE}
-normal <- rnorm(1000, mean = 50, sd = 10) 
+
+``` r
+normal <- rnorm(1000, mean = 50, sd = 10)
 ```
 
-```{r normal_distribution_figure, echo=FALSE, tidy=TRUE, fig.height=2, fig.width=3}
 
-data.frame(value = normal) %>%
-  ggplot(aes(x = value)) + 
-  geom_histogram(aes(y = after_stat(count)), fill = 'skyblue4', colour = 'black', bins = 30, alpha = 1/2) + 
-  geom_vline(xintercept = 50, linetype = 2, colour = 'black', linewidth = 1) + 
-  stat_function(fun = function(x) dnorm(x, mean = 50, sd = 10) * length(normal) * diff(range(normal))/30, 
-                color = "red", size = 1) + 
-  geom_hline(yintercept = 0) + 
-  labs(x = ' ', y = ' ') + 
-  scale_y_continuous(breaks = seq(25, 100, 25)) + 
-  default_ggplot_theme + 
-  theme(axis.text.y = element_blank())
-
-```
+\begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/normal_distribution_figure-1} \end{center}
 
 ### Generating Distributions (Standard Normal)
 
@@ -255,26 +188,13 @@ data.frame(value = normal) %>%
 
 ### Generating Distributions (Standard Normal -- Ex)
 
-```{r normal_distribution_ex, echo=TRUE, tidy=TRUE}
-normal <- rnorm(1000, mean = 25, sd = 10) 
+
+``` r
+normal <- rnorm(1000, mean = 25, sd = 10)
 ```
 
-```{r normal_distribution_ex_figure, echo=FALSE, tidy=TRUE, fig.height=2.25, fig.width=3.25}
 
-data.frame(value = normal) %>%
-  ggplot(aes(x = value)) + 
-  geom_histogram(aes(y = after_stat(count)), fill = 'skyblue4', colour = 'black', bins = 30, alpha = 1/2) + 
-  geom_vline(xintercept = 25, linetype = 2, colour = 'black', linewidth = 1) + 
-  stat_function(fun = function(x) dnorm(x, mean = 25, sd = 10) * length(normal) * diff(range(normal))/30, 
-                color = "red", size = 1) + 
-  geom_hline(yintercept = 0) + 
-  labs(x = ' ', y = ' ') + 
-  scale_y_continuous(breaks = seq(25, 100, 25)) + 
-  scale_x_continuous(breaks = seq(-5, 55, 10)) + 
-  default_ggplot_theme + 
-  theme(axis.text.y = element_blank())
-
-```
+\begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/normal_distribution_ex_figure-1} \end{center}
 
 ### Generating Distributions (Exponential -- Ex)
 
@@ -282,23 +202,13 @@ data.frame(value = normal) %>%
 
 ### Generating Distributions (Exponential -- Ex)
 
-```{r rexp_ex, echo=TRUE, tidy=TRUE}
+
+``` r
 exp <- rexp(1000, rate = 2)
 ```
 
-```{r rexp_ex_figure, echo=FALSE, tidy=TRUE, fig.height=2.25, fig.width=3.25}
 
-data.frame(value = exp) %>%
-  ggplot(aes(x = value)) + 
-  geom_histogram(aes(y = after_stat(density)), fill = 'skyblue4', colour = 'black', bins = 30, alpha = 1/2) +
-  stat_function(fun = function(x) dexp(x, rate = 2), 
-                color = "red", size = 1) + 
-  geom_hline(yintercept = 0) + 
-  labs(x = ' ', y = ' ') + 
-  default_ggplot_theme + 
-  theme(axis.text.y = element_blank())
-
-```
+\begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/rexp_ex_figure-1} \end{center}
 
 # Functions
 
@@ -318,33 +228,29 @@ data.frame(value = exp) %>%
 
 \small
 
-```{r function_basic_syntax, eval=F, echo=T, warning=FALSE}
 
-function_name <- function(input_1, input_2){
-  
-  #Code to Assume Input_1 and Input_2 
-  
-  #return(Return Output Value or Object)
-  
+``` r
+function_name <- function(input_1, input_2) {
+
+    # Code to Assume Input_1 and Input_2
+
+    # return(Return Output Value or Object)
+
 }
-
-
 ```
 
 ### Functions (Example)
 
 \small
 
-```{r function_basic_example, eval=F, echo=T, warning=FALSE}
 
+``` r
 add_numbers <- function(x, y) {
-  result <- x + y   
-  return(result)   
+    result <- x + y
+    return(result)
 }
 
 add_numbers(5, 3)
-
-
 ```
 
 ### Functions (Basics, Cont.)
@@ -360,13 +266,12 @@ add_numbers(5, 3)
 
 -   In \texttt{R}, a for loop is a control structure used to repeat a block of code a fixed number of times, iterating over a sequence of values. The basic syntax is:
 
-```{r basic_lor_loop_syntax, eval=FALSE, echo=TRUE}
 
-for (variable in sequence){
-  # Repeating Code Routine
-  # return(Result Value or Object)
+``` r
+for (variable in sequence) {
+    # Repeating Code Routine return(Result Value
+    # or Object)
 }
-
 ```
 
 ### Loops (Basics, Cont.)
@@ -375,21 +280,23 @@ for (variable in sequence){
 
 \footnotesize
 
-```{r basic_for_loop_dice, tidy = T}
 
+``` r
 rolls <- c()
 
-for (i in 1:10){
-  
-  temp_roll <- sample(1:6, 1, 
-                      replace = TRUE, 
-                      prob = rep(1/6, 6))
-  
-  rolls <- c(rolls, temp_roll)
+for (i in 1:10) {
+
+    temp_roll <- sample(1:6, 1, replace = TRUE, prob = rep(1/6,
+        6))
+
+    rolls <- c(rolls, temp_roll)
 }
 
-rolls # Print
+rolls  # Print
+```
 
+```
+ [1] 4 6 3 1 2 2 3 2 5 5
 ```
 
 ### Loops (Basics, Cont.)
@@ -398,23 +305,26 @@ rolls # Print
 
 \footnotesize
 
-```{r loop_function_example,  warning=FALSE}
 
+``` r
 add_numbers <- function(x, y) {
-  result <- x + y   
-  return(result)   
+    result <- x + y
+    return(result)
 }
 
 available_values <- c(1:10)
 sums <- c()
 
-for (pair in seq(1:10)){
-  temp_pair <- sample(available_values, 2)
-  sums <- c(sums, add_numbers(temp_pair[1], temp_pair[2]))
+for (pair in seq(1:10)) {
+    temp_pair <- sample(available_values, 2)
+    sums <- c(sums, add_numbers(temp_pair[1], temp_pair[2]))
 }
 
 sums
+```
 
+```
+ [1]  9  7  9  9 12 15 19 15  8 13
 ```
 
 ### Loops (Basics, Cont.)
@@ -427,36 +337,42 @@ sums
 
 \footnotesize
 
-```{r basic_for_loop_holdem, tidy = T}
 
-set.seed(1234) # Seed
-cards <- as.character(c(2:10, 'J', 'Q', 'K', 'A')) 
-suits <- c('Hearts', 'Diamonds', 'Spades', 'Clubs') 
-deck <- expand.grid(value = cards, 
-                               suit = suits) |>
-  mutate(card = paste(value, "of", suit)) |>
-  pull(card) # Create a Full Deck
+``` r
+set.seed(1234)  # Seed
+cards <- as.character(c(2:10, "J", "Q", "K", "A"))
+suits <- c("Hearts", "Diamonds", "Spades", "Clubs")
+deck <- expand.grid(value = cards, suit = suits) |>
+    mutate(card = paste(value, "of", suit)) |>
+    pull(card)  # Create a Full Deck
 
-hands <- lapply(1:5, function(x) x) 
-
+hands <- lapply(1:5, function(x) x)
 ```
 
 ### Loops (Basics, Cont.)
 
 \footnotesize
 
-```{r basic_for_loop_holdem_cont, tidy = T}
 
-for (card in 1:2){
-  for (player in 1:5){
-    temp_player_card <- sample(deck, 1, replace = F) 
-    deck <- deck[!deck %in% temp_player_card]
-    hands[[player]][card] <- temp_player_card
-  } # For All 5 Players
-} # For Both Cards
+``` r
+for (card in 1:2) {
+    for (player in 1:5) {
+        temp_player_card <- sample(deck, 1, replace = F)
+        deck <- deck[!deck %in% temp_player_card]
+        hands[[player]][card] <- temp_player_card
+    }  # For All 5 Players
+}  # For Both Cards
 
 do.call(cbind, hands)
+```
 
+```
+     [,1]          [,2]            [,3]           
+[1,] "3 of Spades" "4 of Diamonds" "J of Diamonds"
+[2,] "A of Clubs"  "10 of Hearts"  "6 of Hearts"  
+     [,4]         [,5]           
+[1,] "2 of Clubs" "10 of Clubs"  
+[2,] "6 of Clubs" "7 of Diamonds"
 ```
 
 ### Games of Chance: Blackjack
@@ -543,8 +459,8 @@ do.call(cbind, hands)
 
 \scriptsize
 
-```{r default_ggplot_theme, eval=T, echo=T}
 
+``` r
 default_ggplot_theme  <- theme_minimal(base_size = 12) +
   theme(
     plot.title = element_text(hjust = 0.5, size = 12),
@@ -559,50 +475,53 @@ default_ggplot_theme  <- theme_minimal(base_size = 12) +
     
     legend.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
   )
-
 ```
 
 ### My Default ggplot() Aesthetics
 
 \scriptsize
 
-```{r default_ggplot_application_1}
 
+``` r
 set.seed(1234)
 
-sample_data <- tibble(x = c(1:100), 
-                      y = rnorm(100, mean = 0.75, sd = 0.33))
+sample_data <- tibble(x = c(1:100), y = rnorm(100,
+    mean = 0.75, sd = 0.33))
 
 summary(sample_data)
+```
 
+```
+       x                y           
+ Min.   :  1.00   Min.   :-0.02408  
+ 1st Qu.: 25.75   1st Qu.: 0.45454  
+ Median : 50.50   Median : 0.62307  
+ Mean   : 50.50   Mean   : 0.69827  
+ 3rd Qu.: 75.25   3rd Qu.: 0.90550  
+ Max.   :100.00   Max.   : 1.59117  
 ```
 
 ### My Default ggplot() Aesthetics
 
 \scriptsize
 
-```{r default_ggplot_application_2, fig.height=2.5, fig.width=3.5, tidy=TRUE}
 
+``` r
 sample_data %>%
-  ggplot(aes(x = x, y = y)) + 
-  geom_point() + 
-  geom_smooth(method = 'lm', formula = 'y~x')
-
+    ggplot(aes(x = x, y = y)) + geom_point() + geom_smooth(method = "lm",
+    formula = "y~x")
 ```
+
+
+
+\begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/default_ggplot_application_2-1} \end{center}
 
 ### Adding Default Aes
 
 \scriptsize
 
-```{r default_ggplot_application_3, echo=FALSE, fig.height=3, fig.width=4, tidy=TRUE}
 
-sample_data %>%
-  ggplot(aes(x = x, y = y)) + 
-  geom_point(size = 0.75, alpha = 2/3) + 
-  geom_smooth(method = 'lm', formula = 'y~x') + 
-  default_ggplot_theme
-
-```
+\begin{center}\includegraphics{Class_2_Intermediate_R_Programming_files/figure-beamer/default_ggplot_application_3-1} \end{center}
 
 # Stargazer
 
@@ -610,40 +529,81 @@ sample_data %>%
 
 \scriptsize
 
-```{r stargazer, message=FALSE, warning=FALSE, tidy=TRUE, eval = F}
 
+``` r
 library(stargazer)
-temp_lm <- lm(Sepal.Length ~ Sepal.Width + Petal.Length + Petal.Width, data = iris)
+temp_lm <- lm(Sepal.Length ~ Sepal.Width + Petal.Length +
+    Petal.Width, data = iris)
 
-stargazer::stargazer(temp_lm, type = 'text', omit.stat = c("ser", 'f', 'adj.rsq'),  dep.var.caption  = "")
-
-
+stargazer::stargazer(temp_lm, type = "text", omit.stat = c("ser",
+    "f", "adj.rsq"), dep.var.caption = "")
 ```
 
 ### Stargazer -- Text Example
 
 \scriptsize
 
-```{r stargazer_2, echo=FALSE, message=FALSE, warning=FALSE, tidy=TRUE}
 
-temp_lm <- lm(Sepal.Length ~ Sepal.Width + Petal.Length + Petal.Width, data = iris)
+```
 
-stargazer::stargazer(temp_lm, type = 'text', omit.stat = c("ser", 'f', 'adj.rsq'),  dep.var.caption  = "")
-
-
+========================================
+                    Sepal.Length        
+----------------------------------------
+Sepal.Width           0.651***          
+                       (0.067)          
+                                        
+Petal.Length          0.709***          
+                       (0.057)          
+                                        
+Petal.Width           -0.556***         
+                       (0.128)          
+                                        
+Constant              1.856***          
+                       (0.251)          
+                                        
+----------------------------------------
+Observations             150            
+R2                      0.859           
+========================================
+Note:        *p<0.1; **p<0.05; ***p<0.01
 ```
 
 ### Stargazer -- Latex Example (type = 'latex')
 
 \tiny
 
-```{r stargazer_3, echo=FALSE, message=FALSE, warning=FALSE, tidy=TRUE}
+```
 
-temp_lm <- lm(Sepal.Length ~ Sepal.Width + Petal.Length + Petal.Width, data = iris)
-
-stargazer::stargazer(temp_lm, type = 'latex', omit.stat = c("ser", 'f', 'adj.rsq'),  dep.var.caption  = "")
-
-
+% Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+% Date and time: Tue, Jan 27, 2026 - 7:59:23 AM
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\\[-1.8ex] & Sepal.Length \\ 
+\hline \\[-1.8ex] 
+ Sepal.Width & 0.651$^{***}$ \\ 
+  & (0.067) \\ 
+  & \\ 
+ Petal.Length & 0.709$^{***}$ \\ 
+  & (0.057) \\ 
+  & \\ 
+ Petal.Width & $-$0.556$^{***}$ \\ 
+  & (0.128) \\ 
+  & \\ 
+ Constant & 1.856$^{***}$ \\ 
+  & (0.251) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 150 \\ 
+R$^{2}$ & 0.859 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
 ```
 
 ### Stargazer -- Latex Example Rendered
@@ -681,15 +641,7 @@ R$^{2}$ & 0.859 \\
 ```
 ### Stargazer -- Multiple Models
 
-```{r stargazer_multiple_models, message=FALSE, warning=FALSE, include=FALSE, tidy=TRUE}
 
-temp_lm <- lm(Sepal.Length ~ Sepal.Width + Petal.Length + Petal.Width, data = iris)
-temp_lm2 <- lm(Sepal.Length ~ Sepal.Width:Petal.Length + Petal.Width, data = iris)
-
-stargazer::stargazer(temp_lm, temp_lm2, type = 'latex', omit.stat = c("ser", 'f', 'adj.rsq'),  dep.var.caption  = "")
-
-
-```
 
 ```{=tex}
 \tiny
@@ -730,14 +682,22 @@ R$^{2}$ & 0.859 & 0.821 \\
 
 \footnotesize
 
-```{r stargazer_summary_data,  tidy=TRUE}
 
-stargazer(iris, 
-          type = "text", 
-          summary = TRUE,
-          title = "Summary of Iris Dataset")
+``` r
+stargazer(iris, type = "text", summary = TRUE, title = "Summary of Iris Dataset")
+```
 
+```
 
+Summary of Iris Dataset
+===========================================
+Statistic     N  Mean  St. Dev.  Min   Max 
+-------------------------------------------
+Sepal.Length 150 5.843  0.828   4.300 7.900
+Sepal.Width  150 3.057  0.436   2.000 4.400
+Petal.Length 150 3.758  1.765   1.000 6.900
+Petal.Width  150 1.199  0.762   0.100 2.500
+-------------------------------------------
 ```
 
 ### Visualization Example

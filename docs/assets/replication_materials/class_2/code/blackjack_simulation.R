@@ -7,6 +7,7 @@
 #########################################################
 # Libraries & Seed
 #########################################################
+
 library(dplyr)
 set.seed(1234)
 
@@ -462,7 +463,7 @@ combined_outcomes %>%
 # Losing Money (No Replacement)
 #########################################################
 
-set.seed(1234) # Set Random Seed
+set.seed(666) # Set Random Seed
 seeds <- sample(c(1:10000), size= 50, replace = F) # Draw Seeds from seed(1234)
 days <- c(1:50)
 combined_outcomes <- list()
