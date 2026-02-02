@@ -75,13 +75,16 @@ set.seed(4421) # Set Random Seed
 probs <- c(rep(1/7, 5), 2/7) # 6 = 2*p, so 1-5 = 1/7 & 6 = 2/7
 rolls <- as.data.frame(table(sample(1:6, size = 1000, replace = TRUE, prob = probs))) %>% # Simulate Rolls (& Convert to DF)
    setNames(c("side", "count")) %>% # Assign Column Names
-  mutate(proportion = count/sum(count)) # Recover Proportion
+  mutate(proportion = count/sum(count), 
+         prob = probs) # Recover Proportion
 
 rolls %>%
-  mutate(proportion = count/sum(count)) %>%
+  mutate(proportion = count/sum(count)) # Proportion & Probs
+ 
+rolls %>%
   ggplot(aes(x = factor(side), y = proportion)) + 
   geom_bar(stat = "identity", fill = "skyblue2", colour = 'black') +
-  geom_point(aes(y = proportion), color = "black", fill = 'white', shape = 23, size = 3) +
+  geom_point(aes(y = prob), color = "black", fill = 'white', shape = 23, size = 3) +
   geom_hline(yintercept = 0) + 
   labs(x = "\nDie Face", 
        y = "Proportion of Rolls\n", 

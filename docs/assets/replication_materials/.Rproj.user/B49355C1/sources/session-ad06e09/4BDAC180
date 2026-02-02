@@ -3,7 +3,7 @@
     "path": "C:/Users/jaketruscott/Github/CSS_POLS_UF/docs/assets/replication_materials/class_2/problem_set/week_2_problem_set.Rmd",
     "project_path": "class_2/problem_set/week_2_problem_set.Rmd",
     "type": "r_markdown",
-    "hash": "0",
+    "hash": "314294396",
     "contents": "",
     "dirty": false,
     "created": 1770039005190.0,
@@ -13,8 +13,8 @@
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "217,40",
-        "scrollLine": "203",
+        "cursorPosition": "99,0",
+        "scrollLine": "70",
         "rmdVisualMode": "false",
         "rmdVisualWrapConfigured": "true",
         "docOutlineVisible": "1",
@@ -24,11 +24,11 @@
         "docOutlineSize": "31"
     },
     "folds": "",
-    "lastKnownWriteTime": 1770040250,
+    "lastKnownWriteTime": 1770048261,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1770040250225,
+    "last_content_update": 1770048261496,
     "read_only": false,
     "read_only_alternatives": []
 }
