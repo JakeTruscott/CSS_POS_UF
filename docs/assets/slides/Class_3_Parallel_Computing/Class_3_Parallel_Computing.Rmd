@@ -309,7 +309,7 @@ Red Peppers (5 min)
 
 \begin{itemize}[<+->]
 \item Computers default to minimal resource allocation -- i.e., it avoids trying to use resources it doesn't need to b/c it clogs memory and can otherwise slow processes. \par \vspace{2.5mm}
-\item However, given sufficient resources, we spread out large \& burdensome tasks -- theoretically reducing the compilation time by a factor of those allocated resources. \par \vspace{2.5mm}
+\item However, given sufficient resources, we can spread out large \& burdensome tasks -- theoretically reducing the compilation time by a factor of those allocated resources. \par \vspace{2.5mm}
 \item We just need to tell a computing system to do this! 
 \end{itemize}
 
@@ -497,7 +497,7 @@ print(parallel[['elapsed']])
 ### Exporting Packages & Resources to Socket
 
 \begin{itemize}
-\item Using \texttt{cl()} does not automatically make packages loaded via \textit{library()} or objects/functions created in the global environment available on worker nodes. \par \vspace{2.5mm}
+\item Using \texttt{cl()} does not automatically make packages loaded via \textit{library()} or objects/functions created in the global environment available for workers \par \vspace{2.5mm}
 \item As with socket clusters, these packages and objects must be explicitly exported to each cluster node. \par \vspace{2.5mm}
 \item We can do that using \texttt{clusterExport()} and \texttt{clusterEvalQ()}
 \end{itemize}
