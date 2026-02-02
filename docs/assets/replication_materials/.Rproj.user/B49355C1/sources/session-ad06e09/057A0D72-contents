@@ -239,7 +239,7 @@ Red Peppers (5 min)
 \begin{itemize}
 \item Ford's Model T wasn't the first car ever built -- Probably wasn't even remotely close to the ``best'' car available when released in 1908. 
 \item But it was \textbf{cheap} -- Easily accessible to everyday earners. 
-\item By 1920 the Model T costed \$300 -- \$4,800 today. \textbf{How could Ford sell so cheap?}
+\item By 1920 the Model T costed \$300 (\$4,800 today) -- \textbf{How could Ford sell so cheap?}
 \end{itemize}
 \end{column}
 \begin{column}{0.5\textwidth}
@@ -275,7 +275,7 @@ Red Peppers (5 min)
 ### Putting it Together
 
 \begin{itemize}[<+->]
-\item An optimal allocation of resources towards completing tasks often yields the quickest completion time. \par \vspace{2.5mm}
+\item An optimal allocation of resources towards completing tasks often yields the quickest completion time -- or at least the most efficient \par \vspace{2.5mm}
 \item In essence -- completing some tasks is better served with a lot of workers doing a little bit of work, rather than a few workers doing a lot of work \par \vspace{2.5mm}
 \item We're going to clarify this in a bit but the premise serves to explain the difference between \textbf{Serial} and \textbf{Parallel} computing
 \end{itemize}
@@ -511,7 +511,7 @@ clusterEvalQ(cl, {
 ```
 
 ### Another Example
-- Let's work through the \texttt{model\_worker} example in today's code
+- Let's work through the problem_set examples in today's code
 
 # Looking Forward
 
