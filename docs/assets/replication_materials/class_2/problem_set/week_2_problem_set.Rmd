@@ -28,7 +28,7 @@ library(stargazer)
 
 <br>
 
-```{r Problem_1, eval=FALSE, include=FALSE}
+```{r Problem_1, eval=T, include=T}
 
 set.seed(4421) # Set Random Seed
 
@@ -200,7 +200,7 @@ means_combined %>%
 
 <br>
 
-<li> A call center receives customer calls at a rate of one every 5 minutes, on average. The time between calls can be modeled using an exponential distribution with a mean of 5 minutes. Write a custom function with a nested <code>for</code> loop to simulate 1,000 inter-arrival times (in minutes) for incoming calls. Plot the distributions of simulated times and overlay the theoretical exponential density curve. Estimate the probability that the next call arrives within 3 minutes. (2pts)</li>
+<li> A call center receives customer calls at a rate of one every 5 minutes, on average. The time between calls can be modeled using an exponential distribution with a mean of 5 minutes. Simulate 1,000 inter-arrival times (in minutes) for incoming calls. Plot the distributions of simulated times and overlay the theoretical exponential density curve. Estimate the probability that the next call arrives within 3 minutes. (2pts)</li>
 
 <br>
 
@@ -210,6 +210,8 @@ set.seed(4421) # Random Seed Generation
 mu <- 5 # 5 Min Mean
 calls <- data.frame(rexp(1000, rate = 1/mu)) %>%
   setNames('arrival_time') # 1000 Sims (Rate = 1/Avg. Time)
+
+mean(calls <= 3) # Prob <=3 Min
 
 calls %>%
   ggplot(aes(x = arrival_time)) + 
