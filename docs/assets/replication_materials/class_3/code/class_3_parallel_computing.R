@@ -296,8 +296,6 @@ data_grid <- expand.grid(
   sim_id = 1:20 # ID = 1:20
 )
 
-task_list <- split(data_grid, seq_len(nrow(data_grid))) # Partitions Data Grid to Individual Tasks
-
 run_parallel_models <- function(task_list, n_cores = detectCores() - 1){
 
   cl <- makeCluster(n_cores) # Defaults to Total Cores - 1
@@ -309,18 +307,12 @@ run_parallel_models <- function(task_list, n_cores = detectCores() - 1){
     NULL
   }) # Export stats Package to Each Worker
 
-  clusterExport(cl,c("model_worker")) # Make Sure Every Worker Gets model_worker Function
+  clusterExport(cl,c("model_worker", 'data_grid')) # Make Sure Every Worker Gets model_worker Function & data_grid
 
-  results <- parLapply(cl, task_list,
-                       function(data_row) {
-                         tryCatch(
-                           model_worker(data_row),
-                           error = function(e) {
-                             list(sim_id = data_row$sim_id,
-                                  error = TRUE,
-                                  msg = e$message)
-                           })
-                       }) # Try to Recover Results (parLapply automatically distributes across workers!)
+  results <- parLapply(cl, seq_len(nrow(data_grid)), function(i) {
+    data_row <- data_grid[i, ]
+    model_worker(data_row)
+    }) # Try to Recover Results (parLapply automatically distributes across workers!)
 
   stopCluster(cl) # Shut Down Workers
 
