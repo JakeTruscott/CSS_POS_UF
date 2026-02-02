@@ -96,7 +96,7 @@ run_parallel_models <- function(task_list, n_cores = detectCores() - 1){
 
   cl <- makeCluster(n_cores) # Defaults to Total Cores - 1
 
-  clusterSetRNGStream(cl, iseed = 1234) # Sets Initial Seed Across All Cores
+  clusterSetRNGStream(cl, iseed = 1234) # Sets Seed Across All Cores
 
   clusterEvalQ(cl, {
     library(stats)
@@ -117,7 +117,7 @@ run_parallel_models <- function(task_list, n_cores = detectCores() - 1){
                error = TRUE,
                msg = e$message)
         })
-    }) # Try to Recover Results
+    }) # Try to Recover Results (parLapply automatically distributes across workers!)
 
   stopCluster(cl) # Shut Down Workers
 
