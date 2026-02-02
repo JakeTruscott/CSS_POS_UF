@@ -3,7 +3,7 @@
     "path": "C:/Users/jaketruscott/Github/CSS_POLS_UF/docs/assets/replication_materials/class_3/code/class_3_parallel_computing.R",
     "project_path": "class_3/code/class_3_parallel_computing.R",
     "type": "r_source",
-    "hash": "29193647",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1769885842154.0,
@@ -13,15 +13,15 @@
         "tempName": "Untitled2",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "9,60",
-        "scrollLine": "0"
+        "cursorPosition": "280,25",
+        "scrollLine": "262"
     },
-    "folds": "97|61|102|2|\n",
-    "lastKnownWriteTime": 1770056920,
+    "folds": "97|61|102|2|\n300|72|330|0|\n",
+    "lastKnownWriteTime": 1770059069,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1770056920962,
+    "last_content_update": 1770059069006,
     "read_only": false,
     "read_only_alternatives": []
 }

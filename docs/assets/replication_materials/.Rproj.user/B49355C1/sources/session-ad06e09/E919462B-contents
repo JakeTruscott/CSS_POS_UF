@@ -273,10 +273,6 @@ stargazer::stargazer(summary_serial_parallel, summary = F, type = 'text')
 model_worker <- function(data){
 
   n = data$n
-  beta = data$beta
-  noise = data$noise
-  sim_id = data$sim_id
-
   x <- rnorm(data$n) # X = Random Values from Normal Distribution
   y <- data$beta * x + rnorm(n, sd = data$noise) # Y = X + Noise
   fit <- lm(y ~ x) # Simulate Model
@@ -284,6 +280,8 @@ model_worker <- function(data){
   list(
     sim_id = data$sim_id,
     n = data$n,
+    beta = data$beta,
+    noise = data$noise,
     beta_hat = coef(fit)[2],
     se_hat = summary(fit)$coefficients[2,2],
     r2 = summary(fit)$r.squared
@@ -311,10 +309,7 @@ run_parallel_models <- function(task_list, n_cores = detectCores() - 1){
     NULL
   }) # Export stats Package to Each Worker
 
-  clusterExport(cl,
-                varlist = c("model_worker"),
-                envir = environment()
-  ) # Make Sure Every Worker Gets model_worker Function
+  clusterExport(cl,c("model_worker")) # Make Sure Every Worker Gets model_worker Function
 
   results <- parLapply(cl, task_list,
                        function(data_row) {
@@ -336,8 +331,7 @@ run_parallel_models <- function(task_list, n_cores = detectCores() - 1){
 }
 
 
-out <- run_parallel_models(task_list,
-                           ncores = detectCores() - 1) # Run in Parallel
+out <- run_parallel_models(task_list) # Run in Parallel
 
 head(out$results_df) # Peek Results DF
 
