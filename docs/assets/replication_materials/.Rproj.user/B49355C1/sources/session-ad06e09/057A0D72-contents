@@ -48,11 +48,22 @@ default_ggplot_theme  <- theme_minimal(base_size = 12) +
 # Overview
 
 ### Overview
-
--   Class 2 Problem Set Review \par \vspace{2.5mm}
--   \textbf{Today's Goal}: Learn Skills to Improve Computational Efficiency w/ Parallel Computing \par \vspace{2.5mm}
--   Serial Tasks  \par \vspace{2.5mm}
--   Parallel Tasks
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+  \item Class 2 Problem Set Review \par \vspace{2.5mm}
+  \item   \textbf{Today's Goal}: Learn Skills to Improve Computational Efficiency w/ Parallel Computing \par \vspace{2.5mm}
+  \item  Serial Tasks  \par \vspace{2.5mm}
+  \item   Parallel Tasks
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\centering
+\vfill
+\includegraphics[width=4.5cm]{../../images/computer_magic.jpg}
+\vfill
+\end{column}
+\end{columns}
 
 # Class 2 Problem Set
 

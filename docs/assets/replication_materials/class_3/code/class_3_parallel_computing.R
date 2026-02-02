@@ -10,7 +10,7 @@
 # note: install.packages('PACKAGE') if not already installed
 ################################################################################
 
-library(dplyr); library(ggplot2); library(ggtext); library(cowplot); library(parallel); library(doParallel)
+library(dplyr); library(ggplot2); library(parallel); library(doParallel)
 
 
 ################################################################################
@@ -190,9 +190,9 @@ summary(sim_data)
 set.seed(1234) # Random Seeds
 seeds <- sample(1:100000, size = 1000, replace = F)
 
-########################################
+###############
 # Serial
-########################################
+###############
 serial_completion <- system.time(
   for (i in 1:1000){
     set.seed(seeds[i]) # Replication
@@ -210,9 +210,9 @@ serial_completion <- system.time(
   })[['elapsed']] # Run 100 Times, Recording Completion Time Once Complete
 
 
-########################################
+###############
 # Parallel
-########################################
+###############
 
 cores <- c(2, 4, 6)
 parallel_completion_times <- c()
@@ -266,7 +266,7 @@ stargazer::stargazer(summary_serial_parallel, summary = F, type = 'text')
 
 
 ################################################################################
-# Another Advanced Parallel Script
+# Another Parallel Script
 # Grid of Model Specifications -- Runs Model & Recovers Results
 ################################################################################
 
