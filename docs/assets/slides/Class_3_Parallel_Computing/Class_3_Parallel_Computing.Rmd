@@ -1,0 +1,505 @@
+---
+title: "Parallel Computing"
+author: "Jake S. Truscott, Ph.D"
+subtitle: |
+  POS6933: Computational Social Science
+institute: |
+  \vspace{-5mm} University of Florida \newline
+  Spring 2026 \newline \newline \newline
+  \includegraphics[width=3cm]{../../beamer_style/UF.png} \quad 
+  \includegraphics[width=3.1cm]{../../images/CSS_POLS_UF_Logo.png}
+output: 
+  beamer_presentation:
+    slide_level: 3
+    keep_tex: true
+    toc: false
+classoption: aspectratio=169  
+header-includes:
+  - \PassOptionsToClass{aspectratio=169}{beamer}
+  - \usepackage{../../beamer_style/beamer_style}
+  - \setbeamersize{text margin left=3.5mm,text margin right=3.5mm}
+---
+
+```{r setup, include=FALSE}
+library(dplyr); library(ggplot2); library(cowplot); library(formatR); library(stargazer); library(parallel); library(doParallel)
+
+knitr::opts_chunk$set(
+  warning = FALSE, 
+	fig.align = "center",
+	comment = NA,
+	dev = "pdf",
+	size = "tiny",
+	tidy = TRUE, 
+  tidy.opts=list(width.cutoff=50)
+)
+
+default_ggplot_theme  <- theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12),
+    axis.title = element_text(size = 12, colour = 'black'),
+    axis.text = element_text(size = 10, colour = 'black'),
+    panel.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+    legend.position = 'bottom', 
+    legend.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+  )
+
+```
+
+# Overview
+
+### Overview
+
+-   Class 2 Problem Set Review \par \vspace{2.5mm}
+-   \textbf{Today's Goal}: Learn Skills to Improve Computational Efficiency w/ Parallel Computing \par \vspace{2.5mm}
+-   Serial Tasks  \par \vspace{2.5mm}
+-   Parallel Tasks
+
+# Class 2 Problem Set
+
+### General Notes Re: Class 2 Problem Set
+
+
+
+
+
+# Ramblings
+
+### Why Ratatouille is Unrealistic
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{enumerate}[<+->]
+  \item Movie takes place in France but two main characters suspiciously don't have French accents?
+  \item Rats don't have true opposable thumbs and they can't vomit
+  \item Gusteau's drop from a ``five-star'' restaurant presumably references its Michelin rating -- which actually caps at three stars
+  \item Rats are sentient, not sapient -- they can't cook food.
+\end{enumerate}
+\end{column}
+\begin{column}{0.5\textwidth}
+\centering
+\vfill
+\includegraphics[width=4.5cm]{../../images/ratatouille.jpg}
+\vfill
+\end{column}
+\end{columns}
+
+
+### Why Ratatouille is Unrealistic (Cont.)
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}[<+->]
+  \item The film's \textit{catharsis} (emotional climax) is the scene where Remy cooks Ratatouille for the food critic, Anton Ego. 
+  \item Ego loves the food so much he's transported back to his childhood in the French countryside and lovingly remembers his mother's cooking. 
+  \item Awesome -- but problematic for many reasons. 
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\centering
+\vfill
+\includegraphics[width=4.5cm]{../../images/ratatouille.jpg}
+\vfill
+\end{column}
+\end{columns}
+
+
+
+### Why Ratatouille is Unrealistic (Cont.)
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{enumerate}[<+->]
+\item The most straightforward recipe for the classical Provencal dish I could fine was from \textit{The New York Times}.
+\item Recipe requires \textit{at minimum} three hours to arrange and cook, while also assuming all 12 ingredients have even been properly cut.
+\item[] So, in less than 5 minutes of screen time, Remy secures the kitchen and (by himself) prepares, cooks, and plates the dish, and is able to have this cathartic experience about believing in yourself -- \textbf{I don't buy it}
+\end{enumerate}
+\end{column}
+\begin{column}{0.5\textwidth}
+\centering
+\vfill
+\includegraphics[width=4.5cm]{../../images/ratatouille_food.jpg}
+\vfill
+\end{column}
+\end{columns}
+
+### Why Ratatouille is Unrealistic (Cont.)
+
+\begin{center}
+\large \textbf{There's just no way Remy -- by himself -- could have prepared this dish in a reasonable amount of time}
+\end{center}
+
+
+### Why Ratatouille is Unrealistic (Cont.)
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item \textbf{Solution}: Divide the labor. 
+\item Steps:
+\begin{enumerate} 
+\item Onion: 5 min \par \vspace{-0.5mm}
+\item Tomato: 2 min \par \vspace{-0.5mm}
+\item Zucchini: 4 min \par \vspace{-0.5mm}
+\item Eggplant: 3 min \par \vspace{-0.5mm}
+\item Red Peppers: 5 min \par \vspace{-0.5mm}
+\item Garlic, Herbs, \& Spices: 5 min \par \vspace{-0.5mm}
+\item Arrange: 5 min \par \vspace{-0.5mm}
+\item Cook: 60 min \par \vspace{-0.5mm}
+\end{enumerate}
+\item \textbf{Total Prep Time}: 24 minutes
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\centering
+\vfill
+\includegraphics[width=4.5cm]{../../images/ratatouille_food.jpg}
+\vfill
+\end{column}
+\end{columns}
+
+
+### Dividing the Labor (Cont.)
+
+\begin{columns}
+\begin{column}{0.25\textwidth} 
+\centering
+\textbf{Remy} \\
+\vfill
+\end{column}
+\begin{column}{0.25\textwidth}
+\centering
+\textbf{Linguini} \\
+\end{column}
+\begin{column}{0.25\textwidth}
+\centering
+\textbf{Colette} \\
+\end{column}
+\begin{column}{0.25\textwidth}
+\centering
+\textbf{Horst} \\
+\end{column}
+\end{columns} 
+\vfill
+\centering
+\textbf{What's the optimal way to allocate across the (4) chefs? Discuss with a classmate}
+
+
+
+
+### Dividing the Labor (Cont.)
+
+\begin{columns}
+\begin{column}{0.25\textwidth} 
+\centering
+\textbf{Remy} \\
+Onion (5 min) \\
+\vfill
+\end{column}
+\begin{column}{0.25\textwidth}
+\centering
+\textbf{Linguini} \\
+Garlic, etc. (5)
+\end{column}
+\begin{column}{0.25\textwidth}
+\centering
+\textbf{Colette} \\
+Tomato (2 min) \\
+Eggplant (3 min) 
+\end{column}
+\begin{column}{0.25\textwidth}
+\centering
+\textbf{Horst} \\
+Red Peppers (5 min)
+\end{column}
+\end{columns} 
+\vfill
+\centering
+\textbf{Suddenly the prep time is only (5) minutes! Even adding time to \textit{arrange}, we're still saving more than half the preparation time versus Remy doing it alone!}
+
+
+### Model T
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item Ford's Model T wasn't the first car ever built -- Probably wasn't even remotely close to the ``best'' car available when released in 1908. 
+\item But it was \textbf{cheap} -- Easily accessible to everyday earners. 
+\item By 1920 the Model T costed \$300 -- \$4,800 today. \textbf{How could Ford sell so cheap?}
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\centering
+\vfill
+\includegraphics[width=1\textwidth]{../../images/ford_model_t.png}
+\vfill
+\end{column}
+\end{columns}
+
+
+
+### Model T
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item Ford's ingenuity came from optimization of the factory line
+\item Rather than one individual (or a group) building the car from start to finish, pieces would be assembled in parallel and progressively combined into a single product at the end.
+\item Each worker/group would be responsible for their component (\textit{task}), not the car as a whole.
+\item Less specialized workforce + faster construction time = cheaper sales price = more purchases 
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\centering
+\vfill
+\includegraphics[width=1\textwidth]{../../images/ford_model_t.png}
+\vfill
+\end{column}
+\end{columns}
+
+
+### Putting it Together
+
+\begin{itemize}[<+->]
+\item An optimal allocation of resources towards completing tasks often yields the quickest completion time. \par \vspace{2.5mm}
+\item In essence -- completing some tasks is better served with a lot of workers doing a little bit of work, rather than a few workers doing a lot of work \par \vspace{2.5mm}
+\item We're going to clarify this in a bit but the premise serves to explain the difference between \textbf{Serial} and \textbf{Parallel} computing
+\end{itemize}
+
+
+# Serial v. Parallel
+
+### The Difference
+
+\begin{itemize}
+\item \textbf{Serial}: A computer program's instructions are executed one at a time, in a specific, linear order, using a single processor (\textit{Traditional/Default Computing Method}) \par \vspace{2.5mm}
+\item \textbf{Parallel}: The practice of dividing a large computational task into smaller parts that can be executed simultaneously 
+\end{itemize}
+
+### The Difference (Illustrated)
+\centering
+\includegraphics[width=0.55\textwidth]{../../images/parallel_vs_serial_computing.png}
+
+### Terminology
+
+\begin{itemize}[<+->]
+\item Computers default to minimal resource allocation -- i.e., it avoids trying to use resources it doesn't need to b/c it clogs memory and can otherwise slow processes. \par \vspace{2.5mm}
+\item However, given sufficient resources, we spread out large \& burdensome tasks -- theoretically reducing the compilation time by a factor of those allocated resources. \par \vspace{2.5mm}
+\item We just need to tell a computing system to do this! 
+\end{itemize}
+
+# Terminology
+
+### Terminology
+
+\begin{itemize}
+\item Resources to Consider: 
+\begin{enumerate}
+  \item CPU (and Processor) \par \vspace{-0.5mm}
+  \item Thread \par \vspace{-0.5mm}
+  \item RAM \par \vspace{-0.5mm}
+  \item Nodes \par \vspace{-0.5mm}
+  \item Cluster
+\end{enumerate}
+\end{itemize}
+
+### CPU (and Processor)
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item \textbf{CPU}: The ``brain'' of a computer that executes instructions for tasks on a computing system. 
+\item Term generally used interchangeably with processor -- refers to the piece of hardware on a computer motherboard that can contain multiple CPUs or Cores (\textit{More Next})
+\item In our Ratatoullie example, this is the kitchen -- containing multiple stations for sauces, vegetables/starches, pastries, etc. 
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\centering
+\vfill
+\includegraphics[width=0.75\textwidth]{../../images/cpu.png}
+\vfill
+\end{column}
+\end{columns}
+
+### Core
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item \textbf{Core}: A single processing unit within a CPU that can execute tasks independently \par \vspace{2.5mm}
+\item In our kitchen example, cores are the number of \textbf{kitchen stoves} -- each only capable of cooking one dish at a time. 
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\centering
+\vfill
+\includegraphics[width=0.75\textwidth]{../../images/cores.png}
+\vfill
+\end{column}
+\end{columns}
+
+
+
+### Thread
+
+\begin{itemize}
+\item \textbf{Thread}: A single sequence of instructions within a process that can run independently. 
+\begin{itemize} 
+\item \footnotesize{Knowing what is required, each chef will work in coordination with the others to synchronously produce their dishes.}
+\end{itemize} \par \vspace{2.5mm}
+\item In our kitchen example, threads ideally represent \textbf{both arms of a chef}. Two hands are obviously more ideal than one, but that doesn't detract from the reality that they're still standing at one stove. \par \vspace{2.5mm}
+\item Ex: A 16-core, 32-thread CPU usually means 16 physical cores on the CPU, each with 2 hardware threads.  \par \vspace{2.5mm}
+\begin{itemize} \vspace{-2.5mm}
+\item \footnotesize{\textbf{Key takeaway}: 32 threads does not mean 32 stoves. The extra thread mainly helps prevent idle time -- e.g., think of it as the chef using their second arm to prep the next dish while the first one is cooking, so the stove is never waiting. That improves efficiency but doesn't detract from reality there's still only one stove. }
+\end{itemize}
+\end{itemize}
+
+### Thread (Cont.)
+\centering
+\includegraphics[width=0.75\textwidth]{../../images/thread.png}
+
+
+
+### RAM
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item \textbf{RAM} (Random Access Memory): Where the computer keeps data and instructions that the CPU is actively using.\par \vspace{2.5mm}
+\item In our kitchen example, we can think of RAM as the ingredients or recipe that the chef will want to have handy so they can prevent delays. \par \vspace{2.5mm}
+\item \textit{Note}: If the recipe isn’t in RAM (or the ingredients aren’t ready), the chef has to wait while it’s fetched from the pantry (storage like a hard drive or SSD), which is much slower.
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\centering
+\vfill
+\includegraphics[width=0.75\textwidth]{../../images/ram.png}
+\vfill
+\end{column}
+\end{columns}
+
+### HiPerGator
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item \textbf{HiPerGator} is UF's \textbf{high-performance computing (HPC)} system. \par \vspace{2.5mm}
+\item Provides access to \textbf{thousands of CPU cores, GPUs, and large-scale storage}. \par \vspace{2.5mm}
+\item Designed for \textbf{computationally intensive tasks} such as simulations, machine learning, and big data analysis. \par \vspace{2.5mm}
+\item Enables research that is \textbf{too large, slow, or complex} to run on a personal computer.
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\centering
+\vfill
+\includegraphics[width=0.75\textwidth]{../../images/hipergator.png}
+\vfill
+\end{column}
+\end{columns}
+
+
+
+# Running Parallel in R
+
+### Running Paralell in R
+
+\scriptsize
+```{r setting_up_parallel, echo=TRUE}
+
+suppressPackageStartupMessages({
+  library(parallel); 
+  library(doParallel)
+}) # Load Parallel (Quietly)
+
+numcores <- parallel::detectCores() 
+message('You Have ', numcores, ' Cores Available for Use!')
+
+```
+
+
+### Create Socket Cluster
+
+\begin{itemize}
+\item Here, we are creating \textit{Workers} -- independent \texttt{R} processes that preserves (ideally) \textit{at minimum} a 1:1 ratio with the number of cores available. 
+\item Your OS will decide how to best allocate resources across cores, 
+\end{itemize}
+
+\scriptsize
+```{r create_socket_cluster, echo=TRUE}
+
+cl <- makeCluster(numcores - 1)  
+doParallel::registerDoParallel(cl) # Register Socket 
+stopCluster(cl) # Relieves Cluster
+
+```
+
+
+### Benchmarking 
+
+\scriptsize
+```{r benchmarking, echo = T, eval = T}
+
+tedious_function <- function(x) {
+  y <- rnorm(1000000) 
+  mean(y^2) 
+}  
+
+cl <- makeCluster(numcores - 1)
+doParallel::registerDoParallel(cl) 
+
+serial <- system.time({
+  serial_run <- lapply(1:numcores, tedious_function)
+}) # Serial Run (numcores times)
+
+
+parallel <- system.time({
+  parallel_run <- parLapply(cl, 1:10, tedious_function)
+}) # Parallel Run (numcores times)
+
+stopCluster(cl) # Shut Down Parallel
+
+```
+
+
+### Benchmarking (Cont.)
+
+\scriptsize
+```{r benchmarking_cont, echo = T, eval = T}
+print(serial[['elapsed']])
+print(parallel[['elapsed']])
+```
+
+### Exporting Packages & Resources to Socket
+
+\begin{itemize}
+\item Using \texttt{cl()} does not automatically make packages loaded via \textit{library()} or objects/functions created in the global environment available on worker nodes. \par \vspace{2.5mm}
+\item As with socket clusters, these packages and objects must be explicitly exported to each cluster node. \par \vspace{2.5mm}
+\item We can do that using \texttt{clusterExport()} and \texttt{clusterEvalQ()}
+\end{itemize}
+
+
+### Exporting Packages & Resources to Socket (Cont.)
+
+\begin{itemize}
+\item Below is an example from one of my papers re: simulating departure behaviors of federal judges. 
+\end{itemize}
+
+\scriptsize
+```{r export_resources, echo=T, eval=F}
+clusterExport(cl, c("predict_survival", 'new_judge', 'election_simulation', 'senate_moratorium', 'senate_rejection', 'single_simulation_analysis', 'electoral_outcomes_02_24', 'departure_simulation_comparison', 'd1', 'c1', 'fjc_combined_survival', 'allocated_seats', 'nominate', 'senate_rejection_data'))  
+
+clusterEvalQ(cl, {
+  library(dplyr)
+  library(survival)
+  library(stringr)
+}) # Allocate Necessary Packages 
+
+```
+
+# Looking Forward
+
+### Next Class
+
+- Problem Set 3 due Sunday (11:59pm)
+- Next Class: Intro to Text Analysis
+
+
