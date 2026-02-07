@@ -1,0 +1,6 @@
+"0","grepl('quick brown', string, ignore.case = F)
+"
+"1","[1]"
+"1"," TRUE"
+"1","
+"

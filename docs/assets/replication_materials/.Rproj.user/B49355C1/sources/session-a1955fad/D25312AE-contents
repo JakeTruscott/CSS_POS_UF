@@ -1,0 +1,120 @@
+---
+title: "Text Retrieval and Pre-Processing"
+subtitle: "POS6933: Computational Social Science"
+author: "Truscott (Spring 2026)"
+output:
+  html_document:
+    self_contained: false
+    layout: null
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(warning = FALSE)
+
+library(dplyr); library(ggplot2); library(ggtext); library(cowplot)
+
+```
+
+------------------------------------------------------------------------
+
+## Text Retrieval
+
+There are countless sources of text data -- from a single haiku to bounded volumes providing an expansive anthology of human knowledge, we can use text analysis tools to bridge an entire domain of qualitative and quantitative inquiry. 
+
+### Lies, Damn Lies, and Statistics (2000)
+
+<br>
+
+<img src="https://raw.githubusercontent.com/JakeTruscott/CSS_POS_UF/5c861826858ba038d1f911e434109e243168c683/docs/assets/replication_materials/class_4/supplemental_materials/west_wing_cast.jpg" alt="West Wing" width="600">
+
+<br>
+
+
+
+Aaron Sorken's <em>The West Wing</em> (1999-2007) is not only the best political drama ever created, but I'd go so far as to say it is the best drama, ever -- period. Most public polling concerning the show's continued popularity almost 20 years since its end highlights its staying power. For instance, a survey conducted by <em>Data for Progress</em> found that 33 percent of Americans had a favorable opinion of <em>The West Wing</em>, while only 10 percent had an unfavorable opinion. The same poll also found that the show is more popular among older, more educated, and higher-income Americans.
+
+One of my favorite episodes is Season 1's <em>Lies, Damn Lies, and Statistics</em> -- the title originating from a phrase popularized by Mark Twain (though attributed to British Prime Minister Benjamin Disraeli) to describe the persuasive power of statistics to bolster (often weak or subjective) arguments. In this episode, the White House staff obsess over poll results following a made-for-television fight to regain control of the American political narrative. 
+
+Let's imagine I wanted to know which character in the episode spoke the most lines, or maybe even which had the longest dialogue. To do that, I would need to: 
+
+- Locate the script for the episode <a href="https://westwingwiki.com/2014/04/season-1-episode-21-lies-damn-lies-statistics/">(Here)</a>
+- Convert it to a plain text format (.txt) -- Which I've conventiently done <a href="https://raw.githubusercontent.com/JakeTruscott/CSS_POS_UF/main/docs/assets/replication_materials/class_4/supplemental_materials/West_Wing_S1_E21.txt">here</a>
+- Load that plain text file into <code>R</code>
+- Process and organize the strings, as well as identify those strings with their associated characters
+- Perform analyses on the comparative volume of spoken lines, as well as the breadth of individual monologues. 
+
+```{r include=FALSE}
+west_wing_script_location <- "https://raw.githubusercontent.com/JakeTruscott/CSS_POS_UF/main/docs/assets/replication_materials/class_4/supplemental_materials/West_Wing_S1_E21.txt"
+
+```
+
+```{r, west_wing}
+
+west_wing <- readLines(west_wing_script_location, warn = FALSE) # Read Txt from GitHub Repo
+head(west_wing) # Print Head
+
+```
+
+Clearly, the text is not as organized as I'd like it to be. My next steps will be to conciously try to develop a 4-column dataframe that identifies: 
+
+- <b>Character</b>: Which character is currently speaking.
+- <b>Dialogue</b>: The text (string) 
+- <b>Word Count</b>: How many words are found in the text
+- <b>Line Number</b>: The current number of dialogue entries to that point 
+
+There are several easier ways to do this, but I want to try to be as precise as I can. I am only interested in Josh, Toby, C.J., Donna, Sam, Leo, and President Barlet. 
+
+------------------------------------------------------------------------
+
+```{r damn_lies_process, echo=TRUE, message=TRUE, warning=TRUE}
+
+west_wing <- data.frame(unlist(west_wing)) %>%
+  setNames('text')
+characters <- c('Josh', 'Toby', 'C.J.', 'Donna', 'Sam', 'Leo', 'Bartlet')
+character_regex <- paste0("^(", paste0(toupper(characters), collapse = "|"), ")$")
+
+damn_lies <-  west_wing %>%
+    mutate(character_line = ifelse(stringr::str_detect(text, character_regex), 1, 0), 
+           empty_row = ifelse(text == '', 1, 0), 
+           first_entry = ifelse(character_line == 1, 1, NA)) %>%
+    tidyr::fill(first_entry, .direction = 'down') %>%
+    filter(!is.na(first_entry)) %>%
+    select(-c(first_entry)) %>%
+    mutate(group = cumsum(character_line == 1)) %>%
+    group_by(group) %>%
+    mutate(to_keep = row_number() < which(empty_row == 1)[1] | is.na(which(empty_row == 1)[1])) %>%
+    ungroup() %>%
+    filter(to_keep) %>%
+    select(text, character_line) %>%
+    mutate(group = cumsum(character_line == 1)) %>%
+    group_by(group) %>%
+    summarise(
+    character = text[character_line == 1][1],
+    dialogue  = paste(text[-1], collapse = " "),
+    .groups = "drop") %>%
+    rename(id = group) %>%
+    select(character, dialogue, id) %>%
+    rowwise() %>%
+    mutate(word_count = stringr::str_count(dialogue, "\\S+")) %>%
+    ungroup() %>%
+    filter(!word_count == 0)
+```
+
+```{r damn_lies_summary, echo=FALSE}
+
+head(damn_lies, 10)
+
+damn_lies %>%
+  group_by(character) %>%
+  summarise(total_words = sum(word_count), 
+            average_words = round(mean(word_count)), 
+            total_lines = n()) %>%
+  arrange(desc(total_words)) %>%
+  rename(Character = character, 
+         `Total Words` = total_words, 
+         `Average Words` = average_words, 
+         `Total Lines` = total_lines)
+
+```
+

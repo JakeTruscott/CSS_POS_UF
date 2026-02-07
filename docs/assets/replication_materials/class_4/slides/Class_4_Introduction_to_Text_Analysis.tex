@@ -1,0 +1,872 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  ignorenonframetext,
+  aspectratio=169]{beamer}
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\newif\ifbibliography
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\PassOptionsToClass{aspectratio=169}{beamer}
+\usepackage{../../../beamer_style/beamer_style}
+\setbeamersize{text margin left=3.5mm,text margin right=3.5mm}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Introduction to Text Analysis},
+  pdfauthor={Jake S. Truscott, Ph.D},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Introduction to Text Analysis}
+\subtitle{POS6933: Computational Social Science}
+\author{Jake S. Truscott, Ph.D}
+\date{}
+\institute{\vspace{-5mm}
+
+University of Florida \newline Spring 2026 \newline \newline \newline
+\includegraphics[width=3cm]{../../../beamer_style/UF.png} \quad 
+\includegraphics[width=3.1cm]{../../../images/CSS_POLS_UF_Logo.png}}
+
+\begin{document}
+\frame{\titlepage}
+
+\section{Overview}\label{overview}
+
+\begin{frame}{Overview}
+\begin{itemize}
+\item Non-Traditional Data Structures
+\item Using Text in \texttt{R}
+\item Retrieving Text Data
+\item Creating a Corpus
+\end{itemize}
+\end{frame}
+
+\section{Non-Traditional Data
+Sources}\label{non-traditional-data-sources}
+
+\begin{frame}{Motivation}
+\phantomsection\label{motivation}
+\begin{itemize}
+\item Many important political and social phenomena are expressed in language, not numbers \par \vspace{2.5mm}
+\item Votes, surveys, and roll calls capture outcomes, but not always reasoning, framing, or strategy \par \vspace{2.5mm}
+\item Text (in particular) allows us to observe (among other things): 
+\begin{itemize}
+  \item Preferences before choices
+  \item Strategical signaling
+  \item Agenda setting \& framing
+\end{itemize} \par \vspace{2.5mm}
+\item Operative Goal of Social Science: \textbf{Represent sophisticated human behaviors quantitatively} -- Viewing text as data is a similar vein.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Defining \textit{Non-Traditional Data}}
+\phantomsection\label{defining}
+\begin{itemize}
+\item Unstructured or Semi-Structured Data -- i.e., data that do not come in a fixed or rigid (numeric) format. Instead consist of free-form content where structure must be inferred rather than assumed.  \par \vspace{2.5mm}
+\item Examples: 
+\begin{itemize}
+  \item Speeches, Debates, and Oral Arguments
+  \item Judicial Opinions (and Separate Opinions)
+  \item News Articles \& Editorials
+  \item Social Media Posts
+  \item Legislative Text \& Statutes
+  \item Manifestos \& Party Platforms
+  \item Books, Academic Articles, and Manuscripts
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{What Can We Derive from Text?}
+\phantomsection\label{what-can-we-derive-from-text}
+\begin{itemize}
+\item Can be Used to Measure: 
+\begin{itemize} 
+\item Ideology
+\item Sentiment, Tone, or Feeling
+\item Issue or Topic Attention
+\item Similarity or Coordination
+\end{itemize} \par \vspace{2.5mm}
+\item \textbf{Key Assumption}: Language reflects latent traits -- i.e., it represents either unseen or undefined characteristics, much in the same way that we can prescribe a series of votes in Congress as reflecting conservative or liberal tendencies. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Advantages and Shortcomings}
+\phantomsection\label{advantages-and-shortcomings}
+\begin{columns}[t]
+\begin{column}[t]{0.5\textwidth}
+\textbf{Advantages}
+\begin{itemize}
+\item Captures nuance and context very well 
+\item Methodologies are often very flexible
+\item Provides for qualitative inferences and ex ante assessment 
+\item Scales to large corpora and across time, actors, institutions, etc. 
+\item Can be abundant where numerical data is sparse
+\end{itemize}
+\vfill
+\end{column}
+\begin{column}[t]{0.5\textwidth}
+\textbf{Shortcomings}
+\begin{itemize}
+\item Measurement depends on modeling choices
+\item Technical complexity ranges considerably -- tradeoff motivated by a priori expectations and ability to capture high dimensional relationships
+\item Often introduces high dimensionality -- risks of overfitting, drawing inferrential value from spurious relationships, etc.
+\item Generally requires validation against known qualities when used for measurement
+\end{itemize}
+\vfill
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Key Steps}
+\phantomsection\label{key-steps}
+\begin{itemize}
+\item Retrieving Text (\textbf{Today})
+\item Pre-processing \& Reducing Feature Complexity (\textbf{Today})
+\item Creating a Corpus (\textbf{Today})
+\item Modeling Text 
+\item Analysis
+\end{itemize}
+\end{frame}
+
+\section{Using Text in R}\label{using-text-in-r}
+
+\begin{frame}{R Data Types}
+\phantomsection\label{r-data-types}
+\begin{itemize}
+\item \texttt{numeric} -- (1, 2, 3, 4, 5)
+\item \texttt{integer} -- (1L, 50L, 100L)
+\item \texttt{complex} -- (9+3i)
+\item \texttt{character} -- ('text strings') 
+\item \texttt{logical} -- (TRUE or FALSE)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Using Text in R}
+\phantomsection\label{using-text-in-r-1}
+\begin{itemize}
+\item \texttt{R} (and \texttt{Python}) are both very flexible with handle \texttt{character} (\texttt{string}) data \par \vspace{2.5mm}
+\item Countless sources of text data – from a single haiku to bounded volumes providing an expansive anthology of human knowledge, we can use text  analysis tools to bridge an entire domain of qualitative and quantitative inquiry.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Text Object in R}
+\phantomsection\label{text-object-in-r}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sample\_text }\OtherTok{\textless{}{-}} \StringTok{"This is Sample Text"}
+\FunctionTok{print}\NormalTok{(sample\_text)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] "This is Sample Text"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sample\_vector }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Sample 1"}\NormalTok{, }\StringTok{"Sample 2"}\NormalTok{, }\StringTok{"Sample 3"}\NormalTok{)}
+\FunctionTok{print}\NormalTok{(sample\_vector)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] "Sample 1" "Sample 2" "Sample 3"
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Regular Expressions}
+\phantomsection\label{regular-expressions}
+\begin{itemize}
+\item A regular expression (\textbf{regex}) is a pattern used to search, match, or manipulate text
+\item In essence, it is compact language for telling \texttt{R} what text should look like, not what it should be exactly.
+\item We will use these in conjunction with functions like \texttt{grep}, \texttt{grepl}, and \texttt{gsub} to retrieve and manipulate text. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Regex Examples}
+\phantomsection\label{regex-examples}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(stringr)}
+\NormalTok{text }\OtherTok{\textless{}{-}} \StringTok{"This is a sample string with a date 2026{-}02{-}06, a time 14:30, an email test.user@example.com, and the number 42."}
+
+\FunctionTok{unlist}\NormalTok{(stringr}\SpecialCharTok{::}\FunctionTok{str\_extract\_all}\NormalTok{(text, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{b[a{-}zA{-}Z]+}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{b"}\NormalTok{))  }\CommentTok{\# All Text}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+ [1] "This"    "is"      "a"       "sample"  "string"  "with"    "a"      
+ [8] "date"    "a"       "time"    "an"      "email"   "test"    "user"   
+[15] "example" "com"     "and"     "the"     "number" 
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{unlist}\NormalTok{(stringr}\SpecialCharTok{::}\FunctionTok{str\_extract\_all}\NormalTok{(text, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{b}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{d+}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{b"}\NormalTok{))  }\CommentTok{\# All Numbers}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] "2026" "02"   "06"   "14"   "30"   "42"  
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Regex Examples (Cont.)}
+\phantomsection\label{regex-examples-cont.}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{unlist}\NormalTok{(stringr}\SpecialCharTok{::}\FunctionTok{str\_extract}\NormalTok{(text, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{b}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{d\{4\}{-}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{d\{2\}{-}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{d\{2\}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{b"}\NormalTok{))  }\CommentTok{\# Grab Date}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] "2026-02-06"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{unlist}\NormalTok{(stringr}\SpecialCharTok{::}\FunctionTok{str\_extract}\NormalTok{(text, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{b}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{d\{2\}:}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{d\{2\}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{b"}\NormalTok{))  }\CommentTok{\# Grab Time HH:MM}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] "14:30"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{unlist}\NormalTok{(stringr}\SpecialCharTok{::}\FunctionTok{str\_extract}\NormalTok{(text, }\StringTok{"[a{-}zA{-}Z0{-}9.\_\%+{-}]+@[a{-}zA{-}Z0{-}9.{-}]+}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{.[a{-}zA{-}Z]\{2,\}"}\NormalTok{))  }\CommentTok{\# Email Address}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] "test.user@example.com"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{unlist}\NormalTok{(stringr}\SpecialCharTok{::}\FunctionTok{str\_extract}\NormalTok{(text, }\StringTok{"\^{}[\^{},]+"}\NormalTok{))  }\CommentTok{\# All Before 1st Comma}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] "This is a sample string with a date 2026-02-06"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{unlist}\NormalTok{(stringr}\SpecialCharTok{::}\FunctionTok{str\_replace\_all}\NormalTok{(text, }\StringTok{"[[:punct:]]"}\NormalTok{,}
+    \StringTok{""}\NormalTok{))  }\CommentTok{\# Remove Punctuation}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] "This is a sample string with a date 20260206 a time 1430 an email testuserexamplecom and the number 42"
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Important Functions w/ Regular Expressions}
+\phantomsection\label{important-functions-w-regular-expressions}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1234}\NormalTok{)}
+
+\NormalTok{string }\OtherTok{\textless{}{-}} \StringTok{"The quick brown fox jumps over the lazy dog"}
+
+\FunctionTok{gsub}\NormalTok{(}\StringTok{"quick"}\NormalTok{, }\StringTok{"wild"}\NormalTok{, string)  }\CommentTok{\# Replace Quick}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] "The wild brown fox jumps over the lazy dog"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{grepl}\NormalTok{(}\StringTok{"quick brown"}\NormalTok{, string, }\AttributeTok{ignore.case =}\NormalTok{ F)  }\CommentTok{\# Check String }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] TRUE
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Partitioning Text (Lorem Ipsum)}
+\phantomsection\label{partitioning-text-lorem-ipsum}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lorem\_ipsum }\OtherTok{\textless{}{-}} \StringTok{"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas scelerisque eros nec libero luctus, a gravida augue dictum. Integer sem est, malesuada nec mi ut, venenatis pellentesque massa. Mauris ac ex odio. Integer eget est lacus. Ut varius, sapien nec efficitur malesuada, sem lectus aliquet lacus, ac efficitur ipsum mauris vitae augue. Aliquam ornare faucibus nibh, a varius mauris mattis id. Nullam eu nibh aliquam, vestibulum neque sed, sagittis mi. Etiam blandit facilisis sagittis. Duis ut dolor sed nibh egestas porta. Aenean quis lorem nec augue semper convallis lacinia eget orci. Nam eget dolor tortor."}
+
+\FunctionTok{unlist}\NormalTok{(stringr}\SpecialCharTok{::}\FunctionTok{str\_split}\NormalTok{(lorem\_ipsum, }\AttributeTok{pattern =} \StringTok{\textquotesingle{}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{.[[:space:]]\textquotesingle{}}\NormalTok{))[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+{[}1{]} ``Lorem ipsum dolor sit amet, consectetur adipiscing elit''\\
+{[}2{]} ``Maecenas scelerisque eros nec libero luctus, a gravida augue
+dictum'' {[}3{]} ``Integer sem est, malesuada nec mi ut, venenatis
+pellentesque massa'' {[}4{]} ``Mauris ac ex odio''\\
+{[}5{]} ``Integer eget est lacus''
+\end{frame}
+
+\begin{frame}{Additional Considerations Re: Regular Expressions}
+\phantomsection\label{additional-considerations-re-regular-expressions}
+\begin{itemize}
+\item Punctuation need to double-backslashes \par \vspace{2.5mm}
+\item They are very literal -- make sure you're considering what you're asking it to retrieve/search. \par \vspace{2.5mm}
+\item Some tools/functions for applying regular expressions are different in application (e.g., dplyr, stringr, stringi, tm, etc.) -- make sure you're considering how they approach splits at punctuation! \par \vspace{2.5mm}
+\item A lot of this is trial \& error 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Regex Practice}
+\phantomsection\label{regex-practice}
+\textbf{Practice Sentence}
+
+\par \vspace{2.5mm}
+\begin{itemize}
+\item \textbf{Sentence 1}: The cautious archivist indexed seven obscure manuscripts before dawn. \par \vspace{2.5mm}
+\item \textbf{Sentence 2}: Tomorrow a reckless cyclist shattered records while racing before sunset. \vspace{5mm}
+\item Write a single regex to recover the time of day mentioned in each sentence -- and only the time of day (\textit{Hint}: Make sure you remove punctuation...)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Regex Practice (Cont.)}
+\phantomsection\label{regex-practice-cont.}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{s1 }\OtherTok{\textless{}{-}} \StringTok{"The cautious archivist indexed seven obscure manuscripts before dawn."}
+\NormalTok{s2 }\OtherTok{\textless{}{-}} \StringTok{"Tomorrow a reckless cyclist shattered records while racing before sunset."}
+
+\NormalTok{sentences }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(s1, s2)}
+
+\FunctionTok{gsub}\NormalTok{(}\StringTok{".*before "}\NormalTok{, }\StringTok{""}\NormalTok{, }\FunctionTok{gsub}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{."}\NormalTok{, }\StringTok{""}\NormalTok{, sentences))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] "dawn"   "sunset"
+\end{verbatim}
+\end{frame}
+
+\section{Retrieving Text}\label{retrieving-text}
+
+\begin{frame}{Lies, Damn Lies, and Statistics (2000)}
+\phantomsection\label{lies-damn-lies-and-statistics-2000}
+\centering
+
+\includegraphics[width=0.75\textwidth]{../../../images/west_wing_cast.jpg}
+\end{frame}
+
+\begin{frame}{Lies, Damn Lies, and Statistics (2000)}
+\phantomsection\label{lies-damn-lies-and-statistics-2000-1}
+\begin{itemize}
+\item Aaron Sorkin's \textit{The West Wing} ran from 1999-2007 -- easily the best political drama ever created. \par \vspace{2.5mm}
+\item \textit{Data for Progress} +23\% Favorable Rating (higher among older, more educated, and higher-income Americans) \par \vspace{2.5mm}
+\item 100 Awards from 289 Nominations (27 Emmys, 2 Peabody Awards, 6 SAG Awards, among others) -- it's incredible. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Lies, Damn Lies, and Statistics (2000)}
+\phantomsection\label{lies-damn-lies-and-statistics-2000-2}
+\begin{itemize}
+\item \textit{Lies, Damn Lies, and Statistics} premiered May 10, 2000 \par \vspace{2.5mm}
+\item Title sourced from Mark Twain (or Benjamin Disraeli): \textit{There are lies, damned lies, and statistics} -- used to describe instances where people are given credibility for often weak or disagreeable positions by using statistics to sound empirically rigid. \par \vspace{2.5mm}
+\item \textbf{Synopsis}: The Bartlet administration anxiously awaits crucial polling data following a shift in strategy, while managing political crises. Despite internal pessimism and a personal scandal involving Sam, the poll shows a surprising nine-point increase in approval. \par \vspace{2.5mm}
+\item \href{https://www.youtube.com/watch?v=5fC98J5RQU8&t=51s}{Opening Scene} 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Lies, Damn Lies, and Statistics (2000)}
+\phantomsection\label{lies-damn-lies-and-statistics-2000-3}
+\begin{itemize}
+\item Let's imagine I wanted to know which character spoke the most lines. \par \vspace{2.5mm}
+\item How could I do that? \pause \par \vspace{2.5mm}
+\item Options: 
+  \begin{itemize}
+  \item Watch the episode and count utterances
+  \item Read the closed captioning transcription and (again) count utterances
+  \item Recover the close captioning transcript and use our computing resources to accurately (and quickly) analyze 
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{First Look at Transcript}
+\phantomsection\label{first-look-at-transcript}
+\begin{columns}[t]
+\begin{column}[t]{0.5\textwidth}
+\centering
+\includegraphics[width=5.5cm]{../../../images/lies_damn_lies_statistics_script.png}
+\end{column}
+\begin{column}[t]{0.5\textwidth}
+\centering
+\includegraphics[width=5.75cm]{../../../images/lies_damn_lies_statistics_script_2.png}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Goal}
+\phantomsection\label{goal}
+\begin{itemize}
+\item Clearly, the text is not as organized as I’d like it to be. \par \vspace{2.5mm}
+\item \textbf{Remember}: Organizing text data is like deciphering the wording of variables -- you can write generalizable coding routines to parse text but a lot of this work is going to be application-specific \par \vspace{2.5mm}
+\item My next steps will be to consciously try to develop a 4-column dataframe that identifies:
+  \begin{itemize}
+  \item \textbf{Character}: Which character is currently speaking.
+  \item \textbf{Dialogue}: The text (string)
+  \item \textbf{Word Count}: How many words are found in the text
+  \item \textbf{Line Number}: The current number of dialogue entries to that point
+  \end{itemize}
+\item I'm only interested in Josh, Toby, C.J., Donna, Sam, Leo, and President Bartlet
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Plan of Attack}
+\phantomsection\label{plan-of-attack}
+\begin{itemize}
+\item Recover .txt file of episode script
+\item Convert to dataframe
+\item Use a regular expression (regex) to identify \& partition text for each character
+\item Count number of utterances and words in each utterance
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Recover Script}
+\phantomsection\label{recover-script}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{west\_wing }\OtherTok{\textless{}{-}} \FunctionTok{readLines}\NormalTok{(west\_wing\_script\_location, }\AttributeTok{warn =} \ConstantTok{FALSE}\NormalTok{)  }\CommentTok{\# Read Txt from GitHub Repo}
+
+\FunctionTok{head}\NormalTok{(west\_wing)  }\CommentTok{\# Print Head}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] "THE WEST WING"                     "'LIES, DAMN LIES, AND STATISTICS'"
+[3] "WRITTEN BY: AARON SORKIN"          "DIRECTED BY: DON SCARDINO"        
+[5] ""                                  "TEASER"                           
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Process Script}
+\phantomsection\label{process-script}
+\scriptsize
+
+\begin{verbatim}
+# A tibble: 10 x 4
+   character dialogue                                        id word_count
+   <chr>     <chr>                                        <int>      <int>
+ 1 DONNA     They got to start the poll, Josh. It's 7:05.     1          9
+ 2 JOSH      It's ten to seven.                               2          4
+ 3 DONNA     No, it's really not.                             3          4
+ 4 JOSH      It's 7:05?                                       4          2
+ 5 DONNA     Yeah.                                            5          1
+ 6 JOSH      That's ridiculous.                               6          2
+ 7 DONNA     I'm not making it up.                            7          5
+ 8 JOSH      My watch says ten to seven.                      8          6
+ 9 DONNA     That's 'cause your watch sucks.                  9          5
+10 JOSH      My watch is fine.                               10          4
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Measure Speaker Variance}
+\phantomsection\label{measure-speaker-variance}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{damn\_lies }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{group\_by}\NormalTok{(character) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{summarise}\NormalTok{(}\AttributeTok{total\_words =} \FunctionTok{sum}\NormalTok{(word\_count), }\AttributeTok{average\_words =} \FunctionTok{round}\NormalTok{(}\FunctionTok{mean}\NormalTok{(word\_count)),}
+        \AttributeTok{total\_lines =} \FunctionTok{n}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(total\_words)) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{rename}\NormalTok{(}\AttributeTok{Character =}\NormalTok{ character, }\StringTok{\textasciigrave{}}\AttributeTok{Total Words}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ total\_words,}
+        \StringTok{\textasciigrave{}}\AttributeTok{Average Words}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ average\_words, }\StringTok{\textasciigrave{}}\AttributeTok{Total Lines}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ total\_lines)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 7 x 4
+  Character `Total Words` `Average Words` `Total Lines`
+  <chr>             <int>           <dbl>         <int>
+1 BARTLET            1359               9           145
+2 C.J.                985              11            91
+3 JOSH                757              11            67
+4 LEO                 679               8            90
+5 TOBY                617               8            78
+6 SAM                 454               6            75
+7 DONNA               162               8            20
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# For Each Character {-}{-} Summarize Total Words,}
+\CommentTok{\# Avg. Per Utterance, and Total Utterances}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}{Measuring Length of Supreme Court Opinions (Black \&
+Spriggs 2008)}
+\phantomsection\label{measuring-length-of-supreme-court-opinions-black-spriggs-2008}
+\begin{itemize}
+\item Main reading: Black \& Spriggs 2008 \par \vspace{2.5mm}
+\item What is the methodology? \par \vspace{2.5mm}
+\item What is the main finding? 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{gutenbergr Repository}
+\phantomsection\label{gutenbergr-repository}
+\begin{itemize}
+\item Interfaces with Project Gutenberg to download public-domain texts directly into \texttt{R} \par \vspace{2.5mm}
+\item Returns texts in tidy data frames, making them easy to merge, filter, and analyze \par \vspace{2.5mm}
+\item Supports metadata queries (author, title, language, subject, ID) \par \vspace{2.5mm}
+\item Ideal for large-scale text analysis and reproducible workflows \par \vspace{2.5mm}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{gutenbergr Repository (Cont.)}
+\phantomsection\label{gutenbergr-repository-cont.}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(gutenbergr)}
+\NormalTok{gutenberg\_metadata }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{filter}\NormalTok{(title }\SpecialCharTok{==} \StringTok{"Oliver Twist"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 4 x 8
+  gutenberg_id title     author gutenberg_author_id language gutenberg_bookshelf
+         <int> <chr>     <chr>                <int> <fct>    <chr>              
+1          730 Oliver T~ Dicke~                  37 en       "Category: Novels/~
+2         9727 Oliver T~ Dicke~                  37 en       ""                 
+3        16023 Oliver T~ Dicke~                  37 fr       "FR Littérature/Ca~
+4        56586 Oliver T~ Dicke~                  37 de       "Category: Novels/~
+# i 2 more variables: rights <fct>, has_text <lgl>
+\end{verbatim}
+
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{oliver\_twist }\OtherTok{\textless{}{-}} \FunctionTok{gutenberg\_download}\NormalTok{(}\DecValTok{730}\NormalTok{)  }\CommentTok{\# Download Oliver Twist}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}{Practice -- \textit{Oliver Twist} by Charles Dickens}
+\phantomsection\label{practice-by-charles-dickens}
+\textbf{Practice Task -- Work w/ Classmate}
+
+\par \vspace{2.5mm}
+\begin{itemize}
+\item Using \texttt{gutenbergr} -- Recover the text from \textit{Olive Twist} by Charles Dickens
+\item Construct a regular expression to identify chapters and breaks (\textit{Hint}: Use \texttt{regex} cheat sheet!)
+\item Partition the text to two columns -- \texttt{Chapter} \& \texttt{Text}
+\item Return table using \texttt{stargazer} to identify the total and unique volume of words for each chapter.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Practice -- \textit{War and Peace} by Leo Tolstoy}
+\phantomsection\label{practice-by-leo-tolstoy}
+\textbf{Practice Task -- Work w/ Classmate}
+
+\par \vspace{2.5mm}
+\begin{itemize}
+\item Using \texttt{gutenbergr} -- Recover the text from \textit{War \& Peace} by Leo Tolstoy
+\item Construct a regular expression to identify chapters and breaks (\textit{Hint}: Use \texttt{regex} cheat sheet!)
+\item Partition the text to two columns -- \texttt{Chapter} \& \texttt{Text}
+\item Return table using \texttt{stargazer} to identify the total and unique volume of words for each chapter.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Practice -- Pick Another Book!}
+\phantomsection\label{practice-pick-another-book}
+\centering
+\large
+
+\textbf{Complete the same task (again) but with a book or document of your choice (\texttt{gutenbergr} -- You and a classmate will present it to the class. }
+\end{frame}
+
+\section{Corpus Creation}\label{corpus-creation}
+
+\begin{frame}{The Pipeline}
+\phantomsection\label{the-pipeline}
+\large
+\centering
+
+Raw Text → Corpus (\textbf{You're HERE}) → Tokens → Features (DFM) →
+Models / Analysis
+\end{frame}
+
+\begin{frame}{Corpus}
+\phantomsection\label{corpus}
+\begin{itemize}
+\item \textbf{Corpus} A structured \& systematic collection of texts that you treat as data rather than as individual documents. \par \vspace{2.5mm}
+\item \textbf{Main Idea}: Once text is in a corpus, you stop reading it line-by-line and start analyzing patterns across many texts. \par \vspace{2.5mm}
+\item Allows for multiple texts to assume consistent (comparable) structure and includes associated metadata 
+\item We're going to practice today constructing a corpus with \texttt{quanteda}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Sample Corpus Using Quanteda}
+\phantomsection\label{sample-corpus-using-quanteda}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(quanteda)  }\CommentTok{\# Load Quanteda}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Package version: 4.0.2
+Unicode version: 15.1
+ICU version: 74.1
+\end{verbatim}
+
+\begin{verbatim}
+Parallel computing: 14 of 14 threads used.
+\end{verbatim}
+
+\begin{verbatim}
+See https://quanteda.io for tutorials and examples.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{texts }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"The quick brown fox jumps over the lazy dog."}\NormalTok{,}
+    \StringTok{"Data science is revolutionizing the way we analyze information."}\NormalTok{,}
+    \StringTok{"Text analysis in R is fun and informative!"}\NormalTok{)  }\CommentTok{\# Sample Texts (as vector)}
+
+\NormalTok{texts\_with\_meta }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}\AttributeTok{doc\_id =} \FunctionTok{c}\NormalTok{(}\StringTok{"sentence\_1"}\NormalTok{,}
+    \StringTok{"sentence\_2"}\NormalTok{, }\StringTok{"sentence\_3"}\NormalTok{), }\AttributeTok{text =}\NormalTok{ texts, }\AttributeTok{author =} \FunctionTok{c}\NormalTok{(}\StringTok{"Josh"}\NormalTok{,}
+    \StringTok{"Leo"}\NormalTok{, }\StringTok{"Toby"}\NormalTok{), }\AttributeTok{date =} \FunctionTok{as.Date}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"2025{-}01{-}01"}\NormalTok{,}
+    \StringTok{"2025{-}01{-}02"}\NormalTok{, }\StringTok{"2025{-}01{-}03"}\NormalTok{)))  }\CommentTok{\# Create Metadata for Texts (Same as tm example!)}
+
+\NormalTok{quanteda\_corpus }\OtherTok{\textless{}{-}} \FunctionTok{corpus}\NormalTok{(texts\_with\_meta, }\AttributeTok{text\_field =} \StringTok{"text"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{Sample Corpus Using Quanteda}
+\phantomsection\label{sample-corpus-using-quanteda-1}
+\scriptsize
+
+\begin{verbatim}
+Corpus consisting of 3 documents, showing 3 documents:
+
+       Text Types Tokens Sentences author       date
+ sentence_1    10     10         1   Josh 2025-01-01
+ sentence_2    10     10         1    Leo 2025-01-02
+ sentence_3     9      9         1   Toby 2025-01-03
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Lies, Damn Lies, and Statistics (Again!)}
+\phantomsection\label{lies-damn-lies-and-statistics-again}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{damn\_lies\_corpus }\OtherTok{\textless{}{-}}\NormalTok{ quanteda}\SpecialCharTok{::}\FunctionTok{corpus}\NormalTok{(damn\_lies, }\AttributeTok{text\_field =} \StringTok{"dialogue"}\NormalTok{)  }\CommentTok{\# Create Corpus (Text = \textquotesingle{}dialogue\textquotesingle{})}
+
+\FunctionTok{summary}\NormalTok{(damn\_lies\_corpus[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{])  }\CommentTok{\# Inspect (Just First Couple of Rows)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Corpus consisting of 10 documents, showing 10 documents:
+
+   Text Types Tokens Sentences character id word_count
+  text1    13     14         2     DONNA  1          9
+  text2     5      5         1      JOSH  2          4
+  text3     6      6         1     DONNA  3          4
+  text4     5      5         1      JOSH  4          2
+  text5     2      2         1     DONNA  5          1
+  text6     3      3         1      JOSH  6          2
+  text7     6      6         1     DONNA  7          5
+  text8     7      7         1      JOSH  8          6
+  text9     7      7         1     DONNA  9          5
+ text10     5      5         1      JOSH 10          4
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Lies, Damn Lies, and Statistics (Again! Cont.)}
+\phantomsection\label{lies-damn-lies-and-statistics-again-cont.}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{damn\_lies\_corpus[}\DecValTok{1}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Corpus consisting of 1 document and 3 docvars.
+text1 :
+"They got to start the poll, Josh. It's 7:05."
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{quanteda}\SpecialCharTok{::}\FunctionTok{docvars}\NormalTok{(damn\_lies\_corpus[}\DecValTok{1}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+  character id word_count
+1     DONNA  1          9
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Corpus Practice}
+\phantomsection\label{corpus-practice}
+\centering
+\large
+
+\textbf{Using one of the \texttt{gutenbergr} texts from today -- Construct a corpus, including both the text and the chapter metadata}
+\end{frame}
+
+\section{Looking Forward}\label{looking-forward}
+
+\begin{frame}{Looking Forward (Next Class)}
+\phantomsection\label{looking-forward-next-class}
+\begin{itemize}
+\item The Bag of Words -- Or, how we can use words for more than just descriptive statistics. 
+\end{itemize}
+\end{frame}
+
+\end{document}
