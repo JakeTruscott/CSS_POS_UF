@@ -1,0 +1,4 @@
+"0","dobbs <- get(load('../class_4/data/dobbs_19-1392.rdata')) # Load Dobbs
+"
+"2","Error in readChar(con, 5L, useBytes = TRUE) : cannot open the connection
+"

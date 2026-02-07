@@ -648,6 +648,86 @@ Spriggs 2008)}
 \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]{Measuring Words in Supreme Court Oral Arguments
+(Dobbs v. Jackson)}
+\phantomsection\label{measuring-words-in-supreme-court-oral-arguments-dobbs-v.-jackson}
+\textbf{Practice}
+
+\begin{itemize}
+\item Using the Supreme Court's argument in \textit{Dobbs v. Jackson} (2021), filter to \texttt{role = justice} and recover the total utterances of each \texttt{speaker}, as well as the total words for each. 
+\end{itemize}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dobbs }\OtherTok{\textless{}{-}} \FunctionTok{get}\NormalTok{(}\FunctionTok{load}\NormalTok{(}\StringTok{"data/class\_4/dobbs\_19{-}1392.rdata"}\NormalTok{))  }\CommentTok{\# Load Dobbs}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{Dobbs -- Utterances}
+\phantomsection\label{dobbs-utterances}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dobbs }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{filter}\NormalTok{(role }\SpecialCharTok{==} \StringTok{"Justice"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{group\_by}\NormalTok{(speaker) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{summarise}\NormalTok{(}\AttributeTok{utterances =} \FunctionTok{n}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(utterances))  }\CommentTok{\# Utterances}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 9 x 2
+  speaker              utterances
+  <chr>                     <int>
+1 John G. Roberts, Jr.         39
+2 Sonia Sotomayor              37
+3 Samuel A. Alito, Jr.         29
+4 Clarence Thomas              20
+5 Stephen G. Breyer            14
+6 Amy Coney Barrett            12
+7 Brett M. Kavanaugh           10
+8 Neil Gorsuch                 10
+9 Elena Kagan                   6
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Dobbs -- Total Words}
+\phantomsection\label{dobbs-total-words}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dobbs }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{filter}\NormalTok{(role }\SpecialCharTok{==} \StringTok{"Justice"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{group\_by}\NormalTok{(speaker) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{summarize}\NormalTok{(}\AttributeTok{text =} \FunctionTok{paste}\NormalTok{(text, }\AttributeTok{collapse =} \StringTok{" "}\NormalTok{), }\AttributeTok{.groups =} \StringTok{"drop"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{    tidytext}\SpecialCharTok{::}\FunctionTok{unnest\_tokens}\NormalTok{(word, text) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{group\_by}\NormalTok{(speaker) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{summarise}\NormalTok{(}\AttributeTok{word\_count =} \FunctionTok{n}\NormalTok{(), }\AttributeTok{.groups =} \StringTok{"drop"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(word\_count))  }\CommentTok{\# Words Spoken}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 9 x 2
+  speaker              word_count
+  <chr>                     <int>
+1 Sonia Sotomayor            1467
+2 Stephen G. Breyer          1310
+3 John G. Roberts, Jr.       1222
+4 Brett M. Kavanaugh         1041
+5 Amy Coney Barrett          1025
+6 Samuel A. Alito, Jr.        844
+7 Elena Kagan                 685
+8 Clarence Thomas             556
+9 Neil Gorsuch                524
+\end{verbatim}
+\end{frame}
+
 \begin{frame}{gutenbergr Repository}
 \phantomsection\label{gutenbergr-repository}
 \begin{itemize}

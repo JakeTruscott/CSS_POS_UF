@@ -421,9 +421,49 @@ damn_lies %>%
 \item What is the main finding? 
 \end{itemize}
 
-### Measuring Words in Supreme Court Oral Arguments
-```{r, scotustext_example}
+### Measuring Words in Supreme Court Oral Arguments (Dobbs v. Jackson)
+\textbf{Practice}
+\begin{itemize}
+\item Using the Supreme Court's argument in \textit{Dobbs v. Jackson} (2021), filter to \texttt{role = justice} and recover the total utterances of each \texttt{speaker}, as well as the total words for each. 
+\end{itemize}
+\scriptsize
+```{r load_dobbs_fake, eval=F}
 
+dobbs <- get(load('data/class_4/dobbs_19-1392.rdata')) # Load Dobbs
+
+```
+
+```{r load_dobbs, include=FALSE}
+
+dobbs <- get(load('../data/dobbs_19-1392.rdata')) # Load Dobbs
+
+```
+
+### Dobbs -- Utterances
+\scriptsize
+```{r, scotustext_example_utterances}
+
+dobbs %>%
+  filter(role == 'Justice') %>%
+  group_by(speaker) %>%
+  summarise(utterances = n()) %>%
+  arrange(desc(utterances)) # Utterances
+
+```
+
+
+### Dobbs -- Total Words
+\scriptsize
+```{r, scotustext_example_words}
+
+dobbs %>%
+  filter(role == 'Justice') %>%
+  group_by(speaker) %>%
+  summarize(text = paste(text, collapse = " "), .groups = "drop") %>%
+  tidytext::unnest_tokens(word, text) %>%
+  group_by(speaker) %>%
+  summarise(word_count = n(), .groups = 'drop') %>%
+  arrange(desc(word_count)) # Words Spoken
 
 ```
 

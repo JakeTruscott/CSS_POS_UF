@@ -177,6 +177,28 @@ stargazer::stargazer(oliver_twist, type = 'text', summary = F)
 # SCOTUS Oral Arguments
 ################################################################################
 
+download.file(
+  'https://raw.githubusercontent.com/JakeTruscott/CSS_POS_UF/refs/heads/main/docs/assets/replication_materials/class_4/data/dobbs_19-1392.rdata',
+  destfile = file.path('data', 'class_4', 'dobbs_19-1392.rdata')
+)
+
+dobbs <- get(load('data/class_4/dobbs_19-1392.rdata')) # Load Dobbs
+
+dobbs %>%
+  filter(role == 'Justice') %>%
+  group_by(speaker) %>%
+  summarise(utterances = n()) %>%
+  arrange(desc(utterances)) # Utterances
+
+dobbs %>%
+  filter(role == 'Justice') %>%
+  group_by(speaker) %>%
+  summarize(text = paste(text, collapse = " "), .groups = "drop") %>%
+  tidytext::unnest_tokens(word, text) %>%
+  group_by(speaker) %>%
+  summarise(word_count = n(), .groups = 'drop') %>%
+  arrange(desc(word_count)) # Words Spoken
+
 
 ################################################################################
 # Gutenbegr -- War and Peace by Leo Tolstoy
