@@ -1,4 +1,18 @@
 "0","library(dplyr); library(ggplot2); library(cowplot); library(formatR); library(stargazer); library(parallel); library(doParallel)"
+"2","
+Attaching package: ‘dplyr’
+
+"
+"2","The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+"
 "2","Warning:"
 "2"," package ‘formatR’ was built under R version 4.4.3
 "
@@ -22,7 +36,8 @@ Please cite as:
 "0","	dev = ""pdf"","
 "0","	size = ""tiny"","
 "0","	tidy = TRUE, "
-"0","  tidy.opts=list(width.cutoff=50)"
+"0","  tidy.opts=list(width.cutoff=50), "
+"0","  R.options = list(width = 120)"
 "0",")"
 "0",""
 "0","default_ggplot_theme  <- theme_minimal(base_size = 12) +"

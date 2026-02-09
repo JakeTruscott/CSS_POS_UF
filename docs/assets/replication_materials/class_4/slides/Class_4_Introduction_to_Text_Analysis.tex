@@ -307,19 +307,22 @@ Sources}\label{non-traditional-data-sources}
 \phantomsection\label{regex-examples}
 \scriptsize
 
+text \(<-\) `This is a sample string with a date 2026-02-06, a time
+14:30, an email
+\href{mailto:test.user@example.com}{\nolinkurl{test.user@example.com}},
+and the number 42.'
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{library}\NormalTok{(stringr)}
-\NormalTok{text }\OtherTok{\textless{}{-}} \StringTok{"This is a sample string with a date 2026{-}02{-}06, a time 14:30, an email test.user@example.com, and the number 42."}
 
 \FunctionTok{unlist}\NormalTok{(stringr}\SpecialCharTok{::}\FunctionTok{str\_extract\_all}\NormalTok{(text, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{b[a{-}zA{-}Z]+}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{b"}\NormalTok{))  }\CommentTok{\# All Text}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
- [1] "This"    "is"      "a"       "sample"  "string"  "with"    "a"      
- [8] "date"    "a"       "time"    "an"      "email"   "test"    "user"   
-[15] "example" "com"     "and"     "the"     "number" 
+ [1] "This"    "is"      "a"       "sample"  "string"  "with"    "a"       "date"    "a"       "time"    "an"     
+[12] "email"   "test"    "user"    "example" "com"     "and"     "the"     "number" 
 \end{verbatim}
 
 \begin{Shaded}
@@ -422,10 +425,19 @@ Sources}\label{non-traditional-data-sources}
 \phantomsection\label{partitioning-text-lorem-ipsum}
 \scriptsize
 
+lorem\_ipsum \(<-\) ``Lorem ipsum dolor sit amet, consectetur adipiscing
+elit. Maecenas scelerisque eros nec libero luctus, a gravida augue
+dictum. Integer sem est, malesuada nec mi ut, venenatis pellentesque
+massa. Mauris ac ex odio. Integer eget est lacus. Ut varius, sapien nec
+efficitur malesuada, sem lectus aliquet lacus, ac efficitur ipsum mauris
+vitae augue. Aliquam ornare faucibus nibh, a varius mauris mattis id.
+Nullam eu nibh aliquam, vestibulum neque sed, sagittis mi. Etiam blandit
+facilisis sagittis. Duis ut dolor sed nibh egestas porta. Aenean quis
+lorem nec augue semper convallis lacinia eget orci. Nam eget dolor
+tortor.''
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{lorem\_ipsum }\OtherTok{\textless{}{-}} \StringTok{"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas scelerisque eros nec libero luctus, a gravida augue dictum. Integer sem est, malesuada nec mi ut, venenatis pellentesque massa. Mauris ac ex odio. Integer eget est lacus. Ut varius, sapien nec efficitur malesuada, sem lectus aliquet lacus, ac efficitur ipsum mauris vitae augue. Aliquam ornare faucibus nibh, a varius mauris mattis id. Nullam eu nibh aliquam, vestibulum neque sed, sagittis mi. Etiam blandit facilisis sagittis. Duis ut dolor sed nibh egestas porta. Aenean quis lorem nec augue semper convallis lacinia eget orci. Nam eget dolor tortor."}
-
 \FunctionTok{unlist}\NormalTok{(stringr}\SpecialCharTok{::}\FunctionTok{str\_split}\NormalTok{(lorem\_ipsum, }\AttributeTok{pattern =} \StringTok{\textquotesingle{}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{.[[:space:]]\textquotesingle{}}\NormalTok{))[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{]}
 \end{Highlighting}
 \end{Shaded}
@@ -511,7 +523,7 @@ pellentesque massa'' {[}4{]} ``Mauris ac ex odio''\\
 \phantomsection\label{lies-damn-lies-and-statistics-2000-3}
 \begin{itemize}
 \item Let's imagine I wanted to know which character spoke the most lines. \par \vspace{2.5mm}
-\item How could I do that? \pause \par \vspace{2.5mm}
+\item \textbf{How could I do that?} \pause \par \vspace{2.5mm}
 \item Options: 
   \begin{itemize}
   \item Watch the episode and count utterances
@@ -574,9 +586,8 @@ pellentesque massa'' {[}4{]} ``Mauris ac ex odio''\\
 \end{Shaded}
 
 \begin{verbatim}
-[1] "THE WEST WING"                     "'LIES, DAMN LIES, AND STATISTICS'"
-[3] "WRITTEN BY: AARON SORKIN"          "DIRECTED BY: DON SCARDINO"        
-[5] ""                                  "TEASER"                           
+[1] "THE WEST WING"                     "'LIES, DAMN LIES, AND STATISTICS'" "WRITTEN BY: AARON SORKIN"         
+[4] "DIRECTED BY: DON SCARDINO"         ""                                  "TEASER"                           
 \end{verbatim}
 \end{frame}
 
@@ -752,13 +763,12 @@ Spriggs 2008)}
 
 \begin{verbatim}
 # A tibble: 4 x 8
-  gutenberg_id title     author gutenberg_author_id language gutenberg_bookshelf
-         <int> <chr>     <chr>                <int> <fct>    <chr>              
-1          730 Oliver T~ Dicke~                  37 en       "Category: Novels/~
-2         9727 Oliver T~ Dicke~                  37 en       ""                 
-3        16023 Oliver T~ Dicke~                  37 fr       "FR Littérature/Ca~
-4        56586 Oliver T~ Dicke~                  37 de       "Category: Novels/~
-# i 2 more variables: rights <fct>, has_text <lgl>
+  gutenberg_id title        author           gutenberg_author_id language gutenberg_bookshelf            rights has_text
+         <int> <chr>        <chr>                          <int> <fct>    <chr>                          <fct>  <lgl>   
+1          730 Oliver Twist Dickens, Charles                  37 en       "Category: Novels/Category: C~ Publi~ TRUE    
+2         9727 Oliver Twist Dickens, Charles                  37 en       ""                             Copyr~ TRUE    
+3        16023 Oliver Twist Dickens, Charles                  37 fr       "FR Littérature/Category: Nov~ Publi~ TRUE    
+4        56586 Oliver Twist Dickens, Charles                  37 de       "Category: Novels/Category: C~ Publi~ TRUE    
 \end{verbatim}
 
 \scriptsize

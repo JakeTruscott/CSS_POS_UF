@@ -30,7 +30,8 @@ knitr::opts_chunk$set(
 	dev = "pdf",
 	size = "tiny",
 	tidy = TRUE, 
-  tidy.opts=list(width.cutoff=50)
+  tidy.opts=list(width.cutoff=50), 
+  R.options = list(width = 120)
 )
 
 default_ggplot_theme  <- theme_minimal(base_size = 12) +
@@ -175,9 +176,18 @@ print(sample_vector)
 ### Regex Examples
 \scriptsize
 
+text $<-$ 'This is a sample string with a date 2026-02-06, a time 14:30, an email test.user@example.com, and the number 42.'
+
+```{r, regex_example_text, include = F}
+library(stringr)
+
+
+text <- 'This is a sample string with a date 2026-02-06, a time 14:30, an email test.user@example.com, and the number 42.'
+
+```
+
 ```{r, regex_example}
 library(stringr)
-text <- 'This is a sample string with a date 2026-02-06, a time 14:30, an email test.user@example.com, and the number 42.'
 
 unlist(stringr::str_extract_all(text, "\\b[a-zA-Z]+\\b")) # All Text
 
@@ -222,9 +232,17 @@ grepl('quick brown', string, ignore.case = F) # Check String
 
 ### Partitioning Text (Lorem Ipsum)
 \scriptsize
-```{r, text_partition, tidy=FALSE, echo=T, results='asis'}
+
+lorem_ipsum $<-$ "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas scelerisque eros nec libero luctus, a gravida augue dictum. Integer sem est, malesuada nec mi ut, venenatis pellentesque massa. Mauris ac ex odio. Integer eget est lacus. Ut varius, sapien nec efficitur malesuada, sem lectus aliquet lacus, ac efficitur ipsum mauris vitae augue. Aliquam ornare faucibus nibh, a varius mauris mattis id. Nullam eu nibh aliquam, vestibulum neque sed, sagittis mi. Etiam blandit facilisis sagittis. Duis ut dolor sed nibh egestas porta. Aenean quis lorem nec augue semper convallis lacinia eget orci. Nam eget dolor tortor."
+
+```{r, lorem_ipsum, include = F}
+
 
 lorem_ipsum <- "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas scelerisque eros nec libero luctus, a gravida augue dictum. Integer sem est, malesuada nec mi ut, venenatis pellentesque massa. Mauris ac ex odio. Integer eget est lacus. Ut varius, sapien nec efficitur malesuada, sem lectus aliquet lacus, ac efficitur ipsum mauris vitae augue. Aliquam ornare faucibus nibh, a varius mauris mattis id. Nullam eu nibh aliquam, vestibulum neque sed, sagittis mi. Etiam blandit facilisis sagittis. Duis ut dolor sed nibh egestas porta. Aenean quis lorem nec augue semper convallis lacinia eget orci. Nam eget dolor tortor."
+
+```
+
+```{r, text_partition, tidy=FALSE, echo=T, results='asis'}
 
 unlist(stringr::str_split(lorem_ipsum, pattern = '\\.[[:space:]]'))[1:5]
 
@@ -288,7 +306,7 @@ gsub('.*before ', '', gsub('\\.', '', sentences))
 ### Lies, Damn Lies, and Statistics (2000)
 \begin{itemize}
 \item Let's imagine I wanted to know which character spoke the most lines. \par \vspace{2.5mm}
-\item How could I do that? \pause \par \vspace{2.5mm}
+\item \textbf{How could I do that?} \pause \par \vspace{2.5mm}
 \item Options: 
   \begin{itemize}
   \item Watch the episode and count utterances
@@ -409,6 +427,7 @@ damn_lies %>%
          `Total Words` = total_words, 
          `Average Words` = average_words, 
          `Total Lines` = total_lines)
+
 
 # For Each Character -- Summarize Total Words, Avg. Per Utterance, and Total Utterances
 
@@ -567,7 +586,6 @@ summary(quanteda_corpus) # Inspect the Corpus
 ### Lies, Damn Lies, and Statistics (Again!)
 \scriptsize
 ```{r damn_lies_corpus}
-
 
 damn_lies_corpus <- quanteda::corpus(damn_lies, text_field = "dialogue") # Create Corpus (Text = 'dialogue')
 
