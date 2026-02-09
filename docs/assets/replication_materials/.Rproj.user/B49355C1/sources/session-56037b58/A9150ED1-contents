@@ -70,7 +70,7 @@ default_ggplot_theme  <- theme_minimal(base_size = 12) +
 
 ### Defining \textit{Non-Traditional Data}
 \begin{itemize}
-\item Unstructured or Semi-Structured Data -- i.e., data that do not come in a fixed or rigid (numeric) format. Instead consist of free-form content where structure must be inferred rather than assumed.  \par \vspace{2.5mm}
+\item \textbf{Unstructured or Semi-Structured Data} -- i.e., data that do not come in a fixed or rigid (numeric) format. Instead consist of free-form content where structure must be inferred rather than assumed.  \par \vspace{2.5mm}
 \item Examples: 
 \begin{itemize}
   \item Speeches, Debates, and Oral Arguments
@@ -565,7 +565,7 @@ summary(quanteda_corpus) # Inspect the Corpus
 ```
 
 ### Lies, Damn Lies, and Statistics (Again!)
-
+\scriptsize
 ```{r damn_lies_corpus}
 
 
