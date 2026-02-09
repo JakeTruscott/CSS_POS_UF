@@ -148,7 +148,7 @@ default_ggplot_theme  <- theme_minimal(base_size = 12) +
 ### Using Text in R 
 
 \begin{itemize}
-\item \texttt{R} (and \texttt{Python}) are both very flexible with handle \texttt{character} (\texttt{string}) data \par \vspace{2.5mm}
+\item \texttt{R} (and \texttt{Python}) are both very flexible for handling \texttt{character} (\texttt{string}) data \par \vspace{2.5mm}
 \item Countless sources of text data – from a single haiku to bounded volumes providing an expansive anthology of human knowledge, we can use text  analysis tools to bridge an entire domain of qualitative and quantitative inquiry.
 \end{itemize}
 
