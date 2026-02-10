@@ -134,7 +134,7 @@ damn_lies %>%
 gutenberg_metadata %>%
   filter(title == "Oliver Twist")
 
-oliver_twist <- gutenberg_download(730) # Download Oliver Twist
+oliver_twist <- gutenbergr::gutenberg_download(730) # Download Oliver Twist
 chapter_ids <-  paste0('(', paste(paste0('CHAPTER ', as.character(as.roman(1:26)), '.' ), collapse = '|'), ')') # Roman Number Chapter IDs
 
 oliver_twist <- oliver_twist %>%
