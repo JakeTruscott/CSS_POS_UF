@@ -1,0 +1,5 @@
+"0","  text <- gsub(""\\s{2,}"", ' ', text) # 2 or More Spaces --> One Space
+"
+"2","Error in as.character(x) : 
+  cannot coerce type 'closure' to vector of type 'character'
+"

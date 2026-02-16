@@ -1,0 +1,5 @@
+"0","sotu_dfm <- dfm(sotu_tokens) %>%
+  dfm_trim(min_termfreq = 2)  # Convert to DFM -- Remove Words w/ Less Than 2 Appearances
+"
+"2","Error: object 'sotu_tokens' not found
+"

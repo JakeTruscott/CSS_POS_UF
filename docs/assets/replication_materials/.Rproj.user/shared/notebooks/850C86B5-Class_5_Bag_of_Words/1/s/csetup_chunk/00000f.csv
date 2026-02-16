@@ -1,0 +1,14 @@
+"0","default_ggplot_theme  <- theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12),
+    axis.title = element_text(size = 12, colour = 'black'),
+    axis.text = element_text(size = 10, colour = 'black'),
+    panel.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+    legend.position = 'bottom', 
+    legend.title = element_blank() + 
+    legend.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+"
+"2","Error: unexpected '=' in:
+""    legend.title = element_blank() + 
+    legend.background =""
+"

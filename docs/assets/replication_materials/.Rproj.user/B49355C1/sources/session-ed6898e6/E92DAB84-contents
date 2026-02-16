@@ -1,0 +1,508 @@
+---
+title: "The Bag of Words"
+author: "Jake S. Truscott, Ph.D"
+subtitle: |
+  POS6933: Computational Social Science
+institute: |
+  \vspace{-5mm} University of Florida \newline
+  Spring 2026 \newline \newline \newline
+  \includegraphics[width=3cm]{../../../beamer_style/UF.png} \quad 
+  \includegraphics[width=3.1cm]{../../../images/CSS_POLS_UF_Logo.png}
+output: 
+  beamer_presentation:
+    slide_level: 3
+    keep_tex: true
+    toc: false
+classoption: aspectratio=169  
+header-includes:
+  - \PassOptionsToClass{aspectratio=169}{beamer}
+  - \usepackage{../../../beamer_style/beamer_style}
+  - \setbeamersize{text margin left=3.5mm,text margin right=3.5mm}
+---
+
+```{r setup, include=FALSE}
+library(dplyr); library(ggplot2); library(cowplot); library(formatR); library(stargazer); library(parallel); library(doParallel); library(tm); library(stringr); library(quanteda); library(quanteda.textstats); library(quanteda.textstats)
+
+knitr::opts_chunk$set(
+  warning = FALSE, 
+	fig.align = "center",
+	comment = NA,
+	dev = "pdf",
+	size = "tiny",
+	tidy = TRUE, 
+  tidy.opts=list(width.cutoff=50), 
+  R.options = list(width = 120)
+)
+
+default_ggplot_theme  <- theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12),
+    axis.title = element_text(size = 12, colour = 'black'),
+    axis.text = element_text(size = 10, colour = 'black'),
+    panel.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+    legend.position = 'bottom', 
+    legend.title = element_blank(), 
+    legend.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+  )
+
+```
+
+# Overview
+
+### Overview
+\begin{itemize}
+\item Discussion Re: Topic Selection Assignment \& Final Project Assessment
+\item Week 4 Problem Set Review
+\item Contextualizing the \textit{Bag of Words} (BoW)
+\item Document Frequency Matrices
+\item Word Clouds
+\end{itemize}
+
+# Final Project
+
+### Topic Selection Assignment 
+\begin{itemize}
+  \item If haven't already: Respond to my questions/comments on Canvas \par \vspace{2.5mm}
+  \item \textbf{Big Items}:
+  \begin{itemize}
+    \item Substance v. Application
+    \item Depth $>$ Breadth
+    \item Cool Data \& Method $\neq$ Sufficient -- Needs to have (\textit{coherent}) structure of academic research article
+    \item I am a resource -- collaborate and \textbf{\textit{Don't Procrastinate}}
+  \end{itemize}
+\end{itemize}
+
+### Submission, Presentation, and Evaluation
+\textbf{Formatting}
+\begin{itemize}
+  \item Final papers must be compiled in \texttt{Latex} or \texttt{RMarkdown} and submitted as PDF. 
+  \item Must include supplemental appendix with any and all \texttt{R} or \texttt{Python} code used to render tables/figures
+  \item Presentation slides can be in \texttt{PowerPoint} -- though I can provide my template for UF \texttt{Beamer (LaTex)} for anyone interested.
+  \item Presentations should be 12-15 minutes and allow for 5-10 minutes of Q\&A (lead by intructor \& peer evaluators) 
+\end{itemize} 
+\vspace{3mm}
+\textbf{Evaluation}
+\begin{itemize}
+  \item Topic Assignment (5pts)
+  \item Instructor Evaluation (35pts) -- \textit{Rubric Coming Soon}
+  \item Peer Review (5pts) -- \textit{Assignment(s) Coming Soon}
+\end{itemize}
+
+
+### Looking Forward
+\begin{itemize}
+  \item I want drafts for review by \textbf{April 1} -- \textit{I will tell you what to fix...} \par \vspace{2.5mm}
+  \item I'm happy to collaborate but not workshop -- \textit{No half-baked ideas...} \par \vspace{2.5mm}
+  \item \textbf{Seriously}... don't put this off until April -- \textbf{Fair Warning}: \textit{undeveloped work will be treated as such}.  
+  \item \textbf{Any questions re: formatting, expectations, etc.?}
+\end{itemize}
+
+
+# Week 4 Problem Set
+
+### Week 4 Problem Set
+\textbf{Notes}: 
+\begin{itemize}
+\item Notes...
+\end{itemize}
+
+
+# The Bag of Words
+
+### The Bag of Words
+\begin{itemize}
+  \item \textbf{The Bag of Words}: Represents documents as a collection of individual words, ignoring grammar and word order -- emphasizes co-occurrence of these terms as a principal indicator of similarity or cohesion across documents. \par \vspace{2.5mm}
+  \item Why it's Useful: Converts text into numerical features that can be used for classification, regression, and clustering tasks (\textit{Coming Soon!}). \par \vspace{2.5mm}
+  \item In short: We'll build a \textit{vocabulary} of all unique words across documents, then represent each document as a vector of word counts (\textit{frequencies}) corresponding to that vocabulary. 
+  \begin{itemize}
+    \item Can use these vectors to inform of us both individual documents (ex: emphasize of certain words over others), as well as in comparison to other documents (e.g., how some documents use certain words more than others)
+  \end{itemize}
+\end{itemize}
+
+### State of the Union Address
+\begin{itemize}
+\item We want to know how (if) presidents talk about \texttt{military} issues during annual State of the Union addresses. \par \vspace{2.5mm} \pause
+\item \textbf{First Step}: Construct a vector of terms we associate with the topic of interest (e.g., \texttt{troops}, \texttt{defense}, \texttt{war}, \texttt{security}, \texttt{veterans}). \par \vspace{2.5mm} \pause
+\item \textbf{Operationalization}: For each address, count the frequency (or proportion) of these \texttt{military}-related terms. \par \vspace{2.5mm} \pause
+\item \textbf{Key Assumption}: We are confident about capturing a generalizable series of statements concerning \texttt{military} issues because these specific terms should appear in any \texttt{military}-related section of the speech. \par \vspace{2.5mm}
+\end{itemize}
+
+
+### SOTU Address -- Military (Cont.)
+\scriptsize
+```{r, sotu_example_1}
+
+library(sotu) # Load SOTU Dataset
+sotu_info <-  sotu::sotu_meta %>%
+  filter(president %in% c('Dwight D. Eisenhower', 'George Bush')) # Get Info for Eisenhower and H.W. 
+head(sotu_info) # Print Head
+
+```
+
+
+### SOTU Address -- Military (Cont.)
+\scriptsize
+```{r, sotu_example_2}
+
+indices <- c(sotu_info$X) # Indices to Partition sotu_text 
+
+sotu_eisenhower_bush <- setNames(
+  lapply(seq_len(nrow(sotu_info)), function(i) {
+    cbind(sotu_info[i, ], text = sotu::sotu_text[[indices[i]]])
+  }),
+  paste0(sotu_info$president, " (", sotu_info$year, ")")
+) # Nest Each Speech in List
+
+names(sotu_eisenhower_bush) # Print Names
+
+```
+
+### SOTU Address -- Military (Cont.)
+\scriptsize
+```{r, sotu_example_3}
+
+military_words_regex <- paste0('(', paste(c('military', 'army', 'navy', 'marines', 'air force'), 
+                                          collapse = '|'), ')') # "Military" Words Regex 
+```
+
+```{r sotu_example_3_b, echo=FALSE}
+for (speech in 1:length(sotu_eisenhower_bush)){
+  temp_speech <- sotu_eisenhower_bush[[speech]]
+  temp_speech <- data.frame(stringr::str_split(temp_speech$text, pattern = '\\n')) %>%
+  setNames('text') %>%
+  filter(!text == '') # Grab Speech -- Partition to Sentences 
+  
+  sotu_eisenhower_bush[[speech]]$text <- list(temp_speech) # Append Back to Original
+
+  
+  military_sentences <- temp_speech %>%
+    filter(grepl(military_words_regex, text, ignore.case = T)) # All Sentences w/ "Military" Words
+  
+  sotu_eisenhower_bush[[speech]]$military_text <- list(military_sentences) # Append
+  
+} # Process Speeches & Isolate "Military" Sentences
+
+for (speech in 1:length(sotu_eisenhower_bush)){
+  temp_speech_name <- names(sotu_eisenhower_bush[speech])
+  military_sentences <- length(unlist(sotu_eisenhower_bush[[speech]]$military_text))
+  cat(temp_speech_name, ' -- ', military_sentences, ' Sentences \n')
+} # Prints # of "Military" Sentences Per Speech
+
+```
+
+### SOTU Address -- Military (Cont.)
+\begin{itemize}
+\item Let's validate 
+\end{itemize}
+\scriptsize
+```{r sotu_example_4}
+
+unlist(sotu_eisenhower_bush[[14]]$military_text) # Bush 1992 -- Print Example
+
+```
+
+### SOTU Address -- Military
+\begin{itemize}
+\item Sample appears to confirm that we're indeed recovering parts of the address related to the military. 
+\item FWIW, certain policy elements are \textit{always} in SOTU Addresses -- e.g., the economy, education, and the military
+\item \textbf{What are some additional items we can use to capture rhetoric related to the \texttt{military}}?
+\end{itemize}
+
+### SOTU Address -- Military (Cont.)
+\scriptsize
+```{r, sotu_example_5}
+military_speeches <- data.frame()
+
+for (i in 1:length(sotu_eisenhower_bush)){
+  temp_military <- unlist(sotu_eisenhower_bush[[i]]$military_text)
+  if (length(temp_military) == 0){
+    next
+  }
+  temp_speech <- names(sotu_eisenhower_bush[i])
+  temp_df <- data.frame(speech = temp_speech, 
+                        military_text = temp_military)
+  military_speeches <- bind_rows(military_speeches, temp_df)
+} # Combine to Single DF
+
+
+military_speeches$president <- ifelse(grepl("Eisenhower", military_speeches$speech), 
+                                      "Eisenhower", "Bush") # Add President ID
+
+rownames(military_speeches) <- NULL
+
+```
+
+
+### SOTU Address -- Military (Cont.)
+\scriptsize
+```{r, sotu_example_6}
+tibble(military_speeches)
+```
+
+
+### SOTU Address -- Exercise
+Using the \texttt{sotu} dataset, let's analyze another pairing of executives and policy area. 
+\begin{itemize}
+\item Select another pair of presidents (since 1960)
+\item Select another policy area (ex: the economy, civil rights, energy, etc.)
+\item Develop a regular vocabulary and regular expression (regex) to capture parts of the speeches discussing those policy areas. 
+\item Validate your data collection by sampling a few elements of the collecte data
+\end{itemize}
+
+
+# Complexity Reduction
+
+### High-Dimensional Text
+\begin{itemize}
+\item \textbf{Recall}: Using text data often relieves concerns re: small observations \textbf{but} high-dimensionality often introduces sparsity problems of its own.  \par \vspace{2.5mm}
+\item As the number of unique \textbf{tokens} (word units) increase, observations become sparse and distances between documents become less informative. \par \vspace{2.5mm}
+\end{itemize}
+
+### Normalizing Text
+\begin{itemize}
+\item \textbf{Complexity Reduction}: Process of systematically transforming raw text to reduce the number and variability of unique tokens (features) while preserving meaningful semantic content. \par \vspace{2.5mm}
+\item Reducing feature complexity constrains the hypothesis space, improving generalization to new documents. \par \vspace{2.5mm}
+\item \textbf{Normalization} (lowercasing, lemmatization, stopword removal, etc.) reduces dimensionality and stabilizes similarity measures.
+\end{itemize}
+
+### Complexity Reduction -- R Function
+\scriptsize
+```{r, complexity_reduction}
+reduce_complexity <- function(text){
+  text <- tolower(text) # Lower Case
+  text <- tm::removePunctuation(text) # Punctuation
+  text <- tm::removeNumbers(text) # Numbers
+  text <- tm::removeWords(text, tm::stopwords("english")) # Stop Words
+  text <- unlist(stringr::str_split(text, '\\s+')) # Tokenize 
+  text <- textstem::lemmatize_words(text) # Lemmatize
+  text <- paste(text, collapse = ' ') # Re-Append
+  text <- gsub("\\s{2,}", ' ', text) # 2 or More Spaces --> One Space
+  text <- trimws(text) # White Space
+  return(text)
+} # Function to Process Text for Bag of Words
+
+```
+
+### Complexity Reduction -- Comparison
+\scriptsize
+```{r, complexity_reduction_comparison, results = 'asis'}
+regular <- military_speeches$military_text[1] # Print Regular Text
+normalized <- reduce_complexity(military_speeches$military_text[1]) # Processed Text Example
+
+cat(regular)
+cat(normalized)
+
+```
+
+### Complexity Reduction -- Exercise
+\begin{itemize}
+\item Using \texttt{reduce\_complexity()} function, recover text from your example SOTU policy.
+\item \textit{Note}: Goals of this pre-processing step are to preserve information while reducing noise -- do you think that's still the case once you've normalized your text? 
+\end{itemize}
+
+
+
+# Document Frequency Matrices
+
+### Document Frequency Matrix
+\begin{itemize}
+\item \textbf{DFM}: A \textit{sparse} matrix where rows represent documents and columns represent features (usually word types), and each cell contains the frequency of that feature in that document.
+\item \textbf{Recall}: Our first step to analyze text at the document unit was to create a corpus of text -- we will do the same then convert that corpus into a sparse matrix using \texttt{quanteda}. 
+\end{itemize}
+
+### Creating a DFM -- Create a Corpus First!
+\scriptsize
+```{r, dfm_creation}
+military_speeches <- military_speeches %>%
+  mutate(military_text_clean = sapply(military_text, reduce_complexity)) # Apply Complexity Reduction
+
+sotu_corpus <- quanteda::corpus(military_speeches, text_field = "military_text_clean") # Convert to Corpus Object
+
+sotu_tokens <- quanteda::tokens(sotu_corpus) # Recover Tokens from Corpus Object
+
+sotu_dfm <- dfm(sotu_tokens) %>%
+  dfm_trim(min_termfreq = 2)  # Convert to DFM -- Remove Words w/ Less Than 2 Appearances
+
+```
+
+### Creating a DFM (Cont.)
+\scriptsize
+```{r, dfm_creation_2}
+quanteda::topfeatures(sotu_dfm, 20) # 20-top Features (Words)
+```
+### Visualizing the DFM -- Heatmap
+\scriptsize
+```{r dfm_visualization_heatmap, eval = F}
+
+sotu_dfm_reduced <- sotu_dfm[, names(topfeatures(sotu_dfm, 10))] # Filter to Top-20 Terms
+speech_labels <- docvars(sotu_dfm_reduced, "speech")
+
+sotu_dfm_reduced %>%
+  quanteda::convert(to = "data.frame") %>% # Convert DFM to DF
+  mutate(speech = speech_labels) %>% # Append Speech Labels
+  tidyr::pivot_longer(cols = -c(doc_id, speech), names_to = "term", values_to = "frequency") %>%
+  ggplot(aes(x = term, y = speech, fill = frequency)) +
+  geom_tile(colour = 'grey') +
+  geom_label(aes(label = frequency)) +
+  scale_fill_gradient(low = "white", high = "deepskyblue4") +
+  theme_minimal() +
+  labs(x = "\nTerm", y = "Speech\n") +
+  default_ggplot_theme
+
+```
+
+
+### Visualizing the DFM -- Heatmap
+
+```{r dfm_visualization_heatmap_print, echo=FALSE, fig.height=3, fig.width=4}
+
+sotu_dfm_reduced <- sotu_dfm[, names(topfeatures(sotu_dfm, 10))] # Filter to Top-20 Terms
+speech_labels <- docvars(sotu_dfm_reduced, "speech")
+
+sotu_dfm_reduced %>%
+  quanteda::convert(to = "data.frame") %>% # Convert DFM to DF
+  mutate(speech = speech_labels) %>% # Append Speech Labels
+  tidyr::pivot_longer(cols = -c(doc_id, speech), names_to = "term", values_to = "frequency") %>%
+  ggplot(aes(x = term, y = speech, fill = frequency)) +
+  geom_tile(colour = 'grey') +
+  geom_label(aes(label = frequency), size = 3) +
+  scale_fill_gradient(low = "white", high = "deepskyblue4") +
+  theme_minimal() +
+  labs(x = "\nTerm", y = "Speech\n") +
+  default_ggplot_theme + 
+  theme(axis.text.x = element_text(angle = 45), 
+        legend.position = 'none', 
+        axis.text = element_text(size = 5), 
+        axis.title = element_blank()) 
+
+```
+
+
+
+### Visualizing the DFM -- Top Terms Bar Plot
+\scriptsize
+```{r dfm_visualization_bar, eval = F}
+
+top_terms <- topfeatures(sotu_dfm, 20)
+
+sotu_bar_df <- data.frame(term = names(top_terms),
+                     frequency = as.numeric(top_terms))
+
+sotu_bar_df %>%
+  ggplot(aes(x = frequency, y = reorder(term, frequency))) +
+  geom_col(fill = 'grey', colour = 'black') +
+  labs(x = '\nFrequency', y = 'Term\n') +
+  geom_vline(xintercept =  0) +
+  scale_x_continuous(breaks = seq(25, 150, 25)) +
+  default_ggplot_theme
+
+
+
+```
+
+
+### Visualizing the DFM -- Top Terms Bar Plot
+
+```{r dfm_visualization_bar_print, echo=FALSE, fig.height=3, fig.width=4}
+top_terms <- topfeatures(sotu_dfm, 20)
+
+sotu_bar_df <- data.frame(term = names(top_terms),
+                     frequency = as.numeric(top_terms))
+
+sotu_bar_df %>%
+  ggplot(aes(x = frequency, y = reorder(term, frequency))) +
+  geom_col(fill = 'grey', colour = 'black') +
+  labs(x = '\nFrequency', y = 'Term\n') +
+  geom_vline(xintercept =  0) +
+  scale_x_continuous(breaks = seq(25, 150, 25)) +
+  default_ggplot_theme +
+  theme(axis.title.x = element_blank(), 
+        legend.position = 'none', 
+        axis.text = element_text(size = 5), 
+        axis.title = element_blank(), 
+        legend.text = element_text(size = 5))
+
+
+```
+
+
+
+### Visualizing the DFM -- Top Terms Bar Plot (By Pres)
+\scriptsize
+```{r dfm_visualization_bar_president, eval = F}
+
+sotu_term_freq <- textstat_frequency(sotu_dfm, group = president)
+
+sotu_term_freq %>%
+  group_by(group) %>%
+  slice_max(frequency, n = 10) %>% # Take top-10 Terms
+  ggplot(aes(y = reorder(feature, frequency), x = frequency)) +
+  geom_col(aes(fill = group), colour = 'black', position = position_dodge()) +
+  scale_x_continuous(breaks = seq(25, 125, 25)) +
+  geom_vline(xintercept = 0) +
+  default_ggplot_theme
+
+
+
+```
+
+
+### Visualizing the DFM -- Top Terms Bar Plot (By Pres)
+
+```{r dfm_visualization_bar_president_print, echo=FALSE, fig.height=2.75, fig.width=3.5}
+sotu_term_freq <- textstat_frequency(sotu_dfm, group = president)
+
+sotu_term_freq %>%
+  group_by(group) %>%
+  slice_max(frequency, n = 10) %>% # Take top-10 Terms
+  ggplot(aes(y = reorder(feature, frequency), x = frequency)) +
+  geom_col(aes(fill = group), colour = 'black', position = position_dodge()) +
+  scale_x_continuous(breaks = seq(25, 125, 25)) +
+  geom_vline(xintercept = 0) +
+  default_ggplot_theme +
+  theme(axis.title.x = element_blank(), 
+        axis.text = element_text(size = 5), 
+        axis.title = element_blank(), 
+        legend.text = element_text(size = 5), 
+        legend.key.size = unit(0.25,"line"))
+
+
+```
+
+
+### Visualization Exercise 
+\centering
+\large
+\textbf{Your turn -- Use your custom policy area to replicate the three visualizations.}
+
+
+### WordClouds
+\scriptsize
+```{r wordcloud, eval=F}
+president_dfm <- dfm_group(sotu_dfm, groups = military_speeches$president) # Group DFM by President
+
+quanteda.textplots::textplot_wordcloud(president_dfm, comparison = TRUE, max_words = 100,
+                   color = c("blue", "red"))
+
+```
+
+### WordClouds
+\scriptsize
+```{r wordcloud_print, echo=FALSE, fig.height=3, fig.width=3}
+president_dfm <- dfm_group(sotu_dfm, groups = military_speeches$president) # Group DFM by President
+quanteda.textplots::textplot_wordcloud(president_dfm, comparison = TRUE, max_words = 100,
+                   color = c("blue", "red"), labelsize = 0.75, fixed_aspect = TRUE,
+                   rot.per = 0.25, labeloffset = F)
+
+
+```
+
+
+# Looking Forward
+
+### Next Class
+\begin{itemize}
+\item Modeling the Bag of Words -- Dictionaries, Multinomial Language Model, and Vector Space Model
+\item \textbf{Reminder}: Class 6 Problem Set Due Sunday
+\item \textbf{Reminder}: Respond to Final Project Notes!
+\end{itemize}

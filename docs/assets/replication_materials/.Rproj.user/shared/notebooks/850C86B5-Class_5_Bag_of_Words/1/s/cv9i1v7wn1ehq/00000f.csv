@@ -1,0 +1,7 @@
+"0","quanteda.textplots::textplot_wordcloud(president_dfm, comparison = TRUE, max_words = 100,
+                   color = c(""blue"", ""red""), labelsize = 0.75, fixed_aspect = TRUE,
+                   rot.per = 0.25, labeloffset = F)
+"
+"2","Warning:"
+"2"," rot.per is deprecated; use rotation instead
+"

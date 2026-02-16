@@ -1,0 +1,5 @@
+"0","term_freq <- textstat_frequency(sotu_dfm)
+"
+"2","Error in textstat_frequency(sotu_dfm) : 
+  could not find function ""textstat_frequency""
+"

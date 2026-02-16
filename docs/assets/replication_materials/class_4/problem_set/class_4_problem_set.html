@@ -375,6 +375,64 @@ explaining your implementation) used to complete each problem
 Recover the number of total words and unique words found in each chapter
 (3 pts).</li>
 </ol>
+<pre class="r"><code>war &lt;- gutenbergr::gutenberg_download(36) # Download War of the Worlds
+chapter_ids &lt;-  paste0(as.character(as.roman(1:26)), &#39;.&#39;) # Roman Number Chapter IDs
+
+war &lt;- war %&gt;%
+  mutate(chapter_start = ifelse(text %in% chapter_ids, 1, 0),  # Identify Chapter Starts
+         chapter_name = ifelse(chapter_start == 1, paste(text, lead(text)), NA)) %&gt;% # Name Chapters
+  filter(!lag(chapter_start) == 1) %&gt;% # Remove Title Rows
+  tidyr::fill(chapter_name, .direction = &#39;down&#39;) %&gt;% # Assign Chapter Down 
+  filter(!is.na(chapter_name), !text %in% c(&#39;&#39;, &#39; &#39;), !chapter_start == 1) %&gt;% # Remove Header, Empty Rows, Chapter Start Row
+  select(-c(chapter_start, gutenberg_id)) 
+
+war &lt;- tibble::as_tibble(
+  war %&gt;%
+  group_by(chapter_name) %&gt;%
+  summarize(text = paste(text, collapse = &quot; &quot;)) %&gt;% 
+  tidytext::unnest_tokens(word, text) %&gt;% 
+  group_by(chapter_name) %&gt;%
+  summarize(
+    word_count = n(),
+    unique_words = n_distinct(word)) %&gt;%
+    rename(&#39;Chapter Name&#39; = chapter_name, 
+           &#39;Word Count&#39; = word_count, 
+           &#39;Unique Words&#39; = unique_words) 
+) # As Tibble
+
+stargazer::stargazer(war, type = &#39;text&#39;, summary = F)  </code></pre>
+<pre><code>## 
+## ==========================================================================================
+##                             Chapter Name                           Word Count Unique Words
+## ------------------------------------------------------------------------------------------
+## 1                      I. THE EVE OF THE WAR.                         2227        828     
+## 2                          I. UNDER FOOT.                             2607        878     
+## 3                       II. THE FALLING STAR.                         1341        522     
+## 4              II. WHAT WE SAW FROM THE RUINED HOUSE.                 3320        1157    
+## 5                      III. ON HORSELL COMMON.                        1019        461     
+## 6                  III. THE DAYS OF IMPRISONMENT.                     1958        719     
+## 7                      IV. THE CYLINDER OPENS.                        1125        475     
+## 8                   IV. THE DEATH OF THE CURATE.                      1612        604     
+## 9                     IX. THE FIGHTING BEGINS.                        2126        753     
+## 10                          IX. WRECKAGE.                             1847        727     
+## 11                        V. THE HEAT-RAY.                            1488        555     
+## 12                        V. THE STILLNESS.                           965         428     
+## 13              VI. THE HEAT-RAY IN THE CHOBHAM ROAD.                 834         419     
+## 14                  VI. THE WORK OF FIFTEEN DAYS.                     1253        530     
+## 15                    VII. HOW I REACHED HOME.                        1317        543     
+## 16                  VII. THE MAN ON PUTNEY HILL.                      5590        1514    
+## 17                       VIII. DEAD LONDON.                           3104        973     
+## 18                       VIII. FRIDAY NIGHT.                          980         452     
+## 19                        X. IN THE STORM.                            2256        763     
+## 20                        X. THE EPILOGUE.                            1378        575     
+## 21                       XI. AT THE WINDOW.                           2032        706     
+## 22 XII. WHAT I SAW OF THE DESTRUCTION OF WEYBRIDGE AND SHEPPERTON.    3863        1183    
+## 23              XIII. HOW I FELL IN WITH THE CURATE.                  1781        703     
+## 24                         XIV. IN LONDON.                            3756        1207    
+## 25                XV. WHAT HAD HAPPENED IN SURREY.                    2820        974     
+## 26                  XVI. THE EXODUS FROM LONDON.                      4407        1240    
+## 27                   XVII. THE “THUNDER CHILD”.                       3297        1100    
+## ------------------------------------------------------------------------------------------</code></pre>
 <hr />
 <ol start="2" style="list-style-type: decimal">
 <li>Using the example from the class notes for <em>Lies, Damn Lies and
@@ -392,6 +450,70 @@ number of words, and <b>(iii)</b> the average word length for each piece
 of dialogue (<em>Note</em>: Do not worry about trying to remove stage
 and production direction from the script.) (4pts)</li>
 </ol>
+<pre class="r"><code>west_wing_script_location &lt;- &quot;https://raw.githubusercontent.com/JakeTruscott/CSS_POS_UF/main/docs/assets/replication_materials/class_4/supplemental_materials/West_Wing_S2_E22.txt&quot;
+
+west_wing &lt;- readLines(west_wing_script_location, warn = FALSE) # Read Txt from GitHub Repo
+character_stage &lt;- unique(west_wing[grepl(&quot;^[^a-z]*$&quot;, west_wing)])
+character_stage &lt;- character_stage[!character_stage == &#39;&#39;]
+characters &lt;- c(&#39;Leo&#39;, &#39;Toby&#39;, &#39;Josh&#39;, &#39;C.J.&#39;, &#39;Sam&#39;, &#39;Charlie&#39;, &#39;Bartlet&#39;)
+character_regex &lt;- paste0(&quot;^(&quot;, paste0(toupper(characters), collapse = &quot;|&quot;), &quot;)$&quot;)
+
+west_wing &lt;- data.frame(unlist(west_wing)) %&gt;%
+  setNames(&#39;text&#39;) %&gt;%
+    mutate(character_line = ifelse(stringr::str_detect(text, character_regex), 1, 0), 
+           dialogue_break = ifelse(lead(text) %in% c(character_stage), 1, 0), 
+           empty_row = ifelse(text == &#39;&#39;, 1, 0), 
+           first_entry = ifelse(character_line == 1, 1, NA)) %&gt;%
+    tidyr::fill(first_entry, .direction = &#39;down&#39;) %&gt;%
+    filter(!is.na(first_entry)) %&gt;%
+    select(-c(first_entry)) %&gt;%
+    mutate(group = cumsum(character_line == 1)) %&gt;%
+    group_by(group) %&gt;%
+    mutate(to_keep = row_number() &lt; which(empty_row == 1)[1] | is.na(which(empty_row == 1)[1])) %&gt;%
+    ungroup() %&gt;%
+    filter(to_keep) %&gt;%
+    select(text, character_line) %&gt;%
+    mutate(group = cumsum(character_line == 1)) %&gt;%
+    group_by(group) %&gt;%
+    summarise(
+    character = text[character_line == 1][1],
+    dialogue  = paste(text[-1], collapse = &quot; &quot;),
+    .groups = &quot;drop&quot;) %&gt;%
+    rename(id = group) %&gt;%
+    mutate(dialogue = gsub(&quot;\\[.*?\\]&quot;, &#39;&#39;, dialogue), # Remove Hard Brackets 
+           dialogue = trimws(dialogue)) %&gt;%
+    select(character, dialogue, id) %&gt;%
+    rowwise() %&gt;%
+    mutate(word_count = stringr::str_count(dialogue, &quot;\\S+&quot;)) %&gt;%
+    ungroup() %&gt;%
+    filter(!word_count == 0) 
+
+two_cathedrals &lt;- tibble::as_tibble(
+  west_wing %&gt;%
+  group_by(character) %&gt;%
+  summarise(total_words = sum(word_count), 
+            average_words = round(mean(word_count)), 
+            total_lines = n()) %&gt;%
+  arrange(desc(total_words)) %&gt;%
+  rename(Character = character, 
+         `Total Words` = total_words, 
+         `Average Words` = average_words, 
+         `Total Lines` = total_lines)
+)
+
+stargazer::stargazer(two_cathedrals, type = &#39;text&#39;, summary = F)</code></pre>
+<pre><code>## 
+## =================================================
+##   Character Total Words Average Words Total Lines
+## -------------------------------------------------
+## 1  BARTLET      735           9           78     
+## 2   C.J.        638          13           51     
+## 3   TOBY        283           7           41     
+## 4    LEO        223           6           39     
+## 5   JOSH        217           9           23     
+## 6    SAM        214          10           22     
+## 7  CHARLIE      146           8           19     
+## -------------------------------------------------</code></pre>
 <hr />
 <ol start="3" style="list-style-type: decimal">
 <li>Convert your data from Question Two (<em>Two Cathedrals</em>) to a
@@ -402,6 +524,39 @@ episode, as well as <b>(ii)</b> which order of dialogue this is for that
 particular character. Be sure to render a summary of the corpus object
 using <code>summary(corpus_object)</code> (3 pts).</li>
 </ol>
+<pre class="r"><code>two_cathedrals &lt;- west_wing %&gt;% 
+  group_by(character) %&gt;%
+  mutate(character_dialogue_id = row_number()) %&gt;%
+  rename(episode_dialogue_id = id) %&gt;%
+  select(character, dialogue, character_dialogue_id, episode_dialogue_id)
+
+two_cathedrals_corpus &lt;- quanteda::corpus(two_cathedrals, text_field = &#39;dialogue&#39;)
+
+summary(two_cathedrals_corpus[1:10]) # Print Summary</code></pre>
+<pre><code>## Corpus consisting of 10 documents, showing 10 documents:
+## 
+##    Text Types Tokens Sentences character character_dialogue_id
+##   text1     2      2         1       LEO                     1
+##   text2     2      2         1       LEO                     2
+##   text3     2      2         1       LEO                     3
+##   text4    10     10         1       LEO                     4
+##   text5    12     14         1       LEO                     5
+##   text6    14     16         2       LEO                     6
+##   text7    12     12         1      TOBY                     1
+##   text8    27     30         3      TOBY                     2
+##   text9    22     23         2      TOBY                     3
+##  text10     2      2         1       SAM                     1
+##  episode_dialogue_id
+##                    1
+##                    2
+##                    3
+##                    4
+##                    5
+##                    6
+##                    7
+##                    8
+##                    9
+##                   10</code></pre>
 <hr />
 
 

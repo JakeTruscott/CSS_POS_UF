@@ -1,0 +1,677 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  ignorenonframetext,
+  aspectratio=169]{beamer}
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\newif\ifbibliography
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\PassOptionsToClass{aspectratio=169}{beamer}
+\usepackage{../../../beamer_style/beamer_style}
+\setbeamersize{text margin left=3.5mm,text margin right=3.5mm}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={The Bag of Words},
+  pdfauthor={Jake S. Truscott, Ph.D},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{The Bag of Words}
+\subtitle{POS6933: Computational Social Science}
+\author{Jake S. Truscott, Ph.D}
+\date{}
+\institute{\vspace{-5mm}
+
+University of Florida \newline Spring 2026 \newline \newline \newline
+\includegraphics[width=3cm]{../../../beamer_style/UF.png} \quad 
+\includegraphics[width=3.1cm]{../../../images/CSS_POLS_UF_Logo.png}}
+
+\begin{document}
+\frame{\titlepage}
+
+\section{Overview}\label{overview}
+
+\begin{frame}{Overview}
+\phantomsection\label{overview-1}
+\begin{itemize}
+\item Discussion Re: Topic Selection Assignment \& Final Project Assessment
+\item Week 4 Problem Set Review
+\item Contextualizing the \textit{Bag of Words} (BoW)
+\item Document Frequency Matrices
+\item Word Clouds
+\end{itemize}
+\end{frame}
+
+\section{Final Project}\label{final-project}
+
+\begin{frame}{Topic Selection Assignment}
+\phantomsection\label{topic-selection-assignment}
+\begin{itemize}
+  \item If haven't already: Respond to my questions/comments on Canvas \par \vspace{2.5mm}
+  \item \textbf{Big Items}:
+  \begin{itemize}
+    \item Substance v. Application
+    \item Depth $>$ Breadth
+    \item Cool Data \& Method $\neq$ Sufficient -- Needs to have (\textit{coherent}) structure of academic research article
+    \item I am a resource -- collaborate and \textbf{\textit{Don't Procrastinate}}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Submission, Presentation, and Evaluation}
+\phantomsection\label{submission-presentation-and-evaluation}
+\textbf{Formatting}
+
+\begin{itemize}
+  \item Final papers must be compiled in \texttt{Latex} or \texttt{RMarkdown} and submitted as PDF. 
+  \item Must include supplemental appendix with any and all \texttt{R} or \texttt{Python} code used to render tables/figures
+  \item Presentation slides can be in \texttt{PowerPoint} -- though I can provide my template for UF \texttt{Beamer (LaTex)} for anyone interested.
+  \item Presentations should be 12-15 minutes and allow for 5-10 minutes of Q\&A (lead by intructor \& peer evaluators) 
+\end{itemize} 
+\vspace{3mm}
+
+\textbf{Evaluation}
+
+\begin{itemize}
+  \item Topic Assignment (5pts)
+  \item Instructor Evaluation (35pts) -- \textit{Rubric Coming Soon}
+  \item Peer Review (5pts) -- \textit{Assignment(s) Coming Soon}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Looking Forward}
+\phantomsection\label{looking-forward}
+\begin{itemize}
+  \item I want drafts for review by \textbf{April 1} -- \textit{I will tell you what to fix...} \par \vspace{2.5mm}
+  \item I'm happy to collaborate but not workshop -- \textit{No half-baked ideas...} \par \vspace{2.5mm}
+  \item \textbf{Seriously}... don't put this off until April -- \textbf{Fair Warning}: \textit{undeveloped work will be treated as such}.  
+  \item \textbf{Any questions re: formatting, expectations, etc.?}
+\end{itemize}
+\end{frame}
+
+\section{Week 4 Problem Set}\label{week-4-problem-set}
+
+\begin{frame}{Week 4 Problem Set}
+\phantomsection\label{week-4-problem-set-1}
+\textbf{Notes}:
+
+\begin{itemize}
+\item Notes...
+\end{itemize}
+\end{frame}
+
+\section{The Bag of Words}\label{the-bag-of-words}
+
+\begin{frame}{The Bag of Words}
+\phantomsection\label{the-bag-of-words-1}
+\begin{itemize}
+  \item \textbf{The Bag of Words}: Represents documents as a collection of individual words, ignoring grammar and word order -- emphasizes co-occurrence of these terms as a principal indicator of similarity or cohesion across documents. \par \vspace{2.5mm}
+  \item Why it's Useful: Converts text into numerical features that can be used for classification, regression, and clustering tasks (\textit{Coming Soon!}). \par \vspace{2.5mm}
+  \item In short: We'll build a \textit{vocabulary} of all unique words across documents, then represent each document as a vector of word counts (\textit{frequencies}) corresponding to that vocabulary. 
+  \begin{itemize}
+    \item Can use these vectors to inform of us both individual documents (ex: emphasize of certain words over others), as well as in comparison to other documents (e.g., how some documents use certain words more than others)
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{State of the Union Address}
+\phantomsection\label{state-of-the-union-address}
+\begin{itemize}
+\item We want to know how (if) presidents talk about \texttt{military} issues during annual State of the Union addresses. \par \vspace{2.5mm} \pause
+\item \textbf{First Step}: Construct a vector of terms we associate with the topic of interest (e.g., \texttt{troops}, \texttt{defense}, \texttt{war}, \texttt{security}, \texttt{veterans}). \par \vspace{2.5mm} \pause
+\item \textbf{Operationalization}: For each address, count the frequency (or proportion) of these \texttt{military}-related terms. \par \vspace{2.5mm} \pause
+\item \textbf{Key Assumption}: We are confident about capturing a generalizable series of statements concerning \texttt{military} issues because these specific terms should appear in any \texttt{military}-related section of the speech. \par \vspace{2.5mm}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{SOTU Address -- Military (Cont.)}
+\phantomsection\label{sotu-address-military-cont.}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(sotu)  }\CommentTok{\# Load SOTU Dataset}
+\NormalTok{sotu\_info }\OtherTok{\textless{}{-}}\NormalTok{ sotu}\SpecialCharTok{::}\NormalTok{sotu\_meta }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{filter}\NormalTok{(president }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\StringTok{"Dwight D. Eisenhower"}\NormalTok{,}
+        \StringTok{"George Bush"}\NormalTok{))  }\CommentTok{\# Get Info for Eisenhower and H.W. }
+\FunctionTok{head}\NormalTok{(sotu\_info)  }\CommentTok{\# Print Head}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+    X            president year years_active      party sotu_type
+1 165 Dwight D. Eisenhower 1953    1953-1957 Republican   written
+2 167 Dwight D. Eisenhower 1954    1953-1957 Republican    speech
+3 168 Dwight D. Eisenhower 1955    1953-1957 Republican    speech
+4 169 Dwight D. Eisenhower 1956    1953-1957 Republican    speech
+5 170 Dwight D. Eisenhower 1956    1953-1957 Republican   written
+6 171 Dwight D. Eisenhower 1957    1957-1961 Republican    speech
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{SOTU Address -- Military (Cont.)}
+\phantomsection\label{sotu-address-military-cont.-1}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{indices }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(sotu\_info}\SpecialCharTok{$}\NormalTok{X)  }\CommentTok{\# Indices to Partition sotu\_text }
+
+\NormalTok{sotu\_eisenhower\_bush }\OtherTok{\textless{}{-}} \FunctionTok{setNames}\NormalTok{(}\FunctionTok{lapply}\NormalTok{(}\FunctionTok{seq\_len}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(sotu\_info)),}
+    \ControlFlowTok{function}\NormalTok{(i) \{}
+        \FunctionTok{cbind}\NormalTok{(sotu\_info[i, ], }\AttributeTok{text =}\NormalTok{ sotu}\SpecialCharTok{::}\NormalTok{sotu\_text[[indices[i]]])}
+\NormalTok{    \}), }\FunctionTok{paste0}\NormalTok{(sotu\_info}\SpecialCharTok{$}\NormalTok{president, }\StringTok{" ("}\NormalTok{, sotu\_info}\SpecialCharTok{$}\NormalTok{year,}
+    \StringTok{")"}\NormalTok{))  }\CommentTok{\# Nest Each Speech in List}
+
+\FunctionTok{names}\NormalTok{(sotu\_eisenhower\_bush)  }\CommentTok{\# Print Names}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+ [1] "Dwight D. Eisenhower (1953)" "Dwight D. Eisenhower (1954)" "Dwight D. Eisenhower (1955)"
+ [4] "Dwight D. Eisenhower (1956)" "Dwight D. Eisenhower (1956)" "Dwight D. Eisenhower (1957)"
+ [7] "Dwight D. Eisenhower (1958)" "Dwight D. Eisenhower (1959)" "Dwight D. Eisenhower (1960)"
+[10] "Dwight D. Eisenhower (1961)" "George Bush (1989)"          "George Bush (1990)"         
+[13] "George Bush (1991)"          "George Bush (1992)"         
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{SOTU Address -- Military (Cont.)}
+\phantomsection\label{sotu-address-military-cont.-2}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{military\_words\_regex }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"("}\NormalTok{, }\FunctionTok{paste}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"military"}\NormalTok{,}
+    \StringTok{"army"}\NormalTok{, }\StringTok{"navy"}\NormalTok{, }\StringTok{"marines"}\NormalTok{, }\StringTok{"air force"}\NormalTok{), }\AttributeTok{collapse =} \StringTok{"|"}\NormalTok{),}
+    \StringTok{")"}\NormalTok{)  }\CommentTok{\# \textquotesingle{}Military\textquotesingle{} Words Regex }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Dwight D. Eisenhower (1953)  --  12  Sentences 
+Dwight D. Eisenhower (1954)  --  15  Sentences 
+Dwight D. Eisenhower (1955)  --  17  Sentences 
+Dwight D. Eisenhower (1956)  --  0  Sentences 
+Dwight D. Eisenhower (1956)  --  9  Sentences 
+Dwight D. Eisenhower (1957)  --  8  Sentences 
+Dwight D. Eisenhower (1958)  --  25  Sentences 
+Dwight D. Eisenhower (1959)  --  11  Sentences 
+Dwight D. Eisenhower (1960)  --  6  Sentences 
+Dwight D. Eisenhower (1961)  --  7  Sentences 
+George Bush (1989)  --  4  Sentences 
+George Bush (1990)  --  6  Sentences 
+George Bush (1991)  --  1  Sentences 
+George Bush (1992)  --  2  Sentences 
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{SOTU Address -- Military (Cont.)}
+\phantomsection\label{sotu-address-military-cont.-3}
+\begin{itemize}
+\item Let's validate 
+\end{itemize}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{unlist}\NormalTok{(sotu\_eisenhower\_bush[[}\DecValTok{14}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{military\_text)  }\CommentTok{\# Bush 1992 {-}{-} Print Example}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 text1 
+     "Two years ago, I began planning cuts in military spending that reflected the changes of the new era. But now, this year, with imperial communism gone, that process can be accelerated. Tonight I can tell you of dramatic changes in our strategic nuclear force. These are actions we are taking on our own because they are the right thing to do. After completing 20 planes for which we have begun procurement, we will shut down further production of the B - 2 bombers. We will cancel the small ICBM program. We will cease production of new warheads for our sea-based ballistic missiles. We will stop all new production of the Peacekeeper missile. And we will not purchase any more advanced cruise missiles. " 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 text2 
+"The Secretary of Defense recommended these cuts after consultation with the Joint Chiefs of Staff. And I make them with confidence. But do not misunderstand me. The reductions I have approved will save us an additional $50 billion over the next 5 years. By 1997, we will have cut defense by 30 percent since I took office. These cuts are deep, and you must know my resolve: This deep, and no deeper. To do less would be insensible to progress, but to do more would be ignorant of history. We must not go back to the days of \"the hollow army.\" We cannot repeat the mistakes made twice in this century when armistice was followed by recklessness and defense was purged as if the world were permanently safe. " 
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{SOTU Address -- Military}
+\phantomsection\label{sotu-address-military}
+\begin{itemize}
+\item Sample appears to confirm that we're indeed recovering parts of the address related to the military. 
+\item FWIW, certain policy elements are \textit{always} in SOTU Addresses -- e.g., the economy, education, and the military
+\item \textbf{What are some additional items we can use to capture rhetoric related to the \texttt{military}}?
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{SOTU Address -- Military (Cont.)}
+\phantomsection\label{sotu-address-military-cont.-4}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{military\_speeches }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{()}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(sotu\_eisenhower\_bush)) \{}
+\NormalTok{    temp\_military }\OtherTok{\textless{}{-}} \FunctionTok{unlist}\NormalTok{(sotu\_eisenhower\_bush[[i]]}\SpecialCharTok{$}\NormalTok{military\_text)}
+    \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{length}\NormalTok{(temp\_military) }\SpecialCharTok{==} \DecValTok{0}\NormalTok{) \{}
+        \ControlFlowTok{next}
+\NormalTok{    \}}
+\NormalTok{    temp\_speech }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(sotu\_eisenhower\_bush[i])}
+\NormalTok{    temp\_df }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{speech =}\NormalTok{ temp\_speech, }\AttributeTok{military\_text =}\NormalTok{ temp\_military)}
+\NormalTok{    military\_speeches }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(military\_speeches,}
+\NormalTok{        temp\_df)}
+\NormalTok{\}  }\CommentTok{\# Combine to Single DF}
+
+
+\NormalTok{military\_speeches}\SpecialCharTok{$}\NormalTok{president }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{grepl}\NormalTok{(}\StringTok{"Eisenhower"}\NormalTok{,}
+\NormalTok{    military\_speeches}\SpecialCharTok{$}\NormalTok{speech), }\StringTok{"Eisenhower"}\NormalTok{, }\StringTok{"Bush"}\NormalTok{)  }\CommentTok{\# Add President ID}
+
+\FunctionTok{rownames}\NormalTok{(military\_speeches) }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{SOTU Address -- Military (Cont.)}
+\phantomsection\label{sotu-address-military-cont.-5}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tibble}\NormalTok{(military\_speeches)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 123 x 3
+   speech                      military_text                                                                   president
+   <chr>                       <chr>                                                                           <chr>    
+ 1 Dwight D. Eisenhower (1953) "But the problem of security demands closer cooperation among the nations of E~ Eisenhow~
+ 2 Dwight D. Eisenhower (1953) "Europe's enlightened leaders have long been aware of these facts. All the dev~ Eisenhow~
+ 3 Dwight D. Eisenhower (1953) "The needed unity of Western Europe manifestly cannot be manufactured from wit~ Eisenhow~
+ 4 Dwight D. Eisenhower (1953) "This war is, for Americans, the most painful phase of Communist aggression th~ Eisenhow~
+ 5 Dwight D. Eisenhower (1953) "This has meant, in effect, that the United States Navy was required to serve ~ Eisenhow~
+ 6 Dwight D. Eisenhower (1953) "Consequently there is no longer any logic or sense in a condition that requir~ Eisenhow~
+ 7 Dwight D. Eisenhower (1953) "Our problem is to achieve adequate military strength within the limits of end~ Eisenhow~
+ 8 Dwight D. Eisenhower (1953) "Both military and economic objectives demand a single national military polic~ Eisenhow~
+ 9 Dwight D. Eisenhower (1953) "We must not let traditions or habits of the past stand in the way of developi~ Eisenhow~
+10 Dwight D. Eisenhower (1953) "Because of the complex technical nature of our military organization and beca~ Eisenhow~
+# i 113 more rows
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{SOTU Address -- Exercise}
+\phantomsection\label{sotu-address-exercise}
+Using the \texttt{sotu} dataset, let's analyze another pairing of
+executives and policy area.
+
+\begin{itemize}
+\item Select another pair of presidents (since 1960)
+\item Select another policy area (ex: the economy, civil rights, energy, etc.)
+\item Develop a regular vocabulary and regular expression (regex) to capture parts of the speeches discussing those policy areas. 
+\item Validate your data collection by sampling a few elements of the collecte data
+\end{itemize}
+\end{frame}
+
+\section{Complexity Reduction}\label{complexity-reduction}
+
+\begin{frame}{High-Dimensional Text}
+\phantomsection\label{high-dimensional-text}
+\begin{itemize}
+\item \textbf{Recall}: Using text data often relieves concerns re: small observations \textbf{but} high-dimensionality often introduces sparsity problems of its own.  \par \vspace{2.5mm}
+\item As the number of unique \textbf{tokens} (word units) increase, observations become sparse and distances between documents become less informative. \par \vspace{2.5mm}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Normalizing Text}
+\phantomsection\label{normalizing-text}
+\begin{itemize}
+\item \textbf{Complexity Reduction}: Process of systematically transforming raw text to reduce the number and variability of unique tokens (features) while preserving meaningful semantic content. \par \vspace{2.5mm}
+\item Reducing feature complexity constrains the hypothesis space, improving generalization to new documents. \par \vspace{2.5mm}
+\item \textbf{Normalization} (lowercasing, lemmatization, stopword removal, etc.) reduces dimensionality and stabilizes similarity measures.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Complexity Reduction -- R Function}
+\phantomsection\label{complexity-reduction-r-function}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{reduce\_complexity }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(text) \{}
+\NormalTok{    text }\OtherTok{\textless{}{-}} \FunctionTok{tolower}\NormalTok{(text)  }\CommentTok{\# Lower Case}
+\NormalTok{    text }\OtherTok{\textless{}{-}}\NormalTok{ tm}\SpecialCharTok{::}\FunctionTok{removePunctuation}\NormalTok{(text)  }\CommentTok{\# Punctuation}
+\NormalTok{    text }\OtherTok{\textless{}{-}}\NormalTok{ tm}\SpecialCharTok{::}\FunctionTok{removeNumbers}\NormalTok{(text)  }\CommentTok{\# Numbers}
+\NormalTok{    text }\OtherTok{\textless{}{-}}\NormalTok{ tm}\SpecialCharTok{::}\FunctionTok{removeWords}\NormalTok{(text, tm}\SpecialCharTok{::}\FunctionTok{stopwords}\NormalTok{(}\StringTok{"english"}\NormalTok{))  }\CommentTok{\# Stop Words}
+\NormalTok{    text }\OtherTok{\textless{}{-}} \FunctionTok{unlist}\NormalTok{(stringr}\SpecialCharTok{::}\FunctionTok{str\_split}\NormalTok{(text, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{s+"}\NormalTok{))  }\CommentTok{\# Tokenize }
+\NormalTok{    text }\OtherTok{\textless{}{-}}\NormalTok{ textstem}\SpecialCharTok{::}\FunctionTok{lemmatize\_words}\NormalTok{(text)  }\CommentTok{\# Lemmatize}
+\NormalTok{    text }\OtherTok{\textless{}{-}} \FunctionTok{paste}\NormalTok{(text, }\AttributeTok{collapse =} \StringTok{" "}\NormalTok{)  }\CommentTok{\# Re{-}Append}
+\NormalTok{    text }\OtherTok{\textless{}{-}} \FunctionTok{gsub}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{s\{2,\}"}\NormalTok{, }\StringTok{" "}\NormalTok{, text)  }\CommentTok{\# 2 or More Spaces {-}{-}\textgreater{} One Space}
+\NormalTok{    text }\OtherTok{\textless{}{-}} \FunctionTok{trimws}\NormalTok{(text)  }\CommentTok{\# White Space}
+    \FunctionTok{return}\NormalTok{(text)}
+\NormalTok{\}  }\CommentTok{\# Function to Process Text for Bag of Words}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{Complexity Reduction -- Comparison}
+\phantomsection\label{complexity-reduction-comparison}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{regular }\OtherTok{\textless{}{-}}\NormalTok{ military\_speeches}\SpecialCharTok{$}\NormalTok{military\_text[}\DecValTok{1}\NormalTok{]  }\CommentTok{\# Print Regular Text}
+\NormalTok{normalized }\OtherTok{\textless{}{-}} \FunctionTok{reduce\_complexity}\NormalTok{(military\_speeches}\SpecialCharTok{$}\NormalTok{military\_text[}\DecValTok{1}\NormalTok{])  }\CommentTok{\# Processed Text Example}
+
+\FunctionTok{cat}\NormalTok{(regular)}
+\end{Highlighting}
+\end{Shaded}
+
+But the problem of security demands closer cooperation among the nations
+of Europe than has been known to date. Only a more closely integrated
+economic and political system can provide the greatly increased economic
+strength needed to maintain both necessary military readiness and
+respectable living standards.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(normalized)}
+\end{Highlighting}
+\end{Shaded}
+
+problem security demand close cooperation among nation europe know date
+closely integrate economic political system can provide greatly increase
+economic strength need maintain necessary military readiness respectable
+live standard
+\end{frame}
+
+\begin{frame}{Complexity Reduction -- Exercise}
+\phantomsection\label{complexity-reduction-exercise}
+\begin{itemize}
+\item Using \texttt{reduce\_complexity()} function, recover text from your example SOTU policy.
+\item \textit{Note}: Goals of this pre-processing step are to preserve information while reducing noise -- do you think that's still the case once you've normalized your text? 
+\end{itemize}
+\end{frame}
+
+\section{Document Frequency Matrices}\label{document-frequency-matrices}
+
+\begin{frame}{Document Frequency Matrix}
+\phantomsection\label{document-frequency-matrix}
+\begin{itemize}
+\item \textbf{DFM}: A \textit{sparse} matrix where rows represent documents and columns represent features (usually word types), and each cell contains the frequency of that feature in that document.
+\item \textbf{Recall}: Our first step to analyze text at the document unit was to create a corpus of text -- we will do the same then convert that corpus into a sparse matrix using \texttt{quanteda}. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Creating a DFM -- Create a Corpus First!}
+\phantomsection\label{creating-a-dfm-create-a-corpus-first}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{military\_speeches }\OtherTok{\textless{}{-}}\NormalTok{ military\_speeches }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{military\_text\_clean =} \FunctionTok{sapply}\NormalTok{(military\_text,}
+\NormalTok{        reduce\_complexity))  }\CommentTok{\# Apply Complexity Reduction}
+
+\NormalTok{sotu\_corpus }\OtherTok{\textless{}{-}}\NormalTok{ quanteda}\SpecialCharTok{::}\FunctionTok{corpus}\NormalTok{(military\_speeches,}
+    \AttributeTok{text\_field =} \StringTok{"military\_text\_clean"}\NormalTok{)  }\CommentTok{\# Convert to Corpus Object}
+
+\NormalTok{sotu\_tokens }\OtherTok{\textless{}{-}}\NormalTok{ quanteda}\SpecialCharTok{::}\FunctionTok{tokens}\NormalTok{(sotu\_corpus)  }\CommentTok{\# Recover Tokens from Corpus Object}
+
+\NormalTok{sotu\_dfm }\OtherTok{\textless{}{-}} \FunctionTok{dfm}\NormalTok{(sotu\_tokens) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{dfm\_trim}\NormalTok{(}\AttributeTok{min\_termfreq =} \DecValTok{2}\NormalTok{)  }\CommentTok{\# Convert to DFM {-}{-} Remove Words w/ Less Than 2 Appearances}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{Creating a DFM (Cont.)}
+\phantomsection\label{creating-a-dfm-cont.}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{quanteda}\SpecialCharTok{::}\FunctionTok{topfeatures}\NormalTok{(sotu\_dfm, }\DecValTok{20}\NormalTok{)  }\CommentTok{\# 20{-}top Features (Words)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+military     will  defense     must    force   nation security economic  program    world strength     make continue 
+     132       65       50       44       43       40       38       34       34       32       31       29       28 
+    year      new    power    peace     need maintain    shall 
+      28       26       24       24       23       22       22 
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Visualizing the DFM -- Heatmap}
+\phantomsection\label{visualizing-the-dfm-heatmap}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sotu\_dfm\_reduced }\OtherTok{\textless{}{-}}\NormalTok{ sotu\_dfm[, }\FunctionTok{names}\NormalTok{(}\FunctionTok{topfeatures}\NormalTok{(sotu\_dfm, }\DecValTok{10}\NormalTok{))] }\CommentTok{\# Filter to Top{-}20 Terms}
+\NormalTok{speech\_labels }\OtherTok{\textless{}{-}} \FunctionTok{docvars}\NormalTok{(sotu\_dfm\_reduced, }\StringTok{"speech"}\NormalTok{)}
+
+\NormalTok{sotu\_dfm\_reduced }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  quanteda}\SpecialCharTok{::}\FunctionTok{convert}\NormalTok{(}\AttributeTok{to =} \StringTok{"data.frame"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# Convert DFM to DF}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{speech =}\NormalTok{ speech\_labels) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# Append Speech Labels}
+\NormalTok{  tidyr}\SpecialCharTok{::}\FunctionTok{pivot\_longer}\NormalTok{(}\AttributeTok{cols =} \SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(doc\_id, speech), }\AttributeTok{names\_to =} \StringTok{"term"}\NormalTok{, }\AttributeTok{values\_to =} \StringTok{"frequency"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ term, }\AttributeTok{y =}\NormalTok{ speech, }\AttributeTok{fill =}\NormalTok{ frequency)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_tile}\NormalTok{(}\AttributeTok{colour =} \StringTok{\textquotesingle{}grey\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_label}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{label =}\NormalTok{ frequency)) }\SpecialCharTok{+}
+  \FunctionTok{scale\_fill\_gradient}\NormalTok{(}\AttributeTok{low =} \StringTok{"white"}\NormalTok{, }\AttributeTok{high =} \StringTok{"deepskyblue4"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{Term"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Speech}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{) }\SpecialCharTok{+}
+\NormalTok{  default\_ggplot\_theme}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}{Visualizing the DFM -- Heatmap}
+\phantomsection\label{visualizing-the-dfm-heatmap-1}
+\begin{center}\includegraphics{Class_5_Bag_of_Words_files/figure-beamer/dfm_visualization_heatmap_print-1} \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Visualizing the DFM -- Top Terms Bar Plot}
+\phantomsection\label{visualizing-the-dfm-top-terms-bar-plot}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{top\_terms }\OtherTok{\textless{}{-}} \FunctionTok{topfeatures}\NormalTok{(sotu\_dfm, }\DecValTok{20}\NormalTok{)}
+
+\NormalTok{sotu\_bar\_df }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{term =} \FunctionTok{names}\NormalTok{(top\_terms),}
+    \AttributeTok{frequency =} \FunctionTok{as.numeric}\NormalTok{(top\_terms))}
+
+\NormalTok{sotu\_bar\_df }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ frequency, }\AttributeTok{y =} \FunctionTok{reorder}\NormalTok{(term, frequency))) }\SpecialCharTok{+}
+    \FunctionTok{geom\_col}\NormalTok{(}\AttributeTok{fill =} \StringTok{"grey"}\NormalTok{, }\AttributeTok{colour =} \StringTok{"black"}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{Frequency"}\NormalTok{,}
+    \AttributeTok{y =} \StringTok{"Term}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \DecValTok{0}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{scale\_x\_continuous}\NormalTok{(}\AttributeTok{breaks =} \FunctionTok{seq}\NormalTok{(}\DecValTok{25}\NormalTok{,}
+    \DecValTok{150}\NormalTok{, }\DecValTok{25}\NormalTok{)) }\SpecialCharTok{+}\NormalTok{ default\_ggplot\_theme}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}{Visualizing the DFM -- Top Terms Bar Plot}
+\phantomsection\label{visualizing-the-dfm-top-terms-bar-plot-1}
+\begin{center}\includegraphics{Class_5_Bag_of_Words_files/figure-beamer/dfm_visualization_bar_print-1} \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Visualizing the DFM -- Top Terms Bar Plot (By
+Pres)}
+\phantomsection\label{visualizing-the-dfm-top-terms-bar-plot-by-pres}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sotu\_term\_freq }\OtherTok{\textless{}{-}} \FunctionTok{textstat\_frequency}\NormalTok{(sotu\_dfm, }\AttributeTok{group =}\NormalTok{ president)}
+
+\NormalTok{sotu\_term\_freq }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(group) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{slice\_max}\NormalTok{(frequency, }\AttributeTok{n =} \DecValTok{10}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# Take top{-}10 Terms}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =} \FunctionTok{reorder}\NormalTok{(feature, frequency), }\AttributeTok{x =}\NormalTok{ frequency)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_col}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{fill =}\NormalTok{ group), }\AttributeTok{colour =} \StringTok{\textquotesingle{}black\textquotesingle{}}\NormalTok{, }\AttributeTok{position =} \FunctionTok{position\_dodge}\NormalTok{()) }\SpecialCharTok{+}
+  \FunctionTok{scale\_x\_continuous}\NormalTok{(}\AttributeTok{breaks =} \FunctionTok{seq}\NormalTok{(}\DecValTok{25}\NormalTok{, }\DecValTok{125}\NormalTok{, }\DecValTok{25}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \DecValTok{0}\NormalTok{) }\SpecialCharTok{+}
+\NormalTok{  default\_ggplot\_theme}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}{Visualizing the DFM -- Top Terms Bar Plot (By Pres)}
+\phantomsection\label{visualizing-the-dfm-top-terms-bar-plot-by-pres-1}
+\begin{center}\includegraphics{Class_5_Bag_of_Words_files/figure-beamer/dfm_visualization_bar_president_print-1} \end{center}
+\end{frame}
+
+\begin{frame}{Visualization Exercise}
+\phantomsection\label{visualization-exercise}
+\centering
+\large
+
+\textbf{Your turn -- Use your custom policy area to replicate the three visualizations.}
+\end{frame}
+
+\begin{frame}[fragile]{WordClouds}
+\phantomsection\label{wordclouds}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{president\_dfm }\OtherTok{\textless{}{-}} \FunctionTok{dfm\_group}\NormalTok{(sotu\_dfm, }\AttributeTok{groups =}\NormalTok{ military\_speeches}\SpecialCharTok{$}\NormalTok{president)  }\CommentTok{\# Group DFM by President}
+
+\NormalTok{quanteda.textplots}\SpecialCharTok{::}\FunctionTok{textplot\_wordcloud}\NormalTok{(president\_dfm,}
+    \AttributeTok{comparison =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{max\_words =} \DecValTok{100}\NormalTok{, }\AttributeTok{color =} \FunctionTok{c}\NormalTok{(}\StringTok{"blue"}\NormalTok{,}
+        \StringTok{"red"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}{WordClouds}
+\phantomsection\label{wordclouds-1}
+\scriptsize
+
+\begin{center}\includegraphics{Class_5_Bag_of_Words_files/figure-beamer/wordcloud_print-1} \end{center}
+\end{frame}
+
+\section{Looking Forward}\label{looking-forward-1}
+
+\begin{frame}{Next Class}
+\phantomsection\label{next-class}
+\begin{itemize}
+\item Modeling the Bag of Words -- Dictionaries, Multinomial Language Model, and Vector Space Model
+\item \textbf{Reminder}: Class 6 Problem Set Due Sunday
+\item \textbf{Reminder}: Respond to Final Project Notes!
+\end{itemize}
+\end{frame}
+
+\end{document}
