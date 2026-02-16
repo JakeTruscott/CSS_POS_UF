@@ -103,7 +103,9 @@ default_ggplot_theme  <- theme_minimal(base_size = 12) +
 ### Week 4 Problem Set
 \textbf{Notes}: 
 \begin{itemize}
-\item Notes...
+\item Generally good work
+\item I am going to start being more critical of \texttt{RMarkdown} submissions
+\item Most Common Problem: Text pre-processing (\textit{More Today...})
 \end{itemize}
 
 
@@ -264,6 +266,15 @@ Using the \texttt{sotu} dataset, let's analyze another pairing of executives and
 \item Reducing feature complexity constrains the hypothesis space, improving generalization to new documents. \par \vspace{2.5mm}
 \item \textbf{Normalization} (lowercasing, lemmatization, stopword removal, etc.) reduces dimensionality and stabilizes similarity measures.
 \end{itemize}
+
+### Normalizing Text -- Big Consideration
+\begin{itemize}
+\item Denny \& Spirling (2018) -- Main point? \pause
+\item Pre-processing -- \textit{if \& how} -- can have fundamental impact on results.
+\item Week 4 Problem Set: How you partitioned text impacted your summary values
+\item Models produce values/estimates given observational data -- how (and how much) your input is structured will have an impact on output!  
+\end{itemize}
+
 
 ### Complexity Reduction -- R Function
 \scriptsize
