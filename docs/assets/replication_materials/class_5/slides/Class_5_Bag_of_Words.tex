@@ -227,7 +227,20 @@ University of Florida \newline Spring 2026 \newline \newline \newline
 \phantomsection\label{the-bag-of-words-1}
 \begin{itemize}
   \item \textbf{The Bag of Words}: Represents documents as a collection of individual words, ignoring grammar and word order -- emphasizes co-occurrence of these terms as a principal indicator of similarity or cohesion across documents. \par \vspace{2.5mm}
-  \item Why it's Useful: Converts text into numerical features that can be used for classification, regression, and clustering tasks (\textit{Coming Soon!}). \par \vspace{2.5mm}
+  \item Intuitive Analogy: 
+  \begin{itemize}
+    \item Imagine dumping all the words from a document into a bag -- shake it!
+    \item Either reach into the bag and collect words or dump it out 
+    \item Count the word frequencies 
+  \end{itemize}
+  \item Order and context are unnecessary (vector multiset) -- the existence (and prevalence) of words is sufficient to make sophisticated assessments about the document(s)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The Bag of Words (Cont.)}
+\phantomsection\label{the-bag-of-words-cont.}
+\begin{itemize}
+  \item \textbf{Why it's Useful}: Converts text into numerical features that can be used for classification, regression, and clustering tasks (\textit{Coming Soon!}). \par \vspace{2.5mm}
   \item In short: We'll build a \textit{vocabulary} of all unique words across documents, then represent each document as a vector of word counts (\textit{frequencies}) corresponding to that vocabulary. 
   \begin{itemize}
     \item Can use these vectors to inform of us both individual documents (ex: emphasize of certain words over others), as well as in comparison to other documents (e.g., how some documents use certain words more than others)
@@ -336,16 +349,33 @@ George Bush (1992)  --  2  Sentences
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{unlist}\NormalTok{(sotu\_eisenhower\_bush[[}\DecValTok{14}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{military\_text)  }\CommentTok{\# Bush 1992 {-}{-} Print Example}
+\NormalTok{validation }\OtherTok{\textless{}{-}} \FunctionTok{unlist}\NormalTok{(sotu\_eisenhower\_bush[[}\DecValTok{14}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{military\_text)  }\CommentTok{\# Bush 1992 {-}{-} Print Example}
+
+\FunctionTok{cat}\NormalTok{(validation)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 text1 
-     "Two years ago, I began planning cuts in military spending that reflected the changes of the new era. But now, this year, with imperial communism gone, that process can be accelerated. Tonight I can tell you of dramatic changes in our strategic nuclear force. These are actions we are taking on our own because they are the right thing to do. After completing 20 planes for which we have begun procurement, we will shut down further production of the B - 2 bombers. We will cancel the small ICBM program. We will cease production of new warheads for our sea-based ballistic missiles. We will stop all new production of the Peacekeeper missile. And we will not purchase any more advanced cruise missiles. " 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 text2 
-"The Secretary of Defense recommended these cuts after consultation with the Joint Chiefs of Staff. And I make them with confidence. But do not misunderstand me. The reductions I have approved will save us an additional $50 billion over the next 5 years. By 1997, we will have cut defense by 30 percent since I took office. These cuts are deep, and you must know my resolve: This deep, and no deeper. To do less would be insensible to progress, but to do more would be ignorant of history. We must not go back to the days of \"the hollow army.\" We cannot repeat the mistakes made twice in this century when armistice was followed by recklessness and defense was purged as if the world were permanently safe. " 
-\end{verbatim}
+Two years ago, I began planning cuts in military spending that reflected
+the changes of the new era. But now, this year, with imperial communism
+gone, that process can be accelerated. Tonight I can tell you of
+dramatic changes in our strategic nuclear force. These are actions we
+are taking on our own because they are the right thing to do. After
+completing 20 planes for which we have begun procurement, we will shut
+down further production of the B - 2 bombers. We will cancel the small
+ICBM program. We will cease production of new warheads for our sea-based
+ballistic missiles. We will stop all new production of the Peacekeeper
+missile. And we will not purchase any more advanced cruise missiles. The
+Secretary of Defense recommended these cuts after consultation with the
+Joint Chiefs of Staff. And I make them with confidence. But do not
+misunderstand me. The reductions I have approved will save us an
+additional \$50 billion over the next 5 years. By 1997, we will have cut
+defense by 30 percent since I took office. These cuts are deep, and you
+must know my resolve: This deep, and no deeper. To do less would be
+insensible to progress, but to do more would be ignorant of history. We
+must not go back to the days of ``the hollow army.'' We cannot repeat
+the mistakes made twice in this century when armistice was followed by
+recklessness and defense was purged as if the world were permanently
+safe.
 \end{frame}
 
 \begin{frame}{SOTU Address -- Military}
@@ -353,7 +383,7 @@ George Bush (1992)  --  2  Sentences
 \begin{itemize}
 \item Sample appears to confirm that we're indeed recovering parts of the address related to the military. 
 \item FWIW, certain policy elements are \textit{always} in SOTU Addresses -- e.g., the economy, education, and the military
-\item \textbf{What are some additional items we can use to capture rhetoric related to the \texttt{military}}?
+\item \textbf{What are some additional terms we can use to capture rhetoric related to the \texttt{military}}?
 \end{itemize}
 \end{frame}
 
@@ -421,7 +451,7 @@ executives and policy area.
 \begin{itemize}
 \item Select another pair of presidents (since 1960)
 \item Select another policy area (ex: the economy, civil rights, energy, etc.)
-\item Develop a regular vocabulary and regular expression (regex) to capture parts of the speeches discussing those policy areas. 
+\item Develop a vocabulary and regular expression (regex) to capture parts of the speeches discussing those policy areas. 
 \item Validate your data collection by sampling a few elements of the collecte data
 \end{itemize}
 \end{frame}
@@ -448,9 +478,9 @@ executives and policy area.
 \begin{frame}{Normalizing Text -- Big Consideration}
 \phantomsection\label{normalizing-text-big-consideration}
 \begin{itemize}
-\item Denny \& Spirling (2018) -- Main point? \pause
-\item Pre-processing -- \textit{if \& how} -- can have fundamental impact on results.
-\item Week 4 Problem Set: How you partitioned text impacted your summary values
+\item Denny \& Spirling (2018) -- \textbf{Main point}? \pause \par \vspace{2.5mm}
+\item Pre-processing -- \textit{if \& how} -- can have fundamental impact on results. \par \vspace{2.5mm}
+\item Week 4 Problem Set: How you partitioned text impacted your summary values \par \vspace{2.5mm}
 \item Models produce values/estimates given observational data -- how (and how much) your input is structured will have an impact on output!  
 \end{itemize}
 \end{frame}

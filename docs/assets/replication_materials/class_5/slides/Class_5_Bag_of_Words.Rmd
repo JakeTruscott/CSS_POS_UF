@@ -114,7 +114,19 @@ default_ggplot_theme  <- theme_minimal(base_size = 12) +
 ### The Bag of Words
 \begin{itemize}
   \item \textbf{The Bag of Words}: Represents documents as a collection of individual words, ignoring grammar and word order -- emphasizes co-occurrence of these terms as a principal indicator of similarity or cohesion across documents. \par \vspace{2.5mm}
-  \item Why it's Useful: Converts text into numerical features that can be used for classification, regression, and clustering tasks (\textit{Coming Soon!}). \par \vspace{2.5mm}
+  \item Intuitive Analogy: 
+  \begin{itemize}
+    \item Imagine dumping all the words from a document into a bag -- shake it!
+    \item Either reach into the bag and collect words or dump it out 
+    \item Count the word frequencies 
+  \end{itemize}
+  \item Order and context are unnecessary (vector multiset) -- the existence (and prevalence) of words is sufficient to make sophisticated assessments about the document(s)
+\end{itemize}
+
+
+### The Bag of Words (Cont.)
+\begin{itemize}
+  \item \textbf{Why it's Useful}: Converts text into numerical features that can be used for classification, regression, and clustering tasks (\textit{Coming Soon!}). \par \vspace{2.5mm}
   \item In short: We'll build a \textit{vocabulary} of all unique words across documents, then represent each document as a vector of word counts (\textit{frequencies}) corresponding to that vocabulary. 
   \begin{itemize}
     \item Can use these vectors to inform of us both individual documents (ex: emphasize of certain words over others), as well as in comparison to other documents (e.g., how some documents use certain words more than others)
@@ -197,9 +209,11 @@ for (speech in 1:length(sotu_eisenhower_bush)){
 \item Let's validate 
 \end{itemize}
 \scriptsize
-```{r sotu_example_4}
+```{r sotu_example_4, results = 'asis'}
 
-unlist(sotu_eisenhower_bush[[14]]$military_text) # Bush 1992 -- Print Example
+validation <- unlist(sotu_eisenhower_bush[[14]]$military_text) # Bush 1992 -- Print Example
+
+cat(validation)
 
 ```
 
@@ -207,7 +221,7 @@ unlist(sotu_eisenhower_bush[[14]]$military_text) # Bush 1992 -- Print Example
 \begin{itemize}
 \item Sample appears to confirm that we're indeed recovering parts of the address related to the military. 
 \item FWIW, certain policy elements are \textit{always} in SOTU Addresses -- e.g., the economy, education, and the military
-\item \textbf{What are some additional items we can use to capture rhetoric related to the \texttt{military}}?
+\item \textbf{What are some additional terms we can use to capture rhetoric related to the \texttt{military}}?
 \end{itemize}
 
 ### SOTU Address -- Military (Cont.)
@@ -247,7 +261,7 @@ Using the \texttt{sotu} dataset, let's analyze another pairing of executives and
 \begin{itemize}
 \item Select another pair of presidents (since 1960)
 \item Select another policy area (ex: the economy, civil rights, energy, etc.)
-\item Develop a regular vocabulary and regular expression (regex) to capture parts of the speeches discussing those policy areas. 
+\item Develop a vocabulary and regular expression (regex) to capture parts of the speeches discussing those policy areas. 
 \item Validate your data collection by sampling a few elements of the collecte data
 \end{itemize}
 
@@ -269,9 +283,9 @@ Using the \texttt{sotu} dataset, let's analyze another pairing of executives and
 
 ### Normalizing Text -- Big Consideration
 \begin{itemize}
-\item Denny \& Spirling (2018) -- Main point? \pause
-\item Pre-processing -- \textit{if \& how} -- can have fundamental impact on results.
-\item Week 4 Problem Set: How you partitioned text impacted your summary values
+\item Denny \& Spirling (2018) -- \textbf{Main point}? \pause \par \vspace{2.5mm}
+\item Pre-processing -- \textit{if \& how} -- can have fundamental impact on results. \par \vspace{2.5mm}
+\item Week 4 Problem Set: How you partitioned text impacted your summary values \par \vspace{2.5mm}
 \item Models produce values/estimates given observational data -- how (and how much) your input is structured will have an impact on output!  
 \end{itemize}
 
