@@ -1,0 +1,12 @@
+"0","sapply(dictionary, function(categories) sum(strsplit(sample_text, ""\\W+"")[[1]] %in% categories))
+"
+"1","Positive "
+"1","Negative "
+"1"," Neutral "
+"1","
+"
+"1","       1 "
+"1","       1 "
+"1","       0 "
+"1","
+"

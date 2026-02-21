@@ -319,7 +319,7 @@ Hamilton, James Madison, and John Jay between October 1787 and August
 each Paper was authored using the same collective pseudonym –
 <i>Publius</i> – authorship was disputed. Or, at least, debate was
 surely had concerning which of the three – Hamilton, Madison, or Jay –
-was a particular Paper’s author. Some were later discovred to have been
+was a particular Paper’s author. Some were later discovered to have been
 authored jointly. However, by the mid-20th century, it was believed that
 Jay authored (5), Hamilton authored at least (43), and Madison authored
 (14).</p>
@@ -360,7 +360,7 @@ recover the unique counts below:</p>
 ## 4 upon            374     1       7
 ## 5 whilst            1     0      12
 ## 6 TOTAL          1351    84     514</code></pre>
-<p>Producing the following sum of multinomials, where the values x in
+<p>Produces the following multinomial models, where the values x in
 Multinomial(x, <span class="math inline">\(\mu\)</span>) represent the
 count of the observed vocabulary for each prospective author : <span
 class="math display">\[
@@ -371,8 +371,8 @@ class="math display">\[
 \mathbf{W_{Jay}} ~ \text{Multinomial}(84, \mu_J)
 \]</span></p>
 <p>We then turn towards recovering the unique <span
-class="math inline">\(\mu_H,M,J\)</span> for each author – This example
-recovers Hamilton’s:</p>
+class="math inline">\(\mu_{H,M,J}\)</span> (ML estimator) for each
+author – This example recovers Hamilton’s:</p>
 <p><span class="math display">\[
 \mu_{Hamilton} =
 (\frac{861}{861+13+102+374+1},\frac{13}{1351},\frac{102}{1351},

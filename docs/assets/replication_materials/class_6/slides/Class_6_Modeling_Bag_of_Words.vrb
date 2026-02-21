@@ -1,0 +1,13 @@
+\frametitle{Authorship of Federalist 51 (Vocab Frequencies by Author)}
+\phantomsection\label{authorship-of-federalist-51-vocab-frequencies-by-author}
+\begin{verbatim}
+# A tibble: 6 x 4
+  word       Hamilton   Jay Madison
+  <chr>         <int> <int>   <int>
+1 by              861    82     477
+2 heretofore       13     1       1
+3 man             102     0      17
+4 upon            374     1       7
+5 whilst            1     0      12
+6 TOTAL          1351    84     514
+\end{verbatim}

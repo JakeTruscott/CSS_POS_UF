@@ -1,0 +1,882 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  ignorenonframetext,
+  aspectratio=169]{beamer}
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\newif\ifbibliography
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\PassOptionsToClass{aspectratio=169}{beamer}
+\usepackage{../../../beamer_style/beamer_style}
+\setbeamersize{text margin left=3.5mm,text margin right=3.5mm}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Modeling the Bag of Words},
+  pdfauthor={Jake S. Truscott, Ph.D},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Modeling the Bag of Words}
+\subtitle{POS6933: Computational Social Science}
+\author{Jake S. Truscott, Ph.D}
+\date{}
+\institute{\vspace{-5mm}
+
+University of Florida \newline Spring 2026 \newline \newline \newline
+\includegraphics[width=3cm]{../../../beamer_style/UF.png} \quad 
+\includegraphics[width=3.1cm]{../../../images/CSS_POLS_UF_Logo.png}}
+
+\begin{document}
+\frame{\titlepage}
+
+\section{Overview}\label{overview}
+
+\begin{frame}{Overview}
+\phantomsection\label{overview-1}
+\begin{itemize}
+\item Week 5 Problem Set Review
+\item Dictionaries
+\item Multinomial Language Model
+\item Vector Space Model
+\end{itemize}
+\end{frame}
+
+\section{Week 5 Problem Set}\label{week-5-problem-set}
+
+\begin{frame}{Week 5 Problem Set Review}
+\phantomsection\label{week-5-problem-set-review}
+\begin{itemize}
+\item Comments [...]
+\end{itemize}
+\end{frame}
+
+\section{Focus Today}\label{focus-today}
+
+\begin{frame}{Focus Today}
+\phantomsection\label{focus-today-1}
+\begin{itemize}
+\item Focus today begins preliminary application of modeling strategies re: text as data \par \vspace{2.5mm}
+\item Things to Consider: 
+  \begin{itemize}
+  \item Embrace the learning curve 
+  \item Ask questions
+  \item If we need to continue this next week, we will! 
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{Dictionaries}\label{dictionaries}
+
+\begin{frame}{Dictionaries}
+\phantomsection\label{dictionaries-1}
+\begin{itemize}
+\item A \textbf{dictionary} (\textit{lexicon}) is a predefined list of words associated with categories (\textit{classifications}) \par \vspace{2.5mm}
+\item We can engage in basic classification or labeling tasks using these dictionaries to: 
+  \begin{enumerate}
+  \item Pre-processing our text to normalize/reduce complexity
+  \item Counting how many dictionary words appear
+  \item (Optional) Scaling document by length
+  \item Assigning a category score based on the totals
+  \end{enumerate}
+  \item \textbf{Classification Tasks}: Assigning each document (or sentence) to one or more predefined categories based on its content -- with dictionary methods, classification is completed by matching words. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Dictionaries for Classification Tasks -- Binary
+Classification (e.g., \textit{Positive} \textbf{or} \textit{Negative})}
+\phantomsection\label{dictionaries-for-classification-tasks-binary-classification-e.g.}
+\[
+\text{Label}_i = \arg\max_{c} \left( \text{DictionaryMatches}_{ic} \right)
+\qquad \textbf{or} \qquad
+\text{Score} = \frac{\text{C1 Words} - \text{C2 Words}}{\text{Total Words}}
+\] \vspace{5mm}
+
+\begin{itemize}
+\item $\arg\max$ = Discrete Label
+\item Score = Continuous Measure
+\item Example: 10 Positive Words and 12 Negative Words \\ $$10_{\text{Pos}} < 12_{\text{Neg}} \Rightarrow \text{Label} = \text{Neg}
+  $$ \\  $$ -0.09 = \frac{10(\text{Pos})-12(\text{Neg})}{22(\text{Total})} $$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Dictionaries for Classification Tasks -- Multiclass
+Classification (e.g., \textit{Positive}, \textit{Negative}, \textbf{or}
+\textit{Neutral})}
+\phantomsection\label{dictionaries-for-classification-tasks-multiclass-classification-e.g.}
+\[
+\text{Label}_i = \operatorname*{arg\,max}_{c \in \{\text{Pos}, \text{Neg}, \text{Neu}\}} \left( \text{DictionaryMatches}_{ic} \right)
+\qquad \textbf{or} \qquad
+\text{Score} = \frac{\text{C}_{c}}{\text{Total Words}}
+\] \vspace{5mm}
+
+\begin{itemize}
+\item \textit{Note}: Continuous score now recovered as weight of each category in document. 
+\item Example: 10 Positive Words, 12 Negative Words, 3 Neutral words \\ $$3_{\text{Neu}} < 10_{\text{Pos}} < 12_{\text{Neg}} \Rightarrow \text{Label} = \text{Neg}$$ \\  
+$$ \text{(Pos)} \frac{10}{25}= 0.4 \quad \text{(Neg)}\frac{12}{25}=0.48 \quad \text{(Neu)}\frac{3}{25}=0.12$$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Dictionaries for Classification Tasks (Example)}
+\phantomsection\label{dictionaries-for-classification-tasks-example}
+\begin{itemize}
+\item \textbf{Your Turn} -- Work to recover classification labels for a binary task with 15 \textbf{positive} words and 11 \textbf{negative} words. 
+\item Do the same for a multiclass task that now also includes 13 \textbf{neutral} words. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Dictionaries for Classification Tasks (Example Cont.)}
+\phantomsection\label{dictionaries-for-classification-tasks-example-cont.}
+\begin{itemize}
+\item Binary: $$15_{pos}>11_{neg} \quad \text{or } \frac{15-11}{26}\approx0.15$$ \par \vspace{5mm}
+\item Multiclass: $$\text{(Pos)}\frac{15}{39}=0.38 \quad \text{(Neg)}\frac{11}{39}=0.28 \quad \text{(Neu)}\frac{13}{39}=0.33  $$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Creating Dictionaries}
+\phantomsection\label{creating-dictionaries}
+\begin{itemize}
+\item Creating dictionaries is fairly intuitive -- Create vectors (classes) with terms exclusively representing words unique to that classification. \par \vspace{2.5mm}
+\item Ex: 
+  \begin{itemize}
+  \item \textbf{Positive}: Good, Great, Excellent, Benefit, Success
+  \item \textbf{Negative}: Bad, Poor, Failure, Harm, Risk
+  \item \textbf{Neutral}: Okay, Average, Fine, Moderate
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Creating Dictionary in R}
+\phantomsection\label{creating-dictionary-in-r}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dictionary }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}\AttributeTok{Positive =} \FunctionTok{c}\NormalTok{(}\StringTok{"good"}\NormalTok{, }\StringTok{"great"}\NormalTok{, }\StringTok{"excellent"}\NormalTok{, }\StringTok{"benefit"}\NormalTok{, }\StringTok{"success"}\NormalTok{),}
+                   \AttributeTok{Negative =} \FunctionTok{c}\NormalTok{(}\StringTok{"bad"}\NormalTok{, }\StringTok{"poor"}\NormalTok{, }\StringTok{"failure"}\NormalTok{, }\StringTok{"harm"}\NormalTok{, }\StringTok{"risk"}\NormalTok{),}
+                   \AttributeTok{Neutral  =} \FunctionTok{c}\NormalTok{(}\StringTok{"okay"}\NormalTok{, }\StringTok{"average"}\NormalTok{, }\StringTok{"fine"}\NormalTok{, }\StringTok{"moderate"}\NormalTok{)) }\CommentTok{\# Dictionary as List}
+
+\NormalTok{dictionary[[}\StringTok{\textquotesingle{}Positive\textquotesingle{}}\NormalTok{]] }\CommentTok{\# Sample}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] "good"      "great"     "excellent" "benefit"   "success"  
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Applying Dictionary in R}
+\phantomsection\label{applying-dictionary-in-r}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sample\_text }\OtherTok{\textless{}{-}} \FunctionTok{reduce\_complexity}\NormalTok{(}\StringTok{\textquotesingle{}The project had some success but also some risk\textquotesingle{}}\NormalTok{) }\CommentTok{\# Reduce Complexity}
+\FunctionTok{print}\NormalTok{(sample\_text) }\CommentTok{\# Print Sample}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] "project success also risk"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sapply}\NormalTok{(dictionary, }\ControlFlowTok{function}\NormalTok{(categories) }\FunctionTok{sum}\NormalTok{(}\FunctionTok{strsplit}\NormalTok{(sample\_text, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{W+"}\NormalTok{)[[}\DecValTok{1}\NormalTok{]] }\SpecialCharTok{\%in\%}\NormalTok{ categories)) }\CommentTok{\# Apply }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Positive Negative  Neutral 
+       1        1        0 
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Applying Dictionary in R}
+\phantomsection\label{applying-dictionary-in-r-1}
+\begin{itemize}
+\item \textbf{Your Turn}: Create another string and apply the same dictionary. 
+\item Afterwards -- include additional values to the dictionary. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Existing Lexicons in R (BING)}
+\phantomsection\label{existing-lexicons-in-r-bing}
+\begin{itemize}
+\item \texttt{BING} -- lexicon widely used for binary sentiment classification. \par \vspace{2.5mm}
+\item Assigns words to \textit{positive} or \textit{negative} classifications -- approximately 2k positive words and 4.8k negative words
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Existing Lexicons in R (BING -- Cont.)}
+\phantomsection\label{existing-lexicons-in-r-bing-cont.}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{bing\_dictionary }\OtherTok{\textless{}{-}}\NormalTok{ tidytext}\SpecialCharTok{::}\FunctionTok{get\_sentiments}\NormalTok{(}\StringTok{"bing"}\NormalTok{) }\CommentTok{\# Grab Dictionary}
+
+\NormalTok{bing\_dictionary }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(sentiment) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{slice\_sample}\NormalTok{(}\AttributeTok{n =} \DecValTok{3}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{arrange}\NormalTok{(sentiment) }\CommentTok{\# 3 Word Sample of Each}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 6 x 2
+  word     sentiment
+  <chr>    <chr>    
+1 venom    negative 
+2 scrap    negative 
+3 covetous negative 
+4 readily  positive 
+5 thank    positive 
+6 joyous   positive 
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Existing Lexicons in R (BING -- Cont.)}
+\phantomsection\label{existing-lexicons-in-r-bing-cont.-1}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{strings }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"This decision is excellent, fair, and clearly the right outcome"}\NormalTok{,}
+    \StringTok{"The opinion is good and persuasive, even if it is not perfect"}\NormalTok{,}
+    \StringTok{"The ruling has some good points but also several serious flaws"}\NormalTok{,}
+    \StringTok{"The decision is bad and poorly reasoned"}\NormalTok{, }\StringTok{"This opinion is terrible, deeply unfair, and completely wrong"}\NormalTok{)}
+
+\NormalTok{strings }\OtherTok{\textless{}{-}} \FunctionTok{sapply}\NormalTok{(strings, }\ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{reduce\_complexity}\NormalTok{(x),}
+    \AttributeTok{USE.NAMES =} \ConstantTok{FALSE}\NormalTok{)}
+\FunctionTok{print}\NormalTok{(strings)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] "decision excellent fair clearly right outcome"   "opinion good persuasive even perfect"           
+[3] "rule good point also several serious flaw"       "decision bad poorly reason"                     
+[5] "opinion terrible deeply unfair completely wrong"
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Existing Lexicons in R (BING -- Cont.)}
+\phantomsection\label{existing-lexicons-in-r-bing-cont.-2}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{strings }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}
+  \AttributeTok{doc\_id =} \FunctionTok{seq\_along}\NormalTok{(strings),}
+  \AttributeTok{text =}\NormalTok{ strings) }
+
+\NormalTok{strings\_tokens }\OtherTok{\textless{}{-}}\NormalTok{ strings }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# Convert to tibble}
+\NormalTok{  tidytext}\SpecialCharTok{::}\FunctionTok{unnest\_tokens}\NormalTok{(word, text) }\CommentTok{\# Convert to Unnested Tokens}
+
+\FunctionTok{head}\NormalTok{(strings\_tokens)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 6 x 2
+  doc_id word     
+   <int> <chr>    
+1      1 decision 
+2      1 excellent
+3      1 fair     
+4      1 clearly  
+5      1 right    
+6      1 outcome  
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Existing Lexicons in R (BING -- Cont.)}
+\phantomsection\label{existing-lexicons-in-r-bing-cont.-3}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{strings\_tokens }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{inner\_join}\NormalTok{(tidytext}\SpecialCharTok{::}\FunctionTok{get\_sentiments}\NormalTok{(}\StringTok{"bing"}\NormalTok{), }\AttributeTok{by =} \StringTok{"word"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# Get Sentiment}
+  \FunctionTok{group\_by}\NormalTok{(doc\_id, sentiment) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{n =} \FunctionTok{n}\NormalTok{(), }\CommentTok{\# Total Word Matches}
+            \AttributeTok{words =} \FunctionTok{paste}\NormalTok{(word, }\AttributeTok{collapse =} \StringTok{", "}\NormalTok{), }\CommentTok{\# Combine Word matches}
+            \AttributeTok{.groups =} \StringTok{"drop"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{left\_join}\NormalTok{(strings, }\AttributeTok{by =} \StringTok{"doc\_id"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# Add Back Original Text}
+  \FunctionTok{select}\NormalTok{(doc\_id, text, sentiment, n, words) }\CommentTok{\# Apply BING}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 6 x 5
+  doc_id text                                            sentiment     n words                          
+   <int> <chr>                                           <chr>     <int> <chr>                          
+1      1 decision excellent fair clearly right outcome   positive      4 excellent, fair, clearly, right
+2      2 opinion good persuasive even perfect            positive      2 good, perfect                  
+3      3 rule good point also several serious flaw       negative      1 flaw                           
+4      3 rule good point also several serious flaw       positive      1 good                           
+5      4 decision bad poorly reason                      negative      2 bad, poorly                    
+6      5 opinion terrible deeply unfair completely wrong negative      2 terrible, wrong                
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Existing Lexicons in R (AFINN)}
+\phantomsection\label{existing-lexicons-in-r-afinn}
+\begin{itemize}
+\item \texttt{AFINN} is another lexicon widely used in \texttt{R}
+\item Captures both direction \textbf{and} intensity of rhetoric
+\item Generally ranges from -5 (\textbf{Very Negative}) to +5 (\textbf{Very Positive})
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Existing Lexicons in R (AFINN -- Cont.)}
+\phantomsection\label{existing-lexicons-in-r-afinn-cont.}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1234}\NormalTok{)}
+\NormalTok{afinn\_dictionary }\OtherTok{\textless{}{-}}\NormalTok{ tidytext}\SpecialCharTok{::}\FunctionTok{get\_sentiments}\NormalTok{(}\StringTok{"afinn"}\NormalTok{) }\CommentTok{\# Afinn Dictionary}
+
+\NormalTok{afinn\_dictionary }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{group\_by}\NormalTok{(value) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{slice\_sample}\NormalTok{(}\AttributeTok{n =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{arrange}\NormalTok{(value) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{print}\NormalTok{(}\AttributeTok{n =} \DecValTok{10}\NormalTok{) }\CommentTok{\# Sample Words (Value {-}5 to 5)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 11 x 2
+   word        value
+   <chr>       <dbl>
+ 1 nigger         -5
+ 2 fraudulent     -4
+ 3 distrustful    -3
+ 4 overreact      -2
+ 5 exposes        -1
+ 6 some kind       0
+ 7 protected       1
+ 8 stimulating     2
+ 9 heartfelt       3
+10 wins            4
+# i 1 more row
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Existing Lexicons in R (AFINN -- Cont.)}
+\phantomsection\label{existing-lexicons-in-r-afinn-cont.-1}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{strings\_tokens }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{inner\_join}\NormalTok{(tidytext}\SpecialCharTok{::}\FunctionTok{get\_sentiments}\NormalTok{(}\AttributeTok{lexicon =} \StringTok{\textquotesingle{}afinn\textquotesingle{}}\NormalTok{), }\AttributeTok{by =} \StringTok{\textquotesingle{}word\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(doc\_id, value) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{n =} \FunctionTok{n}\NormalTok{(), }\CommentTok{\# Total Word Matches}
+            \AttributeTok{words =} \FunctionTok{paste}\NormalTok{(word, }\AttributeTok{collapse =} \StringTok{", "}\NormalTok{), }\CommentTok{\# Combine Word matches}
+            \AttributeTok{.groups =} \StringTok{"drop"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{left\_join}\NormalTok{(strings, }\AttributeTok{by =} \StringTok{"doc\_id"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# Add Back Original Text}
+  \FunctionTok{select}\NormalTok{(doc\_id, text, value, n, words)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 8 x 5
+  doc_id text                                            value     n words        
+   <int> <chr>                                           <dbl> <int> <chr>        
+1      1 decision excellent fair clearly right outcome       1     1 clearly      
+2      1 decision excellent fair clearly right outcome       2     1 fair         
+3      1 decision excellent fair clearly right outcome       3     1 excellent    
+4      2 opinion good persuasive even perfect                3     2 good, perfect
+5      3 rule good point also several serious flaw           3     1 good         
+6      4 decision bad poorly reason                         -3     1 bad          
+7      5 opinion terrible deeply unfair completely wrong    -3     1 terrible     
+8      5 opinion terrible deeply unfair completely wrong    -2     2 unfair, wrong
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Existing Lexicons in R (SentimentR)}
+\phantomsection\label{existing-lexicons-in-r-sentimentr}
+\begin{itemize}
+\item \texttt{sentimentR} uses a BING-style polarity lexicon (i.e., words have singular meaning) while also providing for \textbf{negators} (e.g., not, never, etc.), \textbf{amplifiers} (e.g., very or extremely), and \textbf{advesarial conjunction} (e.g., but). 
+\item Result is a BING-style score combined with a valence multiplier to adjust for sentence heuristics (ex: \textit{good} = 1x, not \textit{good} = -1x, \textit{barely good} = 0.5x)
+\item \textit{Note}: Negative doesn't always flip the sign from positive to negative but it will help to scale the intensity. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Existing Lexicons in R (SentimentR - Cont.)}
+\phantomsection\label{existing-lexicons-in-r-sentimentr---cont.}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{strings }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{sentiment =}\NormalTok{ sentimentr}\SpecialCharTok{::}\FunctionTok{sentiment\_by}\NormalTok{(text)}\SpecialCharTok{$}\NormalTok{ave\_sentiment) }\CommentTok{\# Apply SentimentR}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 5 x 3
+  doc_id text                                            sentiment
+   <int> <chr>                                               <dbl>
+1      1 decision excellent fair clearly right outcome      1.14  
+2      2 opinion good persuasive even perfect               0.671 
+3      3 rule good point also several serious flaw         -0.0567
+4      4 decision bad poorly reason                        -0.45  
+5      5 opinion terrible deeply unfair completely wrong   -1.18  
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Existing Lexicons in R (Example)}
+\phantomsection\label{existing-lexicons-in-r-example}
+\begin{itemize}
+\item \textbf{Your turn}: Recover scores from \texttt{Bing, AFINN}, and \texttt{SentimentR} after reducing the complexity of the following strings: 
+\footnotesize
+  \begin{itemize}
+  \item The recent peace agreement between the two nations is a remarkable step toward stability
+  \item The summit produced some promising proposals, though implementation will take time
+  \item The delegation met to discuss ongoing trade negotiations without reaching a conclusion
+  \item The sanctions imposed by the council are likely to harm the civilian population disproportionately
+  \item The military escalation is a disastrous and reckless move that threatens global security
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Existing Lexicons in R (Example)}
+\phantomsection\label{existing-lexicons-in-r-example-1}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(bing }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(text, doc\_id))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 4 x 2
+  text                                                                       doc_id
+  <chr>                                                                       <int>
+1 recent peace agreement two nation remarkable step toward stability              1
+2 summit produce promise proposal though implementation will take time            2
+3 sanction impose council likely harm civilian population disproportionately      4
+4 military escalation disastrous reckless move threaten global security           5
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(bing }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(text)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 4 x 4
+  doc_id sentiment     n words                         
+   <int> <chr>     <int> <chr>                         
+1      1 positive      3 peace, remarkable, stability  
+2      2 positive      1 promise                       
+3      4 negative      2 impose, harm                  
+4      5 negative      3 disastrous, reckless, threaten
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Existing Lexicons in R (Example)}
+\phantomsection\label{existing-lexicons-in-r-example-2}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(afinn }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(text))) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 8 x 4
+  doc_id value     n words             
+   <int> <dbl> <int> <chr>             
+1      1     1     1 agreement         
+2      1     2     2 peace, remarkable 
+3      2     1     1 promise           
+4      3     1     1 reach             
+5      4    -2     1 harm              
+6      4    -1     1 impose            
+7      5    -3     1 disastrous        
+8      5    -2     2 reckless, threaten
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Existing Lexicons in R (Example)}
+\phantomsection\label{existing-lexicons-in-r-example-3}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(sentimentr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 5 x 3
+  doc_id text                                                                       sentiment
+   <int> <chr>                                                                          <dbl>
+1      1 recent peace agreement two nation remarkable step toward stability             0.833
+2      2 summit produce promise proposal though implementation will take time           0.25 
+3      3 delegation meet discuss ongoing trade negotiation without reach conclusion     0    
+4      4 sanction impose council likely harm civilian population disproportionately    -0.389
+5      5 military escalation disastrous reckless move threaten global security         -0.742
+\end{verbatim}
+\end{frame}
+
+\section{Multinomial Language Model}\label{multinomial-language-model}
+
+\begin{frame}{Multinomial Language Model}
+\phantomsection\label{multinomial-language-model-1}
+\begin{itemize}
+\item \textbf{Multinomial Language Model}: A probabilistic model that treats a document as a bag of words generated from a multinomial distribution over a fixed vocabulary \par \vspace{2.5mm}
+\item \textbf{Formally}: For a document represented as a sequence of word counts, the likelihood of observing the document is given by the multinomial probability mass function (PMF), which combines the factorial of the total word count with the product of the probabilities of each word raised to the power of its observed count
+\item Assumes that each word in a document is drawn independently from a fixed vocabulary according to a categorical distribution – i.e., in accordance with the Bag of Words approach, where each word has a certain probability of occurring.  \par \vspace{2.5mm}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Probability Mass Function -- Categorical to Multinomial}
+\phantomsection\label{probability-mass-function-categorical-to-multinomial}
+\begin{itemize}
+\item[] PMF -- Categorical Distribution: 
+$$
+p(\mathbf{W}_i \mid \boldsymbol{\mu})
+= \prod_{j=1}^J \mu_j^{w_{ij}}
+$$
+
+\item[] We can generalize for documents that are longer than one word using the multinomial distribution:
+$$
+p(\mathbf{W}_i \mid \boldsymbol{\mu}) = 
+\frac{M!}{\prod_{j=1}^J W_{ij}!} \prod_{j=1}^J
+\mu_{j}^{\mathbf{W}_{ij}}
+$$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Multinomail PMF (Explained)}
+\phantomsection\label{multinomail-pmf-explained}
+\[
+p(\mathbf{W}_i \mid \boldsymbol{\mu}) = 
+\frac{M!}{\prod_{j=1}^J W_{ij}!} \prod_{j=1}^J
+\mu_{j}^{\mathbf{W}_{ij}}
+\]
+
+\begin{itemize}
+\item $p(\mathbf{W}_i \mid \boldsymbol{\mu})$ = probability of observing the entire word-count vector for document $i$ given probabilities $\mu$
+\item $\mathbf{M} = \sum_{j=1}^j\mathbf{W}_{ij}$ = Total number of word tokens in document $i$
+\item $\frac{M!}{\prod_{j=1}^J W_{ij}!}$ = Number of distinct word sequences consistent with the observed counts
+\item $J$ = Vocabulary size (i.e., number of unique words)
+\item $\prod_{j=1}^J \mu_{j}^{\mathbf{W}_{ij}}$ = Product of word probabilities raised to the number of times each word appears in document $i$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Multinomial Language Model -- Food Example}
+\phantomsection\label{multinomial-language-model-food-example}
+\begin{itemize}
+\item Vocabulary = \texttt{c(hamburger, salad, taco, nuggets)} \par \vspace{2.5mm}
+\item Probabilities ($\mu$): 
+  \begin{itemize}
+  \item $p(\text{hamburger}) = 0.3$
+  \item $p(\text{salad}) = 0.25$
+  \item $p(\text{taco}) = 0.15$
+  \item $p(\text{nuggets}) = 0.3$
+  \end{itemize} \par \vspace{2.5mm}
+\item Count vector from Document $i$ for \\ \texttt{c(hamburger, salad, taco, nuggets)} =  (2, 0, 1, 1) 
+\item i.e., Hamburger (2), Salad (0), Taco (1), and Nuggets (1)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Multinomial Language Model -- Food Example (Add Our Values
+-- Simplify)}
+\phantomsection\label{multinomial-language-model-food-example-add-our-values-simplify}
+\begin{itemize}
+\item[]$$
+p(\mathbf{W}_i \mid \boldsymbol{\mu}) = 
+\frac{M!}{\prod_{j=1}^J W_{ij}!} \prod_{j=1}^J
+\mu_{j}^{\mathbf{W}_{ij}}
+$$ 
+\par \vspace{5mm} \pause
+\item[] $$
+p(\texttt{H,H,T,N} \mid \mu) = 
+\frac{4!}{(2_{H}!)(0_{S}!)(1_{T}!)(1_{N}!)}
+(0.3_H)^2 (0.25_S)^0 (0.15_T)^1 (0.3_N)^1
+$$ \par \vspace{5mm} \pause
+\item[] $$ = \frac{4!}{2!\cdot0!\cdot1!\cdot1!}\quad 0.09 \cdot 1 \cdot 0.15 \cdot 0.3$$ \par \vspace{5mm} \pause
+\item[] $$ p(H,H,T,N \mid \mu) \approx 0.0486 $$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Federalist Papers}
+\phantomsection\label{federalist-papers}
+\begin{itemize}
+\item Collection of essays published in NY newspapers advocating ratification of US Constitution \par \vspace{5mm}
+\item Published anonymously by James Madison, Alexander Hamilton, and Jon Jay -- all using pseudonym \textit{Publius} \par \vspace{5mm}
+\item Virtually any course on American politics prescribes Federalist 10  (\textit{republics and factionalism}) and 51 (\textit{separation of powers to prevent tyranny})  -- I also prescribe 78 (\textit{Judiciary})
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Mosteller and Wallace (1963) -- Cont.}
+\phantomsection\label{mosteller-and-wallace-1963-cont.}
+\begin{itemize}
+\item 85 essays in total -- some where authorship was known, others not -- and some disputed. \par \vspace{5mm}
+\item By mid-20th century, it was believed that Jay authored 5, Hamilton (at least) 43, and Madison (at least) 14 \par \vspace{5mm}
+\item Left several with disputed authorship. 
+\item Mosteller and Wallace (1963) used Bag of Words assumption to try and prescribe unknown authorship. \par \vspace{5mm}
+\item \textbf{Basic Idea}: Variance in each potential author's word choice should emerge in disputed essay.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Prescribing Authorship for Federalist 51}
+\phantomsection\label{prescribing-authorship-for-federalist-51}
+\textbf{What We Need}:
+
+\begin{itemize}
+\item A vocabulary \par \vspace{2.5mm}
+\begin{itemize}
+\item[] \texttt{by, heretofore, man, upon, whilst}
+\end{itemize} \par \vspace{2.5mm}
+\item Variance of that vocabulary in a document of interest \textit{i} \par \vspace{2.5mm}
+\item The associated probabilities $\mu$
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Authorship of Federalist 51 (Cont.)}
+\phantomsection\label{authorship-of-federalist-51-cont.}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tidy\_federalist }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{count}\NormalTok{(author, word) }\SpecialCharTok{\%\textgreater{}\%}          
+\NormalTok{  tidyr}\SpecialCharTok{::} \FunctionTok{pivot\_wider}\NormalTok{(}\AttributeTok{names\_from =}\NormalTok{ author,}\AttributeTok{values\_from =}\NormalTok{ n, }\AttributeTok{values\_fill =} \DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  \{ }
+\NormalTok{    wide }\OtherTok{\textless{}{-}}\NormalTok{ .                      }
+    \FunctionTok{bind\_rows}\NormalTok{(}
+\NormalTok{      wide,}
+\NormalTok{      wide }\SpecialCharTok{\%\textgreater{}\%}
+        \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{word) }\SpecialCharTok{\%\textgreater{}\%}
+        \FunctionTok{summarise}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{everything}\NormalTok{(), sum)) }\SpecialCharTok{\%\textgreater{}\%}
+        \FunctionTok{mutate}\NormalTok{(}\AttributeTok{word =} \StringTok{"TOTAL"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+        \FunctionTok{select}\NormalTok{(word, }\FunctionTok{everything}\NormalTok{()))}
+\NormalTok{  \} }
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{Authorship of Federalist 51 (Vocab Frequencies by
+Author)}
+\phantomsection\label{authorship-of-federalist-51-vocab-frequencies-by-author}
+\begin{verbatim}
+# A tibble: 6 x 4
+  word       Hamilton   Jay Madison
+  <chr>         <int> <int>   <int>
+1 by              861    82     477
+2 heretofore       13     1       1
+3 man             102     0      17
+4 upon            374     1       7
+5 whilst            1     0      12
+6 TOTAL          1351    84     514
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Authorship of Federalist 51 (Recovering \(\mu\))}
+\phantomsection\label{authorship-of-federalist-51-recovering-mu}
+\begin{itemize}
+\item[] $$W_{Hamilton}\text{Multinomial}(1351, \mu_{H})$$ \par \vspace{2.5mm}
+\item[] $$W_{Madison}\text{Multinomial}(514, \mu_{M})$$ \par \vspace{2.5mm}
+\item[] $$W_{Jay}\text{Multinomial}(84, \mu_{J})$$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Authorship of Federalist 51 (Recovering \(\mu_{H,M,J}\))
+-- Cont.}
+\phantomsection\label{authorship-of-federalist-51-recovering-mu_hmj-cont.}
+\begin{itemize}
+\item[] $$\mu_{\sigma j} = \frac{W_{\sigma j}}{N_{\sigma}} $$ \par \vspace{2.5mm}
+\item[] \textbf{Hamilton}: $$\mu_{Hamilton} = (\frac{861}{861+13+102+374+1},\frac{13}{1351},\frac{102}{1351}, \frac{374}{1351}, \frac{1}{1351})$$ \par \vspace{2.5mm}
+\item[] \textbf{Hamilton}: $$ \mu_{Hamilton} = (0.63,0.009,0.07,0.27,0.0007) $$ \par \vspace{2.5mm}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Authorship of Federalist 51 (Recovering \(\mu_{H,M,J}\))
+-- Cont.}
+\phantomsection\label{authorship-of-federalist-51-recovering-mu_hmj-cont.-1}
+\begin{itemize}
+\item[] \textbf{Solve for Madison} \par \vspace{5mm} \pause
+\item[] \textbf{Madison}: $$\mu_{Madison} = (0.92,0.001,0.033,0.013,0.023)$$ \par \vspace{2.5mm}
+\item[] \textbf{Jay}: $$\mu_{Jay} = (0.97,0.01,0,0.01,0)$$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Authorship of Federalist 51 -- Vocabulary in 51}
+\phantomsection\label{authorship-of-federalist-51-vocabulary-in-51}
+\begin{itemize}
+\item We know the following frequency of the vocabulary in Federalist 51:
+  \begin{itemize}
+  \item by (23)
+  \item man (1)
+  \item upon (0)
+  \item heretofore (0)
+  \item whilst (2)
+  \end{itemize} \par \vspace{2.5mm}
+  \item \textbf{Next Step}: Plug in our values!
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Federalist 51 -- Putting Together: Hamilton}
+\phantomsection\label{federalist-51-putting-together-hamilton}
+\begin{itemize}
+\item[] $$
+p(\mathbf{W_{Fed51}}\mid\mu_{Hamilton}) = \frac{26!}{(23!)(1!)(0!)(0!)(2!)}(0.63)^{23}(0.009)^{1}(0.07)^{0}(0.27)^{0}(0.0007)^{2}
+$$ \par \vspace{5mm} \pause
+
+\item[] $$
+p(\mathbf{W_{Fed51}}\mid\mu_{Hamilton}) = 0.0000000008346
+$$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Federalist 51 -- Putting Together: Madison}
+\phantomsection\label{federalist-51-putting-together-madison}
+\begin{itemize}
+\item \textbf{Your Turn} -- Do the same for Madison \par \vspace{2.5mm} \pause
+\item[] $$p(\mathbf{W_{Fed51}}\mid\mu_{Madison}) = \frac{26!}{(23!)(1!)(0!)(0!)(2!)}(0.92)^{23}(0.001)^{1}(0.033)^{0}(0.013)^{0}(0.023)^{2}$$ 
+\item[] $$
+p(\mathbf{W_{Fed51}}\mid\mu_{Madison}) = 0.00055692
+$$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Federalist 51 -- Putting Together: Jay}
+\phantomsection\label{federalist-51-putting-together-jay}
+\begin{itemize}
+\item[] $$
+p(\mathbf{W_{Fed51}}\mid\mu_{Jay}) = \frac{26!}{(23!)(1!)(0!)(0!)(2!)}(0.97)^{23}(0.01)^{1}(0)^{0}(0.01)^{0}(0)^{2}
+$$
+
+\item[] $$
+p(\mathbf{W_{Fed51}}\mid\mu_{Jay}) = 0
+$$
+\end{itemize}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,625 @@
+---
+title: "Modeling the Bag of Words"
+author: "Jake S. Truscott, Ph.D"
+subtitle: |
+  POS6933: Computational Social Science
+institute: |
+  \vspace{-5mm} University of Florida \newline
+  Spring 2026 \newline \newline \newline
+  \includegraphics[width=3cm]{../../../beamer_style/UF.png} \quad 
+  \includegraphics[width=3.1cm]{../../../images/CSS_POLS_UF_Logo.png}
+output: 
+  beamer_presentation:
+    slide_level: 3
+    keep_tex: true
+    toc: false
+classoption: aspectratio=169  
+header-includes:
+  - \PassOptionsToClass{aspectratio=169}{beamer}
+  - \usepackage{../../../beamer_style/beamer_style}
+  - \setbeamersize{text margin left=3.5mm,text margin right=3.5mm}
+---
+
+```{r setup, include=FALSE}
+library(dplyr); library(ggplot2); library(cowplot); library(formatR); library(stargazer); library(parallel); library(doParallel); library(tm); library(stringr); library(quanteda); library(quanteda.textstats); library(quanteda.textstats); library(dplyr); library(ggplot2); library(stringr);  library(tm); library(quanteda); library(quanteda.textstats); library(quanteda.textstats); library(rvest); library(tibble); library(tidytext)
+
+knitr::opts_chunk$set(
+  warning = FALSE, 
+	fig.align = "center",
+	comment = NA,
+	dev = "pdf",
+  tidy.opts=list(width.cutoff=50), 
+  R.options = list(width = 120)
+)
+
+default_ggplot_theme  <- theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12),
+    axis.title = element_text(size = 12, colour = 'black'),
+    axis.text = element_text(size = 10, colour = 'black'),
+    panel.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+    legend.position = 'bottom', 
+    legend.title = element_blank(), 
+    legend.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+  )
+
+reduce_complexity <- function(text){
+  text <- tolower(text) # Lower Case
+  text <- tm::removePunctuation(text) # Punctuation
+  text <- tm::removeNumbers(text) # Numbers
+  text <- tm::removeWords(text, tm::stopwords("english")) # Stop Words
+  text <- unlist(stringr::str_split(text, '\\s+')) # Tokenize 
+  text <- textstem::lemmatize_words(text) # Lemmatize
+  text <- paste(text, collapse = ' ') # Re-Append
+  text <- gsub("\\s{2,}", ' ', text) # 2 or More Spaces --> One Space
+  text <- trimws(text) # White Space
+  return(text)
+} # Function to Process Text for Bag of Words
+
+```
+
+# Overview
+
+### Overview
+\begin{itemize}
+\item Week 5 Problem Set Review
+\item Dictionaries
+\item Multinomial Language Model
+\item Vector Space Model
+\end{itemize}
+
+# Week 5 Problem Set
+
+### Week 5 Problem Set Review
+\begin{itemize}
+\item Comments [...]
+\end{itemize}
+
+# Focus Today
+
+### Focus Today
+\begin{itemize}
+\item Focus today begins preliminary application of modeling strategies re: text as data \par \vspace{2.5mm}
+\item Things to Consider: 
+  \begin{itemize}
+  \item Embrace the learning curve 
+  \item Ask questions
+  \item If we need to continue this next week, we will! 
+  \end{itemize}
+\end{itemize}
+
+
+# Dictionaries
+
+### Dictionaries 
+\begin{itemize}
+\item A \textbf{dictionary} (\textit{lexicon}) is a predefined list of words associated with categories (\textit{classifications}) \par \vspace{2.5mm}
+\item We can engage in basic classification or labeling tasks using these dictionaries to: 
+  \begin{enumerate}
+  \item Pre-processing our text to normalize/reduce complexity
+  \item Counting how many dictionary words appear
+  \item (Optional) Scaling document by length
+  \item Assigning a category score based on the totals
+  \end{enumerate}
+  \item \textbf{Classification Tasks}: Assigning each document (or sentence) to one or more predefined categories based on its content -- with dictionary methods, classification is completed by matching words. 
+\end{itemize}
+
+### Dictionaries for Classification Tasks -- Binary Classification (e.g., \textit{Positive} \textbf{or} \textit{Negative})
+\[
+\text{Label}_i = \arg\max_{c} \left( \text{DictionaryMatches}_{ic} \right)
+\qquad \textbf{or} \qquad
+\text{Score} = \frac{\text{C1 Words} - \text{C2 Words}}{\text{Total Words}}
+\]
+\vspace{5mm}
+\begin{itemize}
+\item $\arg\max$ = Discrete Label
+\item Score = Continuous Measure
+\item Example: 10 Positive Words and 12 Negative Words \\ $$10_{\text{Pos}} < 12_{\text{Neg}} \Rightarrow \text{Label} = \text{Neg}
+  $$ \\  $$ -0.09 = \frac{10(\text{Pos})-12(\text{Neg})}{22(\text{Total})} $$
+  \end{itemize}
+  
+  
+### Dictionaries for Classification Tasks -- Multiclass Classification (e.g., \textit{Positive}, \textit{Negative}, \textbf{or} \textit{Neutral})
+\[
+\text{Label}_i = \operatorname*{arg\,max}_{c \in \{\text{Pos}, \text{Neg}, \text{Neu}\}} \left( \text{DictionaryMatches}_{ic} \right)
+\qquad \textbf{or} \qquad
+\text{Score} = \frac{\text{C}_{c}}{\text{Total Words}}
+\]
+\vspace{5mm}
+\begin{itemize}
+\item \textit{Note}: Continuous score now recovered as weight of each category in document. 
+\item Example: 10 Positive Words, 12 Negative Words, 3 Neutral words \\ $$3_{\text{Neu}} < 10_{\text{Pos}} < 12_{\text{Neg}} \Rightarrow \text{Label} = \text{Neg}$$ \\  
+$$ \text{(Pos)} \frac{10}{25}= 0.4 \quad \text{(Neg)}\frac{12}{25}=0.48 \quad \text{(Neu)}\frac{3}{25}=0.12$$
+\end{itemize}
+
+
+### Dictionaries for Classification Tasks (Example)
+\begin{itemize}
+\item \textbf{Your Turn} -- Work to recover classification labels for a binary task with 15 \textbf{positive} words and 11 \textbf{negative} words. 
+\item Do the same for a multiclass task that now also includes 13 \textbf{neutral} words. 
+\end{itemize}
+
+### Dictionaries for Classification Tasks (Example Cont.)
+\begin{itemize}
+\item Binary: $$15_{pos}>11_{neg} \quad \text{or } \frac{15-11}{26}\approx0.15$$ \par \vspace{5mm}
+\item Multiclass: $$\text{(Pos)}\frac{15}{39}=0.38 \quad \text{(Neg)}\frac{11}{39}=0.28 \quad \text{(Neu)}\frac{13}{39}=0.33  $$
+\end{itemize}
+
+
+### Creating Dictionaries
+\begin{itemize}
+\item Creating dictionaries is fairly intuitive -- Create vectors (classes) with terms exclusively representing words unique to that classification. \par \vspace{2.5mm}
+\item Ex: 
+  \begin{itemize}
+  \item \textbf{Positive}: Good, Great, Excellent, Benefit, Success
+  \item \textbf{Negative}: Bad, Poor, Failure, Harm, Risk
+  \item \textbf{Neutral}: Okay, Average, Fine, Moderate
+  \end{itemize}
+\end{itemize}
+
+
+### Creating Dictionary in R
+\scriptsize
+```{r, dictionary_creation}
+
+dictionary <- list(Positive = c("good", "great", "excellent", "benefit", "success"),
+                   Negative = c("bad", "poor", "failure", "harm", "risk"),
+                   Neutral  = c("okay", "average", "fine", "moderate")) # Dictionary as List
+
+dictionary[['Positive']] # Sample
+
+```
+
+
+### Applying Dictionary in R
+\scriptsize
+```{r, dictionary_application}
+
+sample_text <- reduce_complexity('The project had some success but also some risk') # Reduce Complexity
+print(sample_text) # Print Sample
+
+sapply(dictionary, function(categories) sum(strsplit(sample_text, "\\W+")[[1]] %in% categories)) # Apply 
+
+```
+### Applying Dictionary in R
+\begin{itemize}
+\item \textbf{Your Turn}: Create another string and apply the same dictionary. 
+\item Afterwards -- include additional values to the dictionary. 
+\end{itemize}
+
+
+### Existing Lexicons in R (BING)
+\begin{itemize}
+\item \texttt{BING} -- lexicon widely used for binary sentiment classification. \par \vspace{2.5mm}
+\item Assigns words to \textit{positive} or \textit{negative} classifications -- approximately 2k positive words and 4.8k negative words
+\end{itemize}
+
+### Existing Lexicons in R (BING -- Cont.)
+\scriptsize
+```{r, bing}
+
+bing_dictionary <- tidytext::get_sentiments("bing") # Grab Dictionary
+
+bing_dictionary %>%
+  group_by(sentiment) %>%
+  slice_sample(n = 3) %>%
+  ungroup() %>%
+  arrange(sentiment) # 3 Word Sample of Each
+
+```
+
+### Existing Lexicons in R (BING -- Cont.)
+\scriptsize
+```{r bing_strings,tidy=T}
+
+strings <- c('This decision is excellent, fair, and clearly the right outcome', 
+             'The opinion is good and persuasive, even if it is not perfect', 
+             'The ruling has some good points but also several serious flaws', 
+             'The decision is bad and poorly reasoned', 
+             'This opinion is terrible, deeply unfair, and completely wrong')
+
+strings <- sapply(strings, function(x) reduce_complexity(x), USE.NAMES = FALSE)
+print(strings)
+
+```
+
+
+### Existing Lexicons in R (BING -- Cont.)
+\scriptsize
+```{r, bing_cont}
+
+strings <- tibble(
+  doc_id = seq_along(strings),
+  text = strings) 
+
+strings_tokens <- strings %>% # Convert to tibble
+  tidytext::unnest_tokens(word, text) # Convert to Unnested Tokens
+
+head(strings_tokens)
+
+```
+
+
+### Existing Lexicons in R (BING -- Cont.)
+\scriptsize
+```{r, bing_apply}
+
+strings_tokens %>%
+  inner_join(tidytext::get_sentiments("bing"), by = "word") %>% # Get Sentiment
+  group_by(doc_id, sentiment) %>%
+  summarise(n = n(), # Total Word Matches
+            words = paste(word, collapse = ", "), # Combine Word matches
+            .groups = "drop") %>%
+  left_join(strings, by = "doc_id") %>% # Add Back Original Text
+  select(doc_id, text, sentiment, n, words) # Apply BING
+
+```
+
+### Existing Lexicons in R (AFINN)
+\begin{itemize}
+\item \texttt{AFINN} is another lexicon widely used in \texttt{R}
+\item Captures both direction \textbf{and} intensity of rhetoric
+\item Generally ranges from -5 (\textbf{Very Negative}) to +5 (\textbf{Very Positive})
+\end{itemize}
+
+
+### Existing Lexicons in R (AFINN -- Cont.)
+\scriptsize
+```{r, afinn}
+set.seed(1234)
+afinn_dictionary <- tidytext::get_sentiments("afinn") # Afinn Dictionary
+
+afinn_dictionary %>% 
+  group_by(value) %>%
+  slice_sample(n = 1) %>%
+  ungroup() %>%
+  arrange(value) %>%
+  print(n = 10) # Sample Words (Value -5 to 5)
+```
+
+### Existing Lexicons in R (AFINN -- Cont.)
+```{r, afinn_application}
+strings_tokens %>%
+  inner_join(tidytext::get_sentiments(lexicon = 'afinn'), by = 'word') %>%
+  group_by(doc_id, value) %>%
+  summarise(n = n(), # Total Word Matches
+            words = paste(word, collapse = ", "), # Combine Word matches
+            .groups = "drop") %>%
+  left_join(strings, by = "doc_id") %>% # Add Back Original Text
+  select(doc_id, text, value, n, words)
+
+```
+
+
+### Existing Lexicons in R (SentimentR)
+\begin{itemize}
+\item \texttt{sentimentR} uses a BING-style polarity lexicon (i.e., words have singular meaning) while also providing for \textbf{negators} (e.g., not, never, etc.), \textbf{amplifiers} (e.g., very or extremely), and \textbf{advesarial conjunction} (e.g., but). 
+\item Result is a BING-style score combined with a valence multiplier to adjust for sentence heuristics (ex: \textit{good} = 1x, not \textit{good} = -1x, \textit{barely good} = 0.5x)
+\item \textit{Note}: Negative doesn't always flip the sign from positive to negative but it will help to scale the intensity. 
+\end{itemize}
+
+
+### Existing Lexicons in R (SentimentR - Cont.)
+```{r, sentimentr}
+
+strings %>%
+    mutate(sentiment = sentimentr::sentiment_by(text)$ave_sentiment) # Apply SentimentR
+
+
+```
+
+
+### Existing Lexicons in R (Example)
+\begin{itemize}
+\item \textbf{Your turn}: Recover scores from \texttt{Bing, AFINN}, and \texttt{SentimentR} after reducing the complexity of the following strings: 
+\footnotesize
+  \begin{itemize}
+  \item The recent peace agreement between the two nations is a remarkable step toward stability
+  \item The summit produced some promising proposals, though implementation will take time
+  \item The delegation met to discuss ongoing trade negotiations without reaching a conclusion
+  \item The sanctions imposed by the council are likely to harm the civilian population disproportionately
+  \item The military escalation is a disastrous and reckless move that threatens global security
+  \end{itemize}
+\end{itemize}
+
+```{r, lexicons_example_strings, include=F}
+strings <- c("The recent peace agreement between the two nations is a remarkable step toward stability",
+   "The summit produced some promising proposals, though implementation will take time",
+   "The delegation met to discuss ongoing trade negotiations without reaching a conclusion",
+   "The sanctions imposed by the council are likely to harm the civilian population disproportionately",
+   "The military escalation is a disastrous and reckless move that threatens global security")
+
+strings <- sapply(strings, function(x) reduce_complexity(x))
+strings <- unname(strings)       
+attributes(strings) <- NULL 
+strings <- tibble(
+  doc_id = seq_along(strings),
+  text = strings) 
+
+strings_tokens <- strings %>% # Convert to tibble
+  tidytext::unnest_tokens(word, text) # Convert to Unnested Tokens
+
+bing <- strings_tokens %>%
+  inner_join(tidytext::get_sentiments("bing"), by = "word") %>% # Get Sentiment
+  group_by(doc_id, sentiment) %>%
+  summarise(n = n(), # Total Word Matches
+            words = paste(word, collapse = ", "), # Combine Word matches
+            .groups = "drop") %>%
+  left_join(strings, by = "doc_id") %>% # Add Back Original Text
+  select(doc_id, text, sentiment, n, words) # Apply BING
+
+afinn <- strings_tokens %>%
+  inner_join(tidytext::get_sentiments(lexicon = 'afinn'), by = 'word') %>%
+  group_by(doc_id, value) %>%
+  summarise(n = n(), # Total Word Matches
+            words = paste(word, collapse = ", "), # Combine Word matches
+            .groups = "drop") %>%
+  left_join(strings, by = "doc_id") %>% # Add Back Original Text
+  select(doc_id, text, value, n, words)
+
+sentimentr <- strings %>%
+    mutate(sentiment = sentimentr::sentiment_by(text)$ave_sentiment) # Apply SentimentR
+
+
+```
+
+### Existing Lexicons in R (Example)
+\scriptsize
+```{r, lexicons_example_bing}
+print(bing %>% select(text, doc_id))
+print(bing %>% select(-c(text)))
+```
+
+### Existing Lexicons in R (Example)
+\scriptsize
+```{r, lexicons_example_Afinn}
+print(afinn %>% select(-c(text))) 
+```
+
+### Existing Lexicons in R (Example)
+\scriptsize
+```{r, lexicons_example_sentimentr}
+print(sentimentr)
+```
+
+
+
+# Multinomial Language Model
+
+### Multinomial Language Model
+\begin{itemize}
+\item \textbf{Multinomial Language Model}: A probabilistic model that treats a document as a bag of words generated from a multinomial distribution over a fixed vocabulary \par \vspace{2.5mm}
+\item \textbf{Formally}: For a document represented as a sequence of word counts, the likelihood of observing the document is given by the multinomial probability mass function (PMF), which combines the factorial of the total word count with the product of the probabilities of each word raised to the power of its observed count
+\item Assumes that each word in a document is drawn independently from a fixed vocabulary according to a categorical distribution – i.e., in accordance with the Bag of Words approach, where each word has a certain probability of occurring.  \par \vspace{2.5mm}
+\end{itemize}
+
+### Probability Mass Function -- Categorical to Multinomial
+\begin{itemize}
+\item[] PMF -- Categorical Distribution: 
+$$
+p(\mathbf{W}_i \mid \boldsymbol{\mu})
+= \prod_{j=1}^J \mu_j^{w_{ij}}
+$$
+
+\item[] We can generalize for documents that are longer than one word using the multinomial distribution:
+$$
+p(\mathbf{W}_i \mid \boldsymbol{\mu}) = 
+\frac{M!}{\prod_{j=1}^J W_{ij}!} \prod_{j=1}^J
+\mu_{j}^{\mathbf{W}_{ij}}
+$$
+\end{itemize}
+
+
+### Multinomail PMF (Explained)
+$$
+p(\mathbf{W}_i \mid \boldsymbol{\mu}) = 
+\frac{M!}{\prod_{j=1}^J W_{ij}!} \prod_{j=1}^J
+\mu_{j}^{\mathbf{W}_{ij}}
+$$
+\begin{itemize}
+\item $p(\mathbf{W}_i \mid \boldsymbol{\mu})$ = probability of observing the entire word-count vector for document $i$ given probabilities $\mu$
+\item $\mathbf{M} = \sum_{j=1}^j\mathbf{W}_{ij}$ = Total number of word tokens in document $i$
+\item $\frac{M!}{\prod_{j=1}^J W_{ij}!}$ = Number of distinct word sequences consistent with the observed counts
+\item $J$ = Vocabulary size (i.e., number of unique words)
+\item $\prod_{j=1}^J \mu_{j}^{\mathbf{W}_{ij}}$ = Product of word probabilities raised to the number of times each word appears in document $i$
+\end{itemize}
+
+### Multinomial Language Model -- Food Example
+\begin{itemize}
+\item Vocabulary = \texttt{c(hamburger, salad, taco, nuggets)} \par \vspace{2.5mm}
+\item Probabilities ($\mu$): 
+  \begin{itemize}
+  \item $p(\text{hamburger}) = 0.3$
+  \item $p(\text{salad}) = 0.25$
+  \item $p(\text{taco}) = 0.15$
+  \item $p(\text{nuggets}) = 0.3$
+  \end{itemize} \par \vspace{2.5mm}
+\item Count vector from Document $i$ for \\ \texttt{c(hamburger, salad, taco, nuggets)} =  (2, 0, 1, 1) 
+\item i.e., Hamburger (2), Salad (0), Taco (1), and Nuggets (1)
+\end{itemize}
+
+### Multinomial Language Model -- Food Example (Add Our Values -- Simplify)
+\begin{itemize}
+\item[]$$
+p(\mathbf{W}_i \mid \boldsymbol{\mu}) = 
+\frac{M!}{\prod_{j=1}^J W_{ij}!} \prod_{j=1}^J
+\mu_{j}^{\mathbf{W}_{ij}}
+$$ 
+\par \vspace{5mm} \pause
+\item[] $$
+p(\texttt{H,H,T,N} \mid \mu) = 
+\frac{4!}{(2_{H}!)(0_{S}!)(1_{T}!)(1_{N}!)}
+(0.3_H)^2 (0.25_S)^0 (0.15_T)^1 (0.3_N)^1
+$$ \par \vspace{5mm} \pause
+\item[] $$ = \frac{4!}{2!\cdot0!\cdot1!\cdot1!}\quad 0.09 \cdot 1 \cdot 0.15 \cdot 0.3$$ \par \vspace{5mm} \pause
+\item[] $$ p(H,H,T,N \mid \mu) \approx 0.0486 $$
+\end{itemize}
+
+### Federalist Papers
+\begin{itemize}
+\item Collection of essays published in NY newspapers advocating ratification of US Constitution \par \vspace{5mm}
+\item Published anonymously by James Madison, Alexander Hamilton, and Jon Jay -- all using pseudonym \textit{Publius} \par \vspace{5mm}
+\item Virtually any course on American politics prescribes Federalist 10  (\textit{republics and factionalism}) and 51 (\textit{separation of powers to prevent tyranny})  -- I also prescribe 78 (\textit{Judiciary})
+\end{itemize}
+
+
+### Mosteller and Wallace (1963) -- Cont.
+\begin{itemize}
+\item 85 essays in total -- some where authorship was known, others not -- and some disputed. \par \vspace{5mm}
+\item By mid-20th century, it was believed that Jay authored 5, Hamilton (at least) 43, and Madison (at least) 14 \par \vspace{5mm}
+\item Left several with disputed authorship. 
+\item Mosteller and Wallace (1963) used Bag of Words assumption to try and prescribe unknown authorship. \par \vspace{5mm}
+\item \textbf{Basic Idea}: Variance in each potential author's word choice should emerge in disputed essay.
+\end{itemize}
+
+### Prescribing Authorship for Federalist 51
+\textbf{What We Need}:
+\begin{itemize}
+\item A vocabulary \par \vspace{2.5mm}
+\begin{itemize}
+\item[] \texttt{by, heretofore, man, upon, whilst}
+\end{itemize} \par \vspace{2.5mm}
+\item Variance of that vocabulary in a document of interest \textit{i} \par \vspace{2.5mm}
+\item The associated probabilities $\mu$
+\end{itemize}
+
+### Authorship of Federalist 51 (Cont.)
+```{r fed_51_data, include=FALSE}
+
+fed_papers <- read_html('https://www.gutenberg.org/cache/epub/18/pg18-images.html')
+essays <- html_elements(fed_papers, '.chapter')
+text <- html_text2(essays)
+text <- tibble(text)
+federalist <- text %>%
+  filter(stringr::str_detect(text, 'slightly different version', negate = TRUE)) %>%
+  mutate(author = text %>%
+           str_extract('HAMILTON AND MADISON|HAMILTON OR MADISON|HAMILTON|MADISON|JAY') %>%
+           str_to_title(),
+         title = str_extract(text, 'No. [A-Z].*')) # Clean & Partition
+
+tidy_federalist <- federalist %>%
+  tidytext::unnest_tokens(input = 'text',
+                output = 'word') # Tokenize at Word
+
+interesting_words <- c('by', 'man', 'upon', 'heretofore', 'whilst' ) # Vocabulary
+
+tidy_federalist_51 <- filter(tidy_federalist,
+                             word %in% interesting_words) %>%
+  filter(title == 'No. LI.') # Grab Words in interesting_words from Fed 51
+
+
+tidy_federalist_10 <- filter(tidy_federalist,
+                             word %in% interesting_words) %>%
+  filter(title == 'No. X.') # Same from 10
+
+
+tidy_federalist <- filter(tidy_federalist,
+                          word %in% interesting_words) %>%
+  filter(author %in% c('Hamilton', 'Jay', 'Madison'))
+
+```
+\scriptsize
+```{r fed_51_code, eval=F}
+tidy_federalist %>%
+  count(author, word) %>%          
+  tidyr:: pivot_wider(names_from = author,values_from = n, values_fill = 0) %>%
+  { 
+    wide <- .                      
+    bind_rows(
+      wide,
+      wide %>%
+        select(-word) %>%
+        summarise(across(everything(), sum)) %>%
+        mutate(word = "TOTAL") %>%
+        select(word, everything()))
+  } 
+
+```
+
+
+### Authorship of Federalist 51 (Vocab Frequencies by Author)
+```{r fed_51_vocab_frequencies, echo=FALSE}
+tidy_federalist %>%
+  count(author, word) %>%          
+  tidyr:: pivot_wider(names_from = author,values_from = n, values_fill = 0) %>%
+  { 
+    wide <- .                      
+    bind_rows(
+      wide,
+      wide %>%
+        select(-word) %>%
+        summarise(across(everything(), sum)) %>%
+        mutate(word = "TOTAL") %>%
+        select(word, everything()))
+  } 
+
+```
+
+
+### Authorship of Federalist 51 (Recovering $\mu$)
+\begin{itemize}
+\item[] $$W_{Hamilton}\text{Multinomial}(1351, \mu_{H})$$ \par \vspace{2.5mm}
+\item[] $$W_{Madison}\text{Multinomial}(514, \mu_{M})$$ \par \vspace{2.5mm}
+\item[] $$W_{Jay}\text{Multinomial}(84, \mu_{J})$$
+\end{itemize}
+
+### Authorship of Federalist 51 (Recovering $\mu_{H,M,J}$) -- Cont.
+\begin{itemize}
+\item[] $$\mu_{\sigma j} = \frac{W_{\sigma j}}{N_{\sigma}} $$ \par \vspace{2.5mm}
+\item[] \textbf{Hamilton}: $$\mu_{Hamilton} = (\frac{861}{861+13+102+374+1},\frac{13}{1351},\frac{102}{1351}, \frac{374}{1351}, \frac{1}{1351})$$ \par \vspace{2.5mm}
+\item[] \textbf{Hamilton}: $$ \mu_{Hamilton} = (0.63,0.009,0.07,0.27,0.0007) $$ \par \vspace{2.5mm}
+\end{itemize}
+
+
+### Authorship of Federalist 51 (Recovering $\mu_{H,M,J}$) -- Cont.
+\begin{itemize}
+\item[] \textbf{Solve for Madison} \par \vspace{5mm} \pause
+\item[] \textbf{Madison}: $$\mu_{Madison} = (0.92,0.001,0.033,0.013,0.023)$$ \par \vspace{2.5mm}
+\item[] \textbf{Jay}: $$\mu_{Jay} = (0.97,0.01,0,0.01,0)$$
+\end{itemize}
+
+
+### Authorship of Federalist 51 -- Vocabulary in 51
+\begin{itemize}
+\item We know the following frequency of the vocabulary in Federalist 51:
+  \begin{itemize}
+  \item by (23)
+  \item man (1)
+  \item upon (0)
+  \item heretofore (0)
+  \item whilst (2)
+  \end{itemize} \par \vspace{2.5mm}
+  \item \textbf{Next Step}: Plug in our values!
+\end{itemize}
+
+### Federalist 51 -- Putting Together: Hamilton
+\begin{itemize}
+\item[] $$
+p(\mathbf{W_{Fed51}}\mid\mu_{Hamilton}) = \frac{26!}{(23!)(1!)(0!)(0!)(2!)}(0.63)^{23}(0.009)^{1}(0.07)^{0}(0.27)^{0}(0.0007)^{2}
+$$ \par \vspace{5mm} \pause
+
+\item[] $$
+p(\mathbf{W_{Fed51}}\mid\mu_{Hamilton}) = 0.0000000008346
+$$
+\end{itemize}
+
+### Federalist 51 -- Putting Together: Madison
+\begin{itemize}
+\item \textbf{Your Turn} -- Do the same for Madison \par \vspace{2.5mm} \pause
+\item[] $$p(\mathbf{W_{Fed51}}\mid\mu_{Madison}) = \frac{26!}{(23!)(1!)(0!)(0!)(2!)}(0.92)^{23}(0.001)^{1}(0.033)^{0}(0.013)^{0}(0.023)^{2}$$ 
+\item[] $$
+p(\mathbf{W_{Fed51}}\mid\mu_{Madison}) = 0.00055692
+$$
+\end{itemize}
+
+### Federalist 51 -- Putting Together: Jay
+\begin{itemize}
+\item[] $$
+p(\mathbf{W_{Fed51}}\mid\mu_{Jay}) = \frac{26!}{(23!)(1!)(0!)(0!)(2!)}(0.97)^{23}(0.01)^{1}(0)^{0}(0.01)^{0}(0)^{2}
+$$
+
+\item[] $$
+p(\mathbf{W_{Fed51}}\mid\mu_{Jay}) = 0
+$$
+\end{itemize}
+
