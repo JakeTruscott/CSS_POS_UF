@@ -344,14 +344,14 @@ Positive Negative  Neutral
 
 \begin{verbatim}
 # A tibble: 6 x 2
-  word         sentiment
-  <chr>        <chr>    
-1 frail        negative 
-2 loose        negative 
-3 hardships    negative 
-4 jaw-dropping positive 
-5 comfortable  positive 
-6 admiration   positive 
+  word       sentiment
+  <chr>      <chr>    
+1 dwindling  negative 
+2 traitorous negative 
+3 astray     negative 
+4 subsidize  positive 
+5 gloriously positive 
+6 civilize   positive 
 \end{verbatim}
 \end{frame}
 
@@ -958,11 +958,125 @@ $$
 \phantomsection\label{multinomial-language-model-updated-mu_h-sim-alpha-21121}
 \begin{itemize} 
 \item[] \footnotesize{$$ \hat{\mu}_{Hamilton} = (\frac{861 + 2}{861+13+102+374+1 + (2 + 1 + 1 + 2 + 1)}, \frac{13+1}{1358}, \frac{102+1}{1358}, \frac{374+2}{1358}, \frac{1+1}{1358})$$}
-\item[] $$
-p(\mathbf{W_{Fed51}\mid\hat{\mu}_{Hamilton}}) = \frac{26!}{(23!)(1!)(0!)(0!)(2!)}(0.63)^{23}(0.01)^{1}(0.07)^{0}(0.27)^{0}(0.001)^{2}
-$$
+\item[] $$p(\mathbf{W_{Fed51}\mid\hat{\mu}_{Hamilton}}) = \frac{26!}{(23!)(1!)(0!)(0!)(2!)}(0.63)^{23}(0.01)^{1}(0.07)^{0}(0.27)^{0}(0.001)^{2}$$
 \item[] $$ p(\mathbf{W_{Fed51}\mid\hat{\mu}_{Hamilton}}) = 0.00000000186 $$
 \end{itemize}
+\end{frame}
+
+\section{Vector Space Model}\label{vector-space-model}
+
+\begin{frame}{Vector Space Model}
+\phantomsection\label{vector-space-model-1}
+\begin{itemize}
+\item While multinomial language model looks at text as a series of words and focuses on how likely each word is to appear, a vector space model treats text as a point in space.
+\item Lets us measure how similar two texts are based on distance or direction. 
+\item In essence, \textbf{MLM} is all about word probabilities –  figuring out which words are more likely in a document
+\item \textbf{VSMs} leverage linear algebra to turn text into vectors so we can compare documents based on their overall content, not just exact word counts.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Vector Space Model -- Ex: Inner Products (Federalist 51)}
+\phantomsection\label{vector-space-model-ex-inner-products-federalist-51}
+\footnotesize
+\begin{itemize}
+\item[] $$\mathbf{W_{Madison}} \cdot \mathbf{W_{Hamilton}} = (477, 1, 17, 7, 12) \cdot (861, 13, 102, 374, 1) $$
+\item[] $$= (477 \times 861) + (1 \times 13) + (17 \times 102) + (7 \times 374) + (12 \times 1) $$
+\item[] $$= 410,697$$
+\item[] $$\mathbf{W_{Madison}} \cdot \mathbf{W_{Jay}} = (477, 1, 17, 7, 12) \cdot (82, 1, 0, 1, 0, 84) $$
+\item[] $$= (477 \times 82) + (1 \times 1) + (17 \times 0) + (7 \times 0) + (12 \times 84)$$
+\item[] $$= 40,123$$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Cosine Similarity}
+\phantomsection\label{cosine-similarity}
+\begin{itemize}
+\item Recall the distribution of frequencies across Hamilton, Madison, and Jay seemed to heavily favor Hamilton \par \vspace{2.5mm}
+\item \textbf{Important Q}: Should it matter more that Hamilton used the four of the five words in our vocabulary more frequently than Madison, or should it matter more how the distribution of that word usage matches that in the disputed document? \par \vspace{2.5mm}
+\item Ideally, no -- but high-dimensionality makes this very possible. \par \vspace{2.5mm}
+\item \textbf{Cosine Similarity} allows us to normalize the inner product and the magnitude of the vectors. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Cosine Similarity (Cont.)}
+\phantomsection\label{cosine-similarity-cont.}
+\begin{itemize}
+\item[] $$
+\text{cosine(u,v)} = \frac{\text{u}\cdot \text{v}}{||\text{u}||\hspace{2mm}||\text{v}||} = \frac{\sum_iu_iv_i}{\sqrt{\sum_iu_{i}^2} \sqrt{\sum_{i}v_{i}^2}}$$
+\item Numerator = Inner product of the two vectors
+\item Denominator = Product of the vectors' magnitudes
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Cosine Similarity -- Hamilton \& Federalist 51 Example}
+\phantomsection\label{cosine-similarity-hamilton-federalist-51-example}
+\begin{itemize}
+\item \textbf{Inner Product}: $$ \mathbf{W}_{Hamilton} \cdot \mathbf{W}_{Disputed} = (861 \times 23) + (13 \times 1) + (102 \times 0) + (374 \times 0) + (1 \times 2) \quad = 19,818 $$ \pause
+\item \textbf{Magnitude of Vectors (Hamilton)}: $$||\mathbf{W}_{Hamilton}|| = \sqrt{861^2 + 13^2 + 102^2 + 374^2 + 1^2} \quad \approx 944.33$$ \pause
+\item \textbf{Magnitude of Vectors} (Federalist 51): $$ ||\mathbf{W}_{Disputed}||  = \sqrt{23^2 + 1^2 + 0^2 + 0^2 + 2^2} \quad \approx 23.10$$ \pause
+\item \textbf{Cosine Similarity}: $$cos(\mathbf{W}_{Hamilton}, \mathbf{W}_{Disputed}) = \frac{19,818}{944.33 \times 23.10} \quad \approx 0.9085 $$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Cosine Similarity -- Madison}
+\phantomsection\label{cosine-similarity-madison}
+\begin{itemize}
+\item \textbf{Your turn} -- Try with Madison \pause
+\item[] $$cos(\mathbf{W}_{Madison}, \mathbf{W}_{Disputed}) = \frac{10,996}{477.50 \times 23.10} \quad \approx 0.996$$ \pause
+\item Effectively removes all doubt re: Madison's authorship!
+\end{itemize}
+\end{frame}
+
+\begin{frame}{TF-IDF}
+\phantomsection\label{tf-idf}
+\begin{itemize}
+\item \textbf{Term Frequency - Inverse Frequency} (TF-IDF): Strategy that rescales a DFM by its inverse document frequency, down-weighting terms that appear in many documents. \par \vspace{2.5mm}
+\item In Short: Words that occur frequently in individual documents while remaining relatively uncommon in the broader corpus receive greater weight \par \vspace{2.5mm}
+\item Terms that satisfy both conditions are in the \textit{Goldilocks zone} -- those that violate both are penalized.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{TF-IDF (Cont.)}
+\phantomsection\label{tf-idf-cont.}
+\begin{itemize}
+\item[] $$ W^{\text{tf-idf}}_{ij} = W_{ij} * log\frac{N}{n_j} $$
+\item[] $$ N = \text{Number of Documents in Corpus} $$
+\item[] $$ n_j = \text{Number of Documents Containing Word } j $$
+\item[] $$ W_{ij} = \text{Word Count} $$
+\item[] $$ log\frac{N}{n_j} = \text{Penalty for Frequent Words} $$
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Hamilton -- No TF-IDF}
+\phantomsection\label{hamilton-no-tf-idf}
+\scriptsize
+\centering
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{wordcloud}\SpecialCharTok{::}\FunctionTok{wordcloud}\NormalTok{(}\AttributeTok{words =}\NormalTok{ top\_hamilton}\SpecialCharTok{$}\NormalTok{word,}
+                     \AttributeTok{freq =}\NormalTok{ top\_hamilton}\SpecialCharTok{$}\NormalTok{n,}
+                     \AttributeTok{vfont=}\FunctionTok{c}\NormalTok{(}\StringTok{"serif"}\NormalTok{,}\StringTok{"plain"}\NormalTok{)) }\CommentTok{\# No TF{-}IDF}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Class_6_Modeling_Bag_of_Words_files/figure-beamer/no_tf_idf-1} \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Hamilton -- TF-IDF}
+\phantomsection\label{hamilton-tf-idf}
+\scriptsize
+\centering
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{wordcloud}\SpecialCharTok{::}\FunctionTok{wordcloud}\NormalTok{(}\AttributeTok{words =}\NormalTok{ top\_hamilton}\SpecialCharTok{$}\NormalTok{word,}
+                     \AttributeTok{freq =}\NormalTok{ top\_hamilton}\SpecialCharTok{$}\NormalTok{tf\_idf,}
+                     \AttributeTok{vfont=}\FunctionTok{c}\NormalTok{(}\StringTok{"serif"}\NormalTok{,}\StringTok{"plain"}\NormalTok{)) }\CommentTok{\# TF{-}IDF}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Class_6_Modeling_Bag_of_Words_files/figure-beamer/tf_idf-1} \end{center}
 \end{frame}
 
 \end{document}

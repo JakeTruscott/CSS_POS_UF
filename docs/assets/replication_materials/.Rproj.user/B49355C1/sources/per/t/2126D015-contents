@@ -172,3 +172,48 @@ jay_likelihood <- dmultinom(x = federalist_10_vector,
 
 madison_likelihood/jay_likelihood # Madison vs. Jay
 madison_likelihood/hamilton_likelihood # Madison v. Hamilton
+
+
+####################################################
+#TF-IDF
+#####################################################
+
+text <- html_text2(essays)
+text <- tibble(text)
+federalist <- text %>%
+  filter(stringr::str_detect(text, 'slightly different version', negate = TRUE)) %>%
+  mutate(author = text %>%
+           str_extract('HAMILTON AND MADISON|HAMILTON OR MADISON|HAMILTON|MADISON|JAY') %>%
+           str_to_title(),
+         title = str_extract(text, 'No. [A-Z].*')) # Clean & Partition
+
+tidy_federalist <- federalist %>%
+  tidytext::unnest_tokens(input = 'text',
+                          output = 'word') # Tokenize at Word
+
+tidy_federalist_clean <- tidy_federalist %>%
+  filter(!word %in% interesting_words) %>%
+  filter(str_detect(word, "[a-z]"))
+
+tf_author <- tidy_federalist_clean %>%
+  count(author, word, sort = TRUE)
+
+tfidf_author <- tf_author %>%
+  bind_tf_idf(term = word, document = author, n = n)
+
+top_words <- tfidf_author %>%
+  group_by(author) %>%
+  slice_max(tf_idf, n = 50) %>%  # top 50 words per author
+  ungroup()
+
+top_hamilton <- top_words %>% filter(author == "Hamilton")
+
+
+wordcloud::wordcloud(words = top_hamilton$word,
+                     freq = top_hamilton$n,
+                     vfont=c("serif","plain")) # No TF-IDF
+
+
+wordcloud::wordcloud(words = top_hamilton$word,
+                     freq = top_hamilton$tf_idf,
+                     vfont=c("serif","plain")) # TF-IDF

@@ -725,6 +725,125 @@ madison_likelihood/hamilton_likelihood # Likelihood Ratio of Madison v. Hamilton
 # Vector Space Model
 
 ### Vector Space Model
+\begin{itemize}
+\item While multinomial language model looks at text as a series of words and focuses on how likely each word is to appear, a vector space model treats text as a point in space.
+\item Lets us measure how similar two texts are based on distance or direction. 
+\item In essence, \textbf{MLM} is all about word probabilities –  figuring out which words are more likely in a document
+\item \textbf{VSMs} leverage linear algebra to turn text into vectors so we can compare documents based on their overall content, not just exact word counts.
+\end{itemize}
+
+### Vector Space Model -- Ex: Inner Products (Federalist 51)
+\footnotesize
+\begin{itemize}
+\item[] $$\mathbf{W_{Madison}} \cdot \mathbf{W_{Hamilton}} = (477, 1, 17, 7, 12) \cdot (861, 13, 102, 374, 1) $$
+\item[] $$= (477 \times 861) + (1 \times 13) + (17 \times 102) + (7 \times 374) + (12 \times 1) $$
+\item[] $$= 410,697$$
+\item[] $$\mathbf{W_{Madison}} \cdot \mathbf{W_{Jay}} = (477, 1, 17, 7, 12) \cdot (82, 1, 0, 1, 0, 84) $$
+\item[] $$= (477 \times 82) + (1 \times 1) + (17 \times 0) + (7 \times 0) + (12 \times 84)$$
+\item[] $$= 40,123$$
+\end{itemize}
 
 
+### Cosine Similarity
+\begin{itemize}
+\item Recall the distribution of frequencies across Hamilton, Madison, and Jay seemed to heavily favor Hamilton \par \vspace{2.5mm}
+\item \textbf{Important Q}: Should it matter more that Hamilton used the four of the five words in our vocabulary more frequently than Madison, or should it matter more how the distribution of that word usage matches that in the disputed document? \par \vspace{2.5mm}
+\item Ideally, no -- but high-dimensionality makes this very possible. \par \vspace{2.5mm}
+\item \textbf{Cosine Similarity} allows us to normalize the inner product and the magnitude of the vectors. 
+\end{itemize}
 
+
+### Cosine Similarity (Cont.)
+\begin{itemize}
+\item[] $$
+\text{cosine(u,v)} = \frac{\text{u}\cdot \text{v}}{||\text{u}||\hspace{2mm}||\text{v}||} = \frac{\sum_iu_iv_i}{\sqrt{\sum_iu_{i}^2} \sqrt{\sum_{i}v_{i}^2}}$$
+\item Numerator = Inner product of the two vectors
+\item Denominator = Product of the vectors' magnitudes
+\end{itemize}
+
+
+### Cosine Similarity -- Hamilton & Federalist 51 Example
+\begin{itemize}
+\item \textbf{Inner Product}: $$ \mathbf{W}_{Hamilton} \cdot \mathbf{W}_{Disputed} = (861 \times 23) + (13 \times 1) + (102 \times 0) + (374 \times 0) + (1 \times 2) \quad = 19,818 $$ \pause
+\item \textbf{Magnitude of Vectors (Hamilton)}: $$||\mathbf{W}_{Hamilton}|| = \sqrt{861^2 + 13^2 + 102^2 + 374^2 + 1^2} \quad \approx 944.33$$ \pause
+\item \textbf{Magnitude of Vectors} (Federalist 51): $$ ||\mathbf{W}_{Disputed}||  = \sqrt{23^2 + 1^2 + 0^2 + 0^2 + 2^2} \quad \approx 23.10$$ \pause
+\item \textbf{Cosine Similarity}: $$cos(\mathbf{W}_{Hamilton}, \mathbf{W}_{Disputed}) = \frac{19,818}{944.33 \times 23.10} \quad \approx 0.9085 $$
+\end{itemize}
+
+
+### Cosine Similarity -- Madison
+\begin{itemize}
+\item \textbf{Your turn} -- Try with Madison \pause
+\item[] $$cos(\mathbf{W}_{Madison}, \mathbf{W}_{Disputed}) = \frac{10,996}{477.50 \times 23.10} \quad \approx 0.996$$ \pause
+\item Effectively removes all doubt re: Madison's authorship!
+\end{itemize}
+
+
+### TF-IDF
+\begin{itemize}
+\item \textbf{Term Frequency - Inverse Frequency} (TF-IDF): Strategy that rescales a DFM by its inverse document frequency, down-weighting terms that appear in many documents. \par \vspace{2.5mm}
+\item In Short: Words that occur frequently in individual documents while remaining relatively uncommon in the broader corpus receive greater weight \par \vspace{2.5mm}
+\item Terms that satisfy both conditions are in the \textit{Goldilocks zone} -- those that violate both are penalized.
+\end{itemize}
+
+### TF-IDF (Cont.)
+\begin{itemize}
+\item[] $$ W^{\text{tf-idf}}_{ij} = W_{ij} * log\frac{N}{n_j} $$
+\item[] $$ N = \text{Number of Documents in Corpus} $$
+\item[] $$ n_j = \text{Number of Documents Containing Word } j $$
+\item[] $$ W_{ij} = \text{Word Count} $$
+\item[] $$ log\frac{N}{n_j} = \text{Penalty for Frequent Words} $$
+\end{itemize}
+
+
+### Hamilton -- No TF-IDF
+```{r, tf_idf_setup, include=F}
+
+text <- html_text2(essays)
+text <- tibble(text)
+federalist <- text %>%
+  filter(stringr::str_detect(text, 'slightly different version', negate = TRUE)) %>%
+  mutate(author = text %>%
+           str_extract('HAMILTON AND MADISON|HAMILTON OR MADISON|HAMILTON|MADISON|JAY') %>%
+           str_to_title(),
+         title = str_extract(text, 'No. [A-Z].*')) # Clean & Partition
+
+tidy_federalist <- federalist %>%
+  tidytext::unnest_tokens(input = 'text',
+                          output = 'word') # Tokenize at Word
+
+tidy_federalist_clean <- tidy_federalist %>%
+  filter(!word %in% interesting_words) %>%
+  filter(str_detect(word, "[a-z]"))
+
+tf_author <- tidy_federalist_clean %>%
+  count(author, word, sort = TRUE)
+
+tfidf_author <- tf_author %>%
+  bind_tf_idf(term = word, document = author, n = n)
+
+top_words <- tfidf_author %>%
+  group_by(author) %>%
+  slice_max(tf_idf, n = 50) %>%  # top 50 words per author
+  ungroup()
+
+top_hamilton <- top_words %>% filter(author == "Hamilton")
+
+```
+\scriptsize
+\centering
+```{r, no_tf_idf, fig.height=2, fig.width=2}
+wordcloud::wordcloud(words = top_hamilton$word,
+                     freq = top_hamilton$n,
+                     vfont=c("serif","plain")) # No TF-IDF
+```
+
+
+### Hamilton -- TF-IDF
+\scriptsize
+\centering
+```{r tf_idf, fig.height=2, fig.width=2}
+wordcloud::wordcloud(words = top_hamilton$word,
+                     freq = top_hamilton$tf_idf,
+                     vfont=c("serif","plain")) # TF-IDF
+```
