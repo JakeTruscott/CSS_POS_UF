@@ -344,14 +344,14 @@ Positive Negative  Neutral
 
 \begin{verbatim}
 # A tibble: 6 x 2
-  word     sentiment
-  <chr>    <chr>    
-1 venom    negative 
-2 scrap    negative 
-3 covetous negative 
-4 readily  positive 
-5 thank    positive 
-6 joyous   positive 
+  word         sentiment
+  <chr>        <chr>    
+1 frail        negative 
+2 loose        negative 
+3 hardships    negative 
+4 jaw-dropping positive 
+5 comfortable  positive 
+6 admiration   positive 
 \end{verbatim}
 \end{frame}
 
@@ -876,6 +876,92 @@ $$
 \item[] $$
 p(\mathbf{W_{Fed51}}\mid\mu_{Jay}) = 0
 $$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Federalist 51 (Comparison)}
+\phantomsection\label{federalist-51-comparison}
+\begin{itemize}
+\item[] $$p(\mathbf{W_{Fed51}}\mid\mu_{Madison}) > p(\mathbf{W_{Fed51}}\mid\mu_{Hamilton})  > p(\mathbf{W_{Fed51}}\mid\mu_{Jay}) $$ \par \vspace{2.5mm}
+\item Supports findings by Mosteller and Wallace (1963) 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Multinomial Language Model -- Laplace Smoothing}
+\phantomsection\label{multinomial-language-model-laplace-smoothing}
+\begin{itemize}
+\item Other consideration -- no usage of \texttt{man} or \texttt{whilst} by John Jay -- produces a probability of 0. \par \vspace{2.5mm} 
+\item Alternative -- \textbf{Laplace Smoothing}: Add a positive integer to all the word vector values to remove the impossibility while otherwise preserving the proportionality of word usage 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Multinomial Language Model -- Laplace Smoothing
+(Cont.)}
+\phantomsection\label{multinomial-language-model-laplace-smoothing-cont.}
+\scriptsize
+
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hamilton\_likelihood }\OtherTok{\textless{}{-}} \FunctionTok{dmultinom}\NormalTok{(}\AttributeTok{x =}\NormalTok{ federalist\_51\_vector, }\AttributeTok{prob =}\NormalTok{ author\_vectors[[}\StringTok{\textquotesingle{}Hamilton\textquotesingle{}}\NormalTok{]] }\SpecialCharTok{+} \DecValTok{1}\NormalTok{)}
+
+\NormalTok{madison\_likelihood }\OtherTok{\textless{}{-}} \FunctionTok{dmultinom}\NormalTok{(}\AttributeTok{x =}\NormalTok{ federalist\_51\_vector, }\AttributeTok{prob =}\NormalTok{ author\_vectors[[}\StringTok{\textquotesingle{}Madison\textquotesingle{}}\NormalTok{]] }\SpecialCharTok{+} \DecValTok{1}\NormalTok{)}
+
+\NormalTok{jay\_likelihood }\OtherTok{\textless{}{-}} \FunctionTok{dmultinom}\NormalTok{(}\AttributeTok{x =}\NormalTok{ federalist\_51\_vector, }\AttributeTok{prob =}\NormalTok{ author\_vectors[[}\StringTok{\textquotesingle{}Jay\textquotesingle{}}\NormalTok{]] }\SpecialCharTok{+} \DecValTok{1}\NormalTok{)}
+
+
+\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{Author =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}Hamilton\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Madison\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Jay\textquotesingle{}}\NormalTok{), }
+           \AttributeTok{Likelihood =} \FunctionTok{c}\NormalTok{(hamilton\_likelihood, madison\_likelihood, jay\_likelihood))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+    Author   Likelihood
+1 Hamilton 3.845094e-08
+2  Madison 2.557079e-02
+3      Jay 2.222033e-03
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{madison\_likelihood}\SpecialCharTok{/}\NormalTok{jay\_likelihood }\CommentTok{\# Likelihood Ratio of Madison v. Jay}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 11.50783
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{madison\_likelihood}\SpecialCharTok{/}\NormalTok{hamilton\_likelihood }\CommentTok{\# Likelihood Ratio of Madison v. Hamilton }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 665023.7
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Multinomial Language Model -- Dirichlet Distribution}
+\phantomsection\label{multinomial-language-model-dirichlet-distribution}
+\begin{itemize}
+\item Another alternative -- rather than adding a numeric constant to the word counts, add a \textbf{Dirichlet prior} over $\mu$, allowing the word probabilities themselves to be treated as random and regularized through pseudo-count parameters ($\alpha$). \par \vspace{2.5mm}
+\item Basically: When calculating $\mu_{\sigma j}$, add a prior weight value ($\alpha_{j}$) that reflects our prior belief about how common that word is expected to be before observing the document.
+\item For example, I am going to assign $\alpha = (2,1,1,2,1)$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Multinomial Language Model -- Updated
+\(\mu_{H} \sim \alpha = (2,1,1,2,1)\)}
+\phantomsection\label{multinomial-language-model-updated-mu_h-sim-alpha-21121}
+\begin{itemize} 
+\item[] \footnotesize{$$ \hat{\mu}_{Hamilton} = (\frac{861 + 2}{861+13+102+374+1 + (2 + 1 + 1 + 2 + 1)}, \frac{13+1}{1358}, \frac{102+1}{1358}, \frac{374+2}{1358}, \frac{1+1}{1358})$$}
+\item[] $$
+p(\mathbf{W_{Fed51}\mid\hat{\mu}_{Hamilton}}) = \frac{26!}{(23!)(1!)(0!)(0!)(2!)}(0.63)^{23}(0.01)^{1}(0.07)^{0}(0.27)^{0}(0.001)^{2}
+$$
+\item[] $$ p(\mathbf{W_{Fed51}\mid\hat{\mu}_{Hamilton}}) = 0.00000000186 $$
 \end{itemize}
 \end{frame}
 

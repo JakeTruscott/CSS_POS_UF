@@ -623,3 +623,108 @@ p(\mathbf{W_{Fed51}}\mid\mu_{Jay}) = 0
 $$
 \end{itemize}
 
+
+### Federalist 51 (Comparison)
+\begin{itemize}
+\item[] $$p(\mathbf{W_{Fed51}}\mid\mu_{Madison}) > p(\mathbf{W_{Fed51}}\mid\mu_{Hamilton})  > p(\mathbf{W_{Fed51}}\mid\mu_{Jay}) $$ \par \vspace{2.5mm}
+\item Supports findings by Mosteller and Wallace (1963) 
+\end{itemize}
+
+
+### Multinomial Language Model -- Laplace Smoothing
+\begin{itemize}
+\item Other consideration -- no usage of \texttt{man} or \texttt{whilst} by John Jay -- produces a probability of 0. \par \vspace{2.5mm} 
+\item Alternative -- \textbf{Laplace Smoothing}: Add a positive integer to all the word vector values to remove the impossibility while otherwise preserving the proportionality of word usage 
+\end{itemize}
+
+### Multinomial Language Model -- Laplace Smoothing (Cont.)
+\scriptsize
+```{r, laplace_setup, include=F}
+
+federalist_51_counts <- tidy_federalist_51 %>%
+  mutate(word = factor(word)) %>% 
+  count(word, .drop = FALSE) %>%
+  setNames(c('word', 'count'))
+
+federalist_51_vector <- rep(0, length(interesting_words)) 
+names(federalist_51_vector) <- interesting_words
+
+for (i in 1:nrow(federalist_51_counts)){
+  temp_row <- federalist_51_counts[i,]
+  federalist_51_vector[[as.character(temp_row$word)]] <- temp_row$count
+}
+
+author_vectors <- list()
+author_tidy_federalis <- tidy_federalist %>%
+  count(author, word) %>%          
+  tidyr:: pivot_wider(names_from = author,values_from = n, values_fill = 0) %>%
+  { 
+    wide <- .                      
+    bind_rows(
+      wide,
+      wide %>%
+        select(-word) %>%
+        summarise(across(everything(), sum)) %>%
+        mutate(word = "TOTAL") %>%
+        select(word, everything()))
+  } # Print Counts of Interesting Words
+
+
+for (i in c('Hamilton', 'Madison', 'Jay')){
+  
+  temp_federalist_51_vector <- rep(0, length(interesting_words)) 
+  names(temp_federalist_51_vector) <- interesting_words
+  temp_values <- tidy_federalist %>%
+  filter(author == i) %>%
+  count(author, word) %>%          
+  tidyr:: pivot_wider(names_from = author,values_from = n, values_fill = 0) %>%
+  setNames(c('word', 'count')) 
+  temp_vector <- temp_federalist_51_vector
+  temp_vector[match(temp_values$word, names(temp_vector))] <- temp_values$count
+
+  
+  author_vectors[[as.character(i)]] <- temp_vector
+  
+}
+
+```
+\scriptsize
+```{r, laplace_run}
+
+hamilton_likelihood <- dmultinom(x = federalist_51_vector, prob = author_vectors[['Hamilton']] + 1)
+
+madison_likelihood <- dmultinom(x = federalist_51_vector, prob = author_vectors[['Madison']] + 1)
+
+jay_likelihood <- dmultinom(x = federalist_51_vector, prob = author_vectors[['Jay']] + 1)
+
+
+data.frame(Author = c('Hamilton', 'Madison', 'Jay'), 
+           Likelihood = c(hamilton_likelihood, madison_likelihood, jay_likelihood))
+
+madison_likelihood/jay_likelihood # Likelihood Ratio of Madison v. Jay
+madison_likelihood/hamilton_likelihood # Likelihood Ratio of Madison v. Hamilton 
+
+
+```
+
+### Multinomial Language Model -- Dirichlet Distribution 
+\begin{itemize}
+\item Another alternative -- rather than adding a numeric constant to the word counts, add a \textbf{Dirichlet prior} over $\mu$, allowing the word probabilities themselves to be treated as random and regularized through pseudo-count parameters ($\alpha$). \par \vspace{2.5mm}
+\item Basically: When calculating $\mu_{\sigma j}$, add a prior weight value ($\alpha_{j}$) that reflects our prior belief about how common that word is expected to be before observing the document.
+\item For example, I am going to assign $\alpha = (2,1,1,2,1)$
+\end{itemize}
+
+### Multinomial Language Model -- Updated $\mu_{H} \sim \alpha = (2,1,1,2,1)$ 
+\begin{itemize} 
+\item[] \footnotesize{$$ \hat{\mu}_{Hamilton} = (\frac{861 + 2}{861+13+102+374+1 + (2 + 1 + 1 + 2 + 1)}, \frac{13+1}{1358}, \frac{102+1}{1358}, \frac{374+2}{1358}, \frac{1+1}{1358})$$}
+\item[] $$p(\mathbf{W_{Fed51}\mid\hat{\mu}_{Hamilton}}) = \frac{26!}{(23!)(1!)(0!)(0!)(2!)}(0.63)^{23}(0.01)^{1}(0.07)^{0}(0.27)^{0}(0.001)^{2}$$
+\item[] $$ p(\mathbf{W_{Fed51}\mid\hat{\mu}_{Hamilton}}) = 0.00000000186 $$
+\end{itemize}
+
+
+# Vector Space Model
+
+### Vector Space Model
+
+
+

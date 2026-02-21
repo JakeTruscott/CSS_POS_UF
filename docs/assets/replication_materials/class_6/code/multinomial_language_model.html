@@ -430,10 +430,9 @@ each vector to encode the possibility that (let’s say) Jay might someday
 use those words.</p>
 <p>For the sake of ease, I am going to replicate our results with
 Laplace smoothing and <code>dmultinom()</code>, where
-federalist_51_vector is the vector of word-specific counts, and the
-author-specific vectors are the <span class="math inline">\(\mu\)</span>
-values for Hamilton, Madison, or Jay plus 1 (such that Jay now records
-at least 1 instance of each word)</p>
+federalist_51_vector is the vector of word-specific counts, but we’re
+now going to add an integer such that each word \is used <i>at least
+once.</i>)</p>
 <pre class="r"><code>hamilton_likelihood &lt;- dmultinom(x = federalist_51_vector,
                                  prob = author_vectors[[&#39;Hamilton&#39;]] + 1)
 
@@ -477,22 +476,14 @@ James Madison wrote.</p>
 </div>
 <div id="dirichlet-distribution-briefly" class="section level3">
 <h3>Dirichlet Distribution (Briefly)</h3>
-<p>We are going to spend much more time on the <b>Dirchlet
-Distribution</b> when we discuss topic models, but let’s briefly discuss
-this distribution as an alternative to Laplace smoothing. Recall that
-Laplace smoothing effectively just adds psuedo-data (a positive integer
-as a constant) to <span class="math inline">\(\mu\)</span> in order to
-alleviate concerns where authors simply never employed certain terms in
-the vocabulary (thus rendering the authorship attribution to 0). The
-Dirichlet distribution represents a probability distribution over a
-<span class="math inline">\(k\)</span>-dimensional simplex – the set of
-all non-negative vectors that sum to one. A draw from the distribution
-gives you an entire set of probabilities for a multinomial – instead of
-fixing those probabilities, the Dirichlet treats them as random and
-allows uncertainty about how categories are mixed. In essence, the
-Dirichlet distribution is not a distribution over counts or single
-outcomes — it is a distribution over the probability vectors that
-generate those outcomes.</p>
+<p>We will return to the <strong>Dirichlet distribution</strong> in much
+greater detail when we discuss topic models, but for now it is useful to
+introduce it as a principled alternative to Laplace smoothing. Recall
+that Laplace smoothing adds pseudo-counts (a small positive constant) to
+the observed word counts before normalizing, thereby preventing zero
+probabilities when an author never uses a particular term. The Dirichlet
+distribution formalizes this idea within a fully probabilistic
+framework.</p>
 <p><b>In Short – </b> Instead of just adding a small number to every
 category like Laplace smoothing, the Dirichlet lets us treat the
 probabilities themselves as random (though we can choose what <span
@@ -513,13 +504,13 @@ distribution, rather than relying on Laplace smoothing to regularize.
 Using our intuition, let’s assume that we expect <i>by</i> and
 <i>upon</i> to feature most prominently – so we assign <span
 class="math inline">\(\alpha = (2, 1, 1, 2, 1)\)</span>, such that:</p>
-<p><span class="math display">\[\mu_k \sim \text{ Dirichlet}(\alpha =
-(2, 1, 1, 2, 1))\]</span> <span class="math display">\[ W_i\mid\mu,\pi_i
-\sim \text{ Multinomial}(M_i, \mu\pi_i)  \]</span></p>
-<p><span class="math display">\[ \mu_k\mid\alpha,W_i \sim \text{
-Dirichlet}(W_i, + \alpha) \]</span></p>
-<p><span class="math display">\[ E[\mu_k\mid\alpha,W_i] \sim
-\frac{W_i,+\alpha}{\sum^j_{j=1}(W_i,j + \alpha_j)} \]</span></p>
+<p><span class="math display">\[\mu \sim \text{ Dirichlet}(\alpha),
+\quad \alpha = (2, 1, 1, 2, 1)\]</span> <span class="math display">\[
+W_i\mid\mu \sim \text{ Multinomial}(M_i, \mu)  \]</span></p>
+<p><span class="math display">\[ \mu\mid\alpha,W_i \sim \text{
+Dirichlet}(W_i + \alpha) \]</span></p>
+<p><span class="math display">\[ E[\mu_j\mid\alpha,W_i] =
+\frac{W_{ij}+\alpha_j}{\sum_k(W_{i,k} + \alpha_k)} \]</span></p>
 <p>Looking at Hamilton…</p>
 <p><span class="math display">\[ \hat{\mu}_{Hamilton} = (\frac{861 +
 2}{861+13+102+374+1 + (2 + 1 + 1 + 2 + 1)}, \frac{13+1}{1358},
