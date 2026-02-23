@@ -1,0 +1,25 @@
+"0","afinn_dictionary %>% 
+  group_by(value) %>%
+  slice_sample(n = 1) %>%
+  ungroup() %>%
+  arrange(value) %>%
+  select(word) %>%
+  pull(word)
+"
+"1"," [1]"
+"1"," ""son-of-a-bitch"""
+"1"," ""fraudulence""   "
+"1"," ""lunatics""      "
+"1"," ""lethargy""      "
+"1"," ""manipulation""  "
+"1"," ""some kind""     "
+"1"," ""cool""          "
+"1"," ""courtesy""      "
+"1","
+"
+"1"," [9]"
+"1"," ""cheery""        "
+"1"," ""winner""        "
+"1"," ""superb""        "
+"1","
+"

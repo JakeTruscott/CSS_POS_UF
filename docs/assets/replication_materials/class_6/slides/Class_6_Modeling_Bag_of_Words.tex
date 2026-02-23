@@ -153,10 +153,21 @@ University of Florida \newline Spring 2026 \newline \newline \newline
 \begin{frame}{Overview}
 \phantomsection\label{overview-1}
 \begin{itemize}
+\item Housekeeping
 \item Week 5 Problem Set Review
 \item Dictionaries
 \item Multinomial Language Model
 \item Vector Space Model
+\end{itemize}
+\end{frame}
+
+\section{Housekeeping}\label{housekeeping}
+
+\begin{frame}{Housekeeping}
+\phantomsection\label{housekeeping-1}
+\begin{itemize}
+\item Respond to comments re: topic selection by Friday at 5:00 \par \vspace{2.5mm}
+\item This week's material may require us to continue into next week -- I will make determination by end of class. 
 \end{itemize}
 \end{frame}
 
@@ -165,7 +176,9 @@ University of Florida \newline Spring 2026 \newline \newline \newline
 \begin{frame}{Week 5 Problem Set Review}
 \phantomsection\label{week-5-problem-set-review}
 \begin{itemize}
-\item Comments [...]
+\item Everyone generally did fine \par \vspace{2.5mm}
+\item Make sure to fully read prompts... \par \vspace{2.5mm}
+\item I don't mind y'all coordinating together -- But more than half with same presidents, policies, and effectively the same vocabularies, it defeats a big chunk of the purpose. \par \vspace{2.5mm}
 \end{itemize}
 \end{frame}
 
@@ -196,7 +209,7 @@ University of Florida \newline Spring 2026 \newline \newline \newline
   \item Counting how many dictionary words appear
   \item (Optional) Scaling document by length
   \item Assigning a category score based on the totals
-  \end{enumerate}
+  \end{enumerate} \par \vspace{2.5mm}
   \item \textbf{Classification Tasks}: Assigning each document (or sentence) to one or more predefined categories based on its content -- with dictionary methods, classification is completed by matching words. 
 \end{itemize}
 \end{frame}
@@ -211,7 +224,8 @@ Classification (e.g., \textit{Positive} \textbf{or} \textit{Negative})}
 \] \vspace{5mm}
 
 \begin{itemize}
-\item $\arg\max$ = Discrete Label
+\item $i$ = Sentence, $c$ = Label 
+\item $\arg\max$ = Label that best fits
 \item Score = Continuous Measure
 \item Example: 10 Positive Words and 12 Negative Words \\ $$10_{\text{Pos}} < 12_{\text{Neg}} \Rightarrow \text{Label} = \text{Neg}
   $$ \\  $$ -0.09 = \frac{10(\text{Pos})-12(\text{Neg})}{22(\text{Total})} $$
@@ -248,6 +262,16 @@ $$ \text{(Pos)} \frac{10}{25}= 0.4 \quad \text{(Neg)}\frac{12}{25}=0.48 \quad \t
 \begin{itemize}
 \item Binary: $$15_{pos}>11_{neg} \quad \text{or } \frac{15-11}{26}\approx0.15$$ \par \vspace{5mm}
 \item Multiclass: $$\text{(Pos)}\frac{15}{39}=0.38 \quad \text{(Neg)}\frac{11}{39}=0.28 \quad \text{(Neu)}\frac{13}{39}=0.33  $$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Thoughts re: Dictionaries}
+\phantomsection\label{thoughts-re-dictionaries}
+\begin{itemize}
+\item Dictionary classifiers, while rather simple and intuitive, can nevertheless provide robust classification power. \par \vspace{2.5mm} \pause
+\item \textbf{However} -- much of that validity relies on the ability of researchers to construct dense lexicons (avoid small-N problems)  \par \vspace{2.5mm} \pause
+\item While a dense dictionary is certainly important, paramount to such is constructing categorical classifications (e.g., positive or negative) that are both authentic and defensible.   \par \vspace{2.5mm} \pause
+\item Words have associated meaning based on tense and conditional usage. Ex: \textit{happy} is certainly positive – but what if the sentence actually reads \textit{I was not happy at all} (i.e., actually very negative!). Much of these concerns (as with other areas concerning the bag of words) can be improved given more robust methods, including the incorporation of inverses (not) and n-grams.
 \end{itemize}
 \end{frame}
 
@@ -344,14 +368,14 @@ Positive Negative  Neutral
 
 \begin{verbatim}
 # A tibble: 6 x 2
-  word       sentiment
-  <chr>      <chr>    
-1 dwindling  negative 
-2 traitorous negative 
-3 astray     negative 
-4 subsidize  positive 
-5 gloriously positive 
-6 civilize   positive 
+  word        sentiment
+  <chr>       <chr>    
+1 stupid      negative 
+2 dispiriting negative 
+3 nastiness   negative 
+4 engaging    positive 
+5 gained      positive 
+6 luxurious   positive 
 \end{verbatim}
 \end{frame}
 
@@ -454,7 +478,7 @@ Positive Negative  Neutral
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1234}\NormalTok{)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
 \NormalTok{afinn\_dictionary }\OtherTok{\textless{}{-}}\NormalTok{ tidytext}\SpecialCharTok{::}\FunctionTok{get\_sentiments}\NormalTok{(}\StringTok{"afinn"}\NormalTok{) }\CommentTok{\# Afinn Dictionary}
 
 \NormalTok{afinn\_dictionary }\SpecialCharTok{\%\textgreater{}\%} 
@@ -462,30 +486,23 @@ Positive Negative  Neutral
   \FunctionTok{slice\_sample}\NormalTok{(}\AttributeTok{n =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{arrange}\NormalTok{(value) }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{print}\NormalTok{(}\AttributeTok{n =} \DecValTok{10}\NormalTok{) }\CommentTok{\# Sample Words (Value {-}5 to 5)}
+  \FunctionTok{select}\NormalTok{(value, word) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  \{ }\FunctionTok{setNames}\NormalTok{(.}\SpecialCharTok{$}\NormalTok{word, .}\SpecialCharTok{$}\NormalTok{value) \} }\CommentTok{\# Sample Words (Value {-}5 to 5)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-# A tibble: 11 x 2
-   word        value
-   <chr>       <dbl>
- 1 nigger         -5
- 2 fraudulent     -4
- 3 distrustful    -3
- 4 overreact      -2
- 5 exposes        -1
- 6 some kind       0
- 7 protected       1
- 8 stimulating     2
- 9 heartfelt       3
-10 wins            4
-# i 1 more row
+              -5               -4               -3               -2               -1                0                1 
+"son-of-a-bitch"    "fraudulence"       "lunatics"       "lethargy"   "manipulation"      "some kind"           "cool" 
+               2                3                4                5 
+      "courtesy"         "cheery"         "winner"         "superb" 
 \end{verbatim}
 \end{frame}
 
 \begin{frame}[fragile]{Existing Lexicons in R (AFINN -- Cont.)}
 \phantomsection\label{existing-lexicons-in-r-afinn-cont.-1}
+\scriptsize
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{strings\_tokens }\SpecialCharTok{\%\textgreater{}\%}
@@ -525,6 +542,8 @@ Positive Negative  Neutral
 
 \begin{frame}[fragile]{Existing Lexicons in R (SentimentR - Cont.)}
 \phantomsection\label{existing-lexicons-in-r-sentimentr---cont.}
+\scriptsize
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{strings }\SpecialCharTok{\%\textgreater{}\%}
@@ -728,8 +747,8 @@ $$ \par \vspace{5mm} \pause
 \begin{frame}{Federalist Papers}
 \phantomsection\label{federalist-papers}
 \begin{itemize}
-\item Collection of essays published in NY newspapers advocating ratification of US Constitution \par \vspace{5mm}
-\item Published anonymously by James Madison, Alexander Hamilton, and Jon Jay -- all using pseudonym \textit{Publius} \par \vspace{5mm}
+\item Collection of essays published in NY newspapers advocating ratification of US Constitution \par \vspace{2.5mm}
+\item Published anonymously by James Madison, Alexander Hamilton, and Jon Jay -- all using pseudonym \textit{Publius} \par \vspace{2.5mm}
 \item Virtually any course on American politics prescribes Federalist 10  (\textit{republics and factionalism}) and 51 (\textit{separation of powers to prevent tyranny})  -- I also prescribe 78 (\textit{Judiciary})
 \end{itemize}
 \end{frame}
@@ -737,24 +756,24 @@ $$ \par \vspace{5mm} \pause
 \begin{frame}{Mosteller and Wallace (1963) -- Cont.}
 \phantomsection\label{mosteller-and-wallace-1963-cont.}
 \begin{itemize}
-\item 85 essays in total -- some where authorship was known, others not -- and some disputed. \par \vspace{5mm}
-\item By mid-20th century, it was believed that Jay authored 5, Hamilton (at least) 43, and Madison (at least) 14 \par \vspace{5mm}
-\item Left several with disputed authorship. 
-\item Mosteller and Wallace (1963) used Bag of Words assumption to try and prescribe unknown authorship. \par \vspace{5mm}
+\item 85 essays in total -- some where authorship was known, others not -- and some disputed. \par \vspace{2.5mm}
+\item By mid-20th century, it was believed that Jay authored 5, Hamilton (at least) 43, and Madison (at least) 14 \par \vspace{2.5mm}
+\item Left several with disputed authorship. \par \vspace{2.5mm}
+\item Mosteller and Wallace (1963) used Bag of Words assumption to try and prescribe unknown authorship. \par \vspace{2.5mm}
 \item \textbf{Basic Idea}: Variance in each potential author's word choice should emerge in disputed essay.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Prescribing Authorship for Federalist 51}
 \phantomsection\label{prescribing-authorship-for-federalist-51}
-\textbf{What We Need}:
+\textbf{What We Need}: \pause
 
 \begin{itemize}
-\item A vocabulary \par \vspace{2.5mm}
+\item A vocabulary \par \vspace{2.5mm} \pause
 \begin{itemize}
-\item[] \texttt{by, heretofore, man, upon, whilst}
+\item[] \texttt{by, heretofore, man, upon, whilst} \pause
 \end{itemize} \par \vspace{2.5mm}
-\item Variance of that vocabulary in a document of interest \textit{i} \par \vspace{2.5mm}
+\item Variance of that vocabulary in a document of interest \textit{i} \par \vspace{2.5mm} \pause
 \item The associated probabilities $\mu$
 \end{itemize}
 \end{frame}
@@ -968,9 +987,9 @@ $$
 \begin{frame}{Vector Space Model}
 \phantomsection\label{vector-space-model-1}
 \begin{itemize}
-\item While multinomial language model looks at text as a series of words and focuses on how likely each word is to appear, a vector space model treats text as a point in space.
-\item Lets us measure how similar two texts are based on distance or direction. 
-\item In essence, \textbf{MLM} is all about word probabilities –  figuring out which words are more likely in a document
+\item While multinomial language model looks at text as a series of words and focuses on how likely each word is to appear, a vector space model treats text as a point in space. \par \vspace{2.5mm}
+\item Lets us measure how similar two texts are based on distance or direction.  \par \vspace{2.5mm}
+\item In essence, \textbf{MLM} is all about word probabilities –  figuring out which words are more likely in a document \par \vspace{2.5mm}
 \item \textbf{VSMs} leverage linear algebra to turn text into vectors so we can compare documents based on their overall content, not just exact word counts.
 \end{itemize}
 \end{frame}
@@ -1077,6 +1096,16 @@ $$
 \end{Shaded}
 
 \begin{center}\includegraphics{Class_6_Modeling_Bag_of_Words_files/figure-beamer/tf_idf-1} \end{center}
+\end{frame}
+
+\section{Looking Forward}\label{looking-forward}
+
+\begin{frame}{Next Class}
+\phantomsection\label{next-class}
+\begin{itemize}
+\item Next Class: Supervised Learning Methods (Naive Bayes)
+\item \textbf{Remember}: Work on final projects! 
+\end{itemize}
 \end{frame}
 
 \end{document}

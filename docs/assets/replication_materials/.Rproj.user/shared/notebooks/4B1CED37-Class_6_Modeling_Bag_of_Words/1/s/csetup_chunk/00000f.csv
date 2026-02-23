@@ -1,0 +1,106 @@
+"0","library(dplyr); library(ggplot2); library(cowplot); library(formatR); library(stargazer); library(parallel); library(doParallel); library(tm); library(stringr); library(quanteda); library(quanteda.textstats); library(quanteda.textstats); library(dplyr); library(ggplot2); library(stringr);  library(tm); library(quanteda); library(quanteda.textstats); library(quanteda.textstats); library(rvest); library(tibble); library(tidytext)"
+"2","
+Attaching package: ‘dplyr’
+
+"
+"2","The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+"
+"2","Warning:"
+"2"," package ‘formatR’ was built under R version 4.4.3
+"
+"2","
+Please cite as: 
+
+"
+"2"," Hlavac, Marek (2022). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+"
+"2"," R package version 5.2.3. https://CRAN.R-project.org/package=stargazer 
+
+"
+"2","Loading required package: foreach
+"
+"2","Loading required package: iterators
+"
+"2","Warning:"
+"2"," package ‘tm’ was built under R version 4.4.2
+"
+"2","Loading required package: NLP
+"
+"2","Warning:"
+"2"," package ‘NLP’ was built under R version 4.4.2
+"
+"2","
+Attaching package: ‘NLP’
+
+"
+"2","The following object is masked from ‘package:ggplot2’:
+
+    annotate
+
+"
+"2","Package version: 4.0.2
+Unicode version: 15.1
+ICU version: 74.1
+"
+"2","Parallel computing: 14 of 14 threads used.
+"
+"2","See https://quanteda.io for tutorials and examples.
+"
+"2","
+Attaching package: ‘quanteda’
+
+"
+"2","The following object is masked from ‘package:tm’:
+
+    stopwords
+
+"
+"2","The following objects are masked from ‘package:NLP’:
+
+    meta, meta<-
+
+"
+"2","Warning:"
+"2"," package ‘quanteda.textstats’ was built under R version 4.4.3
+"
+"0","knitr::opts_chunk$set("
+"0","  warning = FALSE, "
+"0","	fig.align = ""center"","
+"0","	comment = NA,"
+"0","	dev = ""pdf"","
+"0","  tidy.opts=list(width.cutoff=50), "
+"0","  R.options = list(width = 120)"
+"0",")"
+"0",""
+"0","default_ggplot_theme  <- theme_minimal(base_size = 12) +"
+"0","  theme("
+"0","    plot.title = element_text(hjust = 0.5, size = 12),"
+"0","    axis.title = element_text(size = 12, colour = 'black'),"
+"0","    axis.text = element_text(size = 10, colour = 'black'),"
+"0","    panel.background = element_rect(linewidth = 1, colour = 'black', fill = NA), "
+"0","    legend.position = 'bottom', "
+"0","    legend.title = element_blank(), "
+"0","    legend.background = element_rect(linewidth = 1, colour = 'black', fill = NA), "
+"0","  )"
+"0",""
+"0","reduce_complexity <- function(text){"
+"0","  text <- tolower(text) # Lower Case"
+"0","  text <- tm::removePunctuation(text) # Punctuation"
+"0","  text <- tm::removeNumbers(text) # Numbers"
+"0","  text <- tm::removeWords(text, tm::stopwords(""english"")) # Stop Words"
+"0","  text <- unlist(stringr::str_split(text, '\\s+')) # Tokenize "
+"0","  text <- textstem::lemmatize_words(text) # Lemmatize"
+"0","  text <- paste(text, collapse = ' ') # Re-Append"
+"0","  text <- gsub(""\\s{2,}"", ' ', text) # 2 or More Spaces --> One Space"
+"0","  text <- trimws(text) # White Space"
+"0","  return(text)"
+"0","} # Function to Process Text for Bag of Words"
+"0",""

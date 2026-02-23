@@ -1,0 +1,276 @@
+---
+title: "Class 5 Problem Set"
+author: "Manya Arora"
+date: "2026-02-20"
+output: pdf_document
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(gutenbergr)
+library(stringr)
+library(tidyr)
+library(stargazer)
+library(dplyr)
+library(quanteda)
+library(sotu)
+library(purrr)
+library(tidytext)
+library(quanteda.textplots)
+```
+
+## Using the sotu() library, recover the State of the Union addresses for Presidents Clinton and (W.) Bush between 1993-2008. Complete the following tasks:
+```{r}
+sotu_clinton_bush <- sotu :: sotu_meta %>%
+  filter(president %in% c('William J. Clinton', 'George W. Bush'))
+```
+
+## Select a policy sphere (e.g., Military, Economy, etc.). Using a for loop, select terms that you believe represent that policy sphere and partition the speeches. In some form, provide a table that prints the number of sentences recovered for each speech (2pts)
+```{r, echo=TRUE}
+indices <- c(sotu_clinton_bush$X) # Indices to Partition sotu_text
+
+sotu_clinton_bush <- setNames(
+  lapply(seq_len(nrow(sotu_clinton_bush)), function(i) {
+    cbind(sotu_clinton_bush[i, ], text = sotu::sotu_text[[indices[i]]])
+  }),
+  paste0(sotu_clinton_bush$president, " (", sotu_clinton_bush$year, ")")
+) # Nest Each Speech in List
+
+economy_words <- paste0('(', paste(c('economy', 'money', 'bank', 'banks', 
+                                     'tariffs', 'inflation', 'GDP', 
+                                     'interest rate', 'interest rates'), 
+                                   collapse = "|", ')')) # Economy Words Regex
+
+for (speech in 1:length(sotu_clinton_bush)){
+  temp_speech <- sotu_clinton_bush[[speech]]
+  temp_speech <- data.frame(stringr::str_split(temp_speech$text, "\\n")) %>%
+    setNames('text') %>%
+    filter(!text == '') # Grab Speech -- Partition to Sentences
+
+  sotu_clinton_bush[[speech]]$text <- list(temp_speech) # Append Back to Original
+
+
+  economy_sentences <- temp_speech %>%
+    filter(grepl(economy_words, text, ignore.case = T)) # All Sentences w/ "Military" Words
+
+  sotu_clinton_bush[[speech]]$economy_text <- list(economy_sentences)} # Append
+
+for (speech in 1:length(sotu_clinton_bush)){
+  temp_speech_name <- names(sotu_clinton_bush[speech])
+  economy_sentences <- length(unlist(sotu_clinton_bush[[speech]]$economy_text))
+  cat(temp_speech_name, ' -- ', economy_sentences, ' Sentences \n')
+} 
+
+economy_speeches <- data.frame()
+
+for (i in 1:length(sotu_clinton_bush)){
+  temp_economy <- unlist(sotu_clinton_bush[[i]]$economy_text)
+  if (length(temp_economy) == 0){
+    next
+  }
+  temp_speech <- names(sotu_clinton_bush[i])
+  temp_df <- data.frame(speech = temp_speech,
+                       economy_text = temp_economy)
+  economy_speeches <- bind_rows(economy_speeches, temp_df)
+} # Combine to Single DF
+
+
+economy_speeches$president <- ifelse(grepl("William J. Clinton", economy_speeches$speech),
+                                      "William J. Clinton", "George W. Bush") # Add President ID
+
+economy_sentences <- data.frame(
+  speech = names(sotu_clinton_bush),
+  economy_sentence_count = sapply(sotu_clinton_bush, function(x) {
+    if (is.null(x$economy_text)) {
+      return(0)
+    } else {
+      nrow(x$economy_text[[1]])
+    }
+  })
+)
+```
+
+## Construct a function that reduces the complexity of your texts – including, but not limited to: lemmatizing and removing stopwords, punctuation, and numerals, etc.. Afterwards, use a for loop to apply the function. Convert to a corpus DFM then print the top-20 most frequent words shared among the administrations’ speeches (2pts)
+```{r}
+reduce_complexity <- function(text){ #Class code with reduced complexity
+  text <- tolower(text) # Lower Case
+  text <- tm::removePunctuation(text) # Punctuation
+  text <- tm::removeNumbers(text) # Numbers
+  text <- tm::removeWords(text, tm::stopwords("english")) # Stop Words (articles, no substantive meaning)
+  text <- textstem::lemmatize_words(text) # Lemmatize (finds endings into words and translates it into latin root)
+  text <- paste(text, collapse = ' ') # Re-Append
+  text <- gsub("\\s{2,}", ' ', text) # 2 or More Spaces --> One Space
+  text <- trimws(text) # White Space
+  return(text)
+} 
+
+economy_speeches$clean_text <- ""
+
+for (i in 1:nrow(economy_speeches)){ # For loop to apply the function
+  economy_speeches$clean_text[i] <- reduce_complexity(
+    economy_speeches$economy_text
+  )
+}
+
+corpus_econ <- corpus(economy_speeches$clean_text) # Convertint to corpus
+dfm_economy <- dfm(tokens(corpus_econ))
+
+frequent_words <- topfeatures(dfm_economy, n = 20) #Printing 20 frequent words
+frequent_words
+```
+
+## Construct a word cloud graphic using textplot_wordcloud() (or similar) (1pt).
+```{r}
+corpus_econ <- corpus(economy_speeches, text_field = "clean_text")
+dfm_econ <- dfm(tokens(corpus_econ))
+
+# Attach president as docvar
+docvars(dfm_econ, "president") <- economy_speeches$president
+
+# Group by president
+dfm_grouped <- dfm_group(dfm_econ, groups = docvars(dfm_econ, "president"))
+
+# Remove empty documents and trim
+dfm_grouped <- dfm_grouped[ntoken(dfm_grouped) > 0, ]
+dfm_grouped <- dfm_trim(dfm_grouped, min_termfreq = 1)
+
+ntoken(dfm_grouped)
+
+# Word cloud
+textplot_wordcloud(
+  dfm_grouped,
+  color = c("blue", "red"),
+  fixed_aspect = TRUE
+)
+```
+
+## Complete the same tasks with two document groups of your choice. The only requirements are that you must have (at minimum) 20 documents and 2 groups, and you cannot use State of the Union addresses (5pts)
+```{r}
+#Splitting 20 documents into two groups based on author 
+
+austen_shakespeare <- gutenbergr::gutenberg_metadata %>% 
+  filter(author %in% c("Austen, Jane", "Shakespeare, William")) %>%
+  slice(1:20) 
+  #mutate(text = map(gutenberg_id, gutenberg_download))
+
+keywords <- paste0('(', paste(c('love', 'marriage', 'family', 'brother', 
+                                     'sister', 'spouse', 'proper'), 
+                                   collapse = "|", ')')) # Key Words Regex
+
+#Creating a Keywords Column
+austen_shakespeare$keywords <- vector("list", length(austen_shakespeare))
+
+#Creating a loop to process each book
+for (speech in seq_len(length(austen_shakespeare))) {
+
+  temp_text <- austen_shakespeare$text[[speech]] 
+  
+  if (is.null(temp_text) || nrow(temp_text) == 0) {
+        austen_shakespeare$keywords[[speech]] <- tibble(text = character())
+        next} #Because too many NULLs
+  
+  temp_speech <- temp_text %>%
+    unnest_tokens(output = text, input = text, token = "sentences") %>%
+    filter(text != "") #Splitting into sentences
+
+  austen_shakespeare$text[[speech]] <- temp_speech # Replacing cols. w/ sentence
+
+  keyword_sentences <- temp_speech %>% #Filter keywords in sentences
+    filter(grepl(keywords, text, ignore.case = TRUE))
+
+  austen_shakespeare$keywords[[speech]] <- keyword_sentences
+}
+
+for (speech in 1:length(austen_shakespeare)){
+  temp_speech_name <- names(austen_shakespeare[speech])
+  keyword_sentences <- length(unlist(austen_shakespeare[[speech]]$keywords))
+  cat(temp_speech_name, ' -- ', keyword_sentences, ' Sentences \n')
+}
+
+keyword_speeches <- data.frame()
+
+for (i in 1:length(austen_shakespeare)){
+  temp_keyword <- unlist(austen_shakespeare[[i]]$keywords)
+  if (length(temp_keyword) == 0){
+    next
+  }
+  temp_speech <- names(austen_shakespeare[i])
+  temp_df <- data.frame(speech = temp_speech,
+                       keywords = temp_keyword)
+  keyword_speeches <- bind_rows(keyword_speeches, temp_df)
+} # Combine to Single DF
+
+keyword_speeches$title <- ifelse(grepl("Jane Austen", keyword_speeches$speech),
+                                      "Jane Austen", "William") # Add Author ID
+
+keyword_sentences <- data.frame( #Class code
+  speech = names(austen_shakespeare),
+  keyword_sentence_count = sapply(austen_shakespeare, function(x) {
+    if (is.null(x$keyword_text)) {
+      return(0)
+    } else {
+      nrow(x$keyword_text[[1]])
+    }
+  })
+) # Task one done, sorry I've done everything I could to remove zeroes
+
+reduce_complexity_two <- function(text){ #Making a Reduced Complexity function with class code
+  text <- tolower(text) # Lower Case
+  text <- tm::removePunctuation(text) # Punctuation
+  text <- tm::removeNumbers(text) # Numbers
+  text <- tm::removeWords(text, tm::stopwords("english")) # Stop Words (articles, no substantive meaning)
+  text <- textstem::lemmatize_words(text) # Lemmatize (finds endings into words and translates it into latin root)
+  text <- paste(text, collapse = ' ') # Re-Append
+  text <- gsub("\\s{2,}", ' ', text) # 2 or More Spaces --> One Space
+  text <- trimws(text) # White Space
+  return(text)
+} 
+
+# Making clean text vector to use for the foor loop to apply the function above
+keyword_speeches$clean_text <- vector("list", nrow(keyword_speeches)) 
+
+for (i in seq_len(nrow(keyword_speeches))) { # Making a for loop
+  keyword_speeches$clean_text[[i]] <- reduce_complexity_two( #Indexing for 
+    keyword_speeches$keywords[[i]] # every i element
+  )
+}
+
+#Making this since doing it the normal way returns an error
+corpus_text <- sapply(keyword_speeches$clean_text, function(x) {
+  if (is.null(i) || length(i) == 0) return("") # If NULL, return empty string
+  if ("text" %in% names(i)) x <- x$text # If tibble, make a character
+  paste(x, collapse = " ") # Condense into one string
+})
+
+corpus_keyword <- corpus(corpus_text) # Creating a corpus, I'm sorry the data
+dfm_keyword <- dfm(tokens(corpus_keyword)) # is null I have no idea what I did
+# wrong please forgive me this is a lot harder than I thought
+
+frequent_words <- topfeatures(dfm_keyword, n = 20) # Using the code 
+frequent_words # even though it most likely won't return a result because my
+# data is null for some reason and i can't figure out if it is because of the
+# code or if there is something inherently wrong with my data
+
+# Attach title and author as docvar. Onto the wordcloud
+docvars(dfm_keyword, "title") <- books_text$title
+docvars(dfm_keyword, "author") <- books_text$author
+
+# Group by author
+dfm_grouped <- dfm_group(dfm_keyword, groups = docvars(dfm_keyword, "author"))
+
+# Remove empty documents and trim
+dfm_grouped <- dfm_grouped[ntoken(dfm_grouped) > 0, ]
+dfm_grouped <- dfm_trim(dfm_grouped, min_termfreq = 1)
+
+ntoken(dfm_grouped)
+
+# Word cloud
+textplot_wordcloud(
+  dfm_grouped,
+  color = c("blue", "red"),
+  fixed_aspect = TRUE
+) # I am sorry this didn't work 
+```
+
+

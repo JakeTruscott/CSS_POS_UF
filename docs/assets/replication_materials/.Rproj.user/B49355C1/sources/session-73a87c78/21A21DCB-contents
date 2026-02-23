@@ -62,17 +62,29 @@ reduce_complexity <- function(text){
 
 ### Overview
 \begin{itemize}
+\item Housekeeping
 \item Week 5 Problem Set Review
 \item Dictionaries
 \item Multinomial Language Model
 \item Vector Space Model
 \end{itemize}
 
+# Housekeeping
+
+### Housekeeping
+\begin{itemize}
+\item Respond to comments re: topic selection by Friday at 5:00 \par \vspace{2.5mm}
+\item This week's material may require us to continue into next week -- I will make determination by end of class. 
+\end{itemize}
+
+
 # Week 5 Problem Set
 
 ### Week 5 Problem Set Review
 \begin{itemize}
-\item Comments [...]
+\item Everyone generally did fine \par \vspace{2.5mm}
+\item Make sure to fully read prompts... \par \vspace{2.5mm}
+\item I don't mind y'all coordinating together -- But more than half with same presidents, policies, and effectively the same vocabularies, it defeats a big chunk of the purpose. \par \vspace{2.5mm}
 \end{itemize}
 
 # Focus Today
@@ -100,7 +112,7 @@ reduce_complexity <- function(text){
   \item Counting how many dictionary words appear
   \item (Optional) Scaling document by length
   \item Assigning a category score based on the totals
-  \end{enumerate}
+  \end{enumerate} \par \vspace{2.5mm}
   \item \textbf{Classification Tasks}: Assigning each document (or sentence) to one or more predefined categories based on its content -- with dictionary methods, classification is completed by matching words. 
 \end{itemize}
 
@@ -112,7 +124,8 @@ reduce_complexity <- function(text){
 \]
 \vspace{5mm}
 \begin{itemize}
-\item $\arg\max$ = Discrete Label
+\item $i$ = Sentence, $c$ = Label 
+\item $\arg\max$ = Label that best fits
 \item Score = Continuous Measure
 \item Example: 10 Positive Words and 12 Negative Words \\ $$10_{\text{Pos}} < 12_{\text{Neg}} \Rightarrow \text{Label} = \text{Neg}
   $$ \\  $$ -0.09 = \frac{10(\text{Pos})-12(\text{Neg})}{22(\text{Total})} $$
@@ -143,6 +156,15 @@ $$ \text{(Pos)} \frac{10}{25}= 0.4 \quad \text{(Neg)}\frac{12}{25}=0.48 \quad \t
 \begin{itemize}
 \item Binary: $$15_{pos}>11_{neg} \quad \text{or } \frac{15-11}{26}\approx0.15$$ \par \vspace{5mm}
 \item Multiclass: $$\text{(Pos)}\frac{15}{39}=0.38 \quad \text{(Neg)}\frac{11}{39}=0.28 \quad \text{(Neu)}\frac{13}{39}=0.33  $$
+\end{itemize}
+
+
+### Thoughts re: Dictionaries
+\begin{itemize}
+\item Dictionary classifiers, while rather simple and intuitive, can nevertheless provide robust classification power. \par \vspace{2.5mm} \pause
+\item \textbf{However} -- much of that validity relies on the ability of researchers to construct dense lexicons (avoid small-N problems)  \par \vspace{2.5mm} \pause
+\item While a dense dictionary is certainly important, paramount to such is constructing categorical classifications (e.g., positive or negative) that are both authentic and defensible.   \par \vspace{2.5mm} \pause
+\item Words have associated meaning based on tense and conditional usage. Ex: \textit{happy} is certainly positive – but what if the sentence actually reads \textit{I was not happy at all} (i.e., actually very negative!). Much of these concerns (as with other areas concerning the bag of words) can be improved given more robust methods, including the incorporation of inverses (not) and n-grams.
 \end{itemize}
 
 
@@ -266,7 +288,7 @@ strings_tokens %>%
 ### Existing Lexicons in R (AFINN -- Cont.)
 \scriptsize
 ```{r, afinn}
-set.seed(1234)
+set.seed(123)
 afinn_dictionary <- tidytext::get_sentiments("afinn") # Afinn Dictionary
 
 afinn_dictionary %>% 
@@ -274,10 +296,13 @@ afinn_dictionary %>%
   slice_sample(n = 1) %>%
   ungroup() %>%
   arrange(value) %>%
-  print(n = 10) # Sample Words (Value -5 to 5)
+  select(value, word) %>%
+  { setNames(.$word, .$value) } # Sample Words (Value -5 to 5)
+
 ```
 
 ### Existing Lexicons in R (AFINN -- Cont.)
+\scriptsize
 ```{r, afinn_application}
 strings_tokens %>%
   inner_join(tidytext::get_sentiments(lexicon = 'afinn'), by = 'word') %>%
@@ -300,6 +325,7 @@ strings_tokens %>%
 
 
 ### Existing Lexicons in R (SentimentR - Cont.)
+\scriptsize
 ```{r, sentimentr}
 
 strings %>%
@@ -457,29 +483,29 @@ $$ \par \vspace{5mm} \pause
 
 ### Federalist Papers
 \begin{itemize}
-\item Collection of essays published in NY newspapers advocating ratification of US Constitution \par \vspace{5mm}
-\item Published anonymously by James Madison, Alexander Hamilton, and Jon Jay -- all using pseudonym \textit{Publius} \par \vspace{5mm}
+\item Collection of essays published in NY newspapers advocating ratification of US Constitution \par \vspace{2.5mm}
+\item Published anonymously by James Madison, Alexander Hamilton, and Jon Jay -- all using pseudonym \textit{Publius} \par \vspace{2.5mm}
 \item Virtually any course on American politics prescribes Federalist 10  (\textit{republics and factionalism}) and 51 (\textit{separation of powers to prevent tyranny})  -- I also prescribe 78 (\textit{Judiciary})
 \end{itemize}
 
 
 ### Mosteller and Wallace (1963) -- Cont.
 \begin{itemize}
-\item 85 essays in total -- some where authorship was known, others not -- and some disputed. \par \vspace{5mm}
-\item By mid-20th century, it was believed that Jay authored 5, Hamilton (at least) 43, and Madison (at least) 14 \par \vspace{5mm}
-\item Left several with disputed authorship. 
-\item Mosteller and Wallace (1963) used Bag of Words assumption to try and prescribe unknown authorship. \par \vspace{5mm}
+\item 85 essays in total -- some where authorship was known, others not -- and some disputed. \par \vspace{2.5mm}
+\item By mid-20th century, it was believed that Jay authored 5, Hamilton (at least) 43, and Madison (at least) 14 \par \vspace{2.5mm}
+\item Left several with disputed authorship. \par \vspace{2.5mm}
+\item Mosteller and Wallace (1963) used Bag of Words assumption to try and prescribe unknown authorship. \par \vspace{2.5mm}
 \item \textbf{Basic Idea}: Variance in each potential author's word choice should emerge in disputed essay.
 \end{itemize}
 
 ### Prescribing Authorship for Federalist 51
-\textbf{What We Need}:
+\textbf{What We Need}: \pause
 \begin{itemize}
-\item A vocabulary \par \vspace{2.5mm}
+\item A vocabulary \par \vspace{2.5mm} \pause
 \begin{itemize}
-\item[] \texttt{by, heretofore, man, upon, whilst}
+\item[] \texttt{by, heretofore, man, upon, whilst} \pause
 \end{itemize} \par \vspace{2.5mm}
-\item Variance of that vocabulary in a document of interest \textit{i} \par \vspace{2.5mm}
+\item Variance of that vocabulary in a document of interest \textit{i} \par \vspace{2.5mm} \pause
 \item The associated probabilities $\mu$
 \end{itemize}
 
@@ -726,9 +752,9 @@ madison_likelihood/hamilton_likelihood # Likelihood Ratio of Madison v. Hamilton
 
 ### Vector Space Model
 \begin{itemize}
-\item While multinomial language model looks at text as a series of words and focuses on how likely each word is to appear, a vector space model treats text as a point in space.
-\item Lets us measure how similar two texts are based on distance or direction. 
-\item In essence, \textbf{MLM} is all about word probabilities –  figuring out which words are more likely in a document
+\item While multinomial language model looks at text as a series of words and focuses on how likely each word is to appear, a vector space model treats text as a point in space. \par \vspace{2.5mm}
+\item Lets us measure how similar two texts are based on distance or direction.  \par \vspace{2.5mm}
+\item In essence, \textbf{MLM} is all about word probabilities –  figuring out which words are more likely in a document \par \vspace{2.5mm}
 \item \textbf{VSMs} leverage linear algebra to turn text into vectors so we can compare documents based on their overall content, not just exact word counts.
 \end{itemize}
 
@@ -847,3 +873,12 @@ wordcloud::wordcloud(words = top_hamilton$word,
                      freq = top_hamilton$tf_idf,
                      vfont=c("serif","plain")) # TF-IDF
 ```
+
+
+# Looking Forward
+
+### Next Class
+\begin{itemize}
+\item Next Class: Supervised Learning Methods (Naive Bayes)
+\item \textbf{Remember}: Work on final projects! 
+\end{itemize}
