@@ -12,6 +12,144 @@
 
 library(dplyr); library(ggplot2); library(stringr);  library(tm); library(quanteda); library(quanteda.textstats); library(quanteda.textstats); library(rvest); library(tibble); library(tidytext)
 
+
+reduce_complexity <- function(text){
+  text <- tolower(text) # Lower Case
+  text <- tm::removePunctuation(text) # Punctuation
+  text <- tm::removeNumbers(text) # Numbers
+  text <- tm::removeWords(text, tm::stopwords("english")) # Stop Words
+  text <- unlist(stringr::str_split(text, '\\s+')) # Tokenize
+  text <- textstem::lemmatize_words(text) # Lemmatize
+  text <- paste(text, collapse = ' ') # Re-Append
+  text <- gsub("\\s{2,}", ' ', text) # 2 or More Spaces --> One Space
+  text <- trimws(text) # White Space
+  return(text)
+} # Function to Process Text for Bag of Words
+
+
+
+################################################################################
+# Dictionaries
+################################################################################
+
+dictionary <- list(Positive = c("good", "great", "excellent", "benefit", "success"),
+                   Negative = c("bad", "poor", "failure", "harm", "risk"),
+                   Neutral  = c("okay", "average", "fine", "moderate")) # Dictionary as List
+
+dictionary[['Positive']] # Sample
+
+
+sample_text <- reduce_complexity('The project had some success but also some risk') # Reduce Complexity
+print(sample_text) # Print Sample
+
+sapply(dictionary, function(categories) sum(strsplit(sample_text, "\\W+")[[1]] %in% categories)) # Apply
+
+
+bing_dictionary <- tidytext::get_sentiments("bing") # Grab Dictionary
+
+bing_dictionary %>%
+  group_by(sentiment) %>%
+  slice_sample(n = 3) %>%
+  ungroup() %>%
+  arrange(sentiment) # 3 Word Sample of Each
+
+
+
+strings <- c('This decision is excellent, fair, and clearly the right outcome',
+             'The opinion is good and persuasive, even if it is not perfect',
+             'The ruling has some good points but also several serious flaws',
+             'The decision is bad and poorly reasoned',
+             'This opinion is terrible, deeply unfair, and completely wrong')
+
+strings <- sapply(strings, function(x) reduce_complexity(x), USE.NAMES = FALSE)
+print(strings)
+
+
+
+strings <- tibble(
+  doc_id = seq_along(strings),
+  text = strings)
+
+strings_tokens <- strings %>% # Convert to tibble
+  tidytext::unnest_tokens(word, text) # Convert to Unnested Tokens
+
+head(strings_tokens)
+
+
+strings_tokens %>%
+  inner_join(tidytext::get_sentiments("bing"), by = "word") %>% # Get Sentiment
+  group_by(doc_id, sentiment) %>%
+  summarise(n = n(), # Total Word Matches
+            words = paste(word, collapse = ", "), # Combine Word matches
+            .groups = "drop") %>%
+  left_join(strings, by = "doc_id") %>% # Add Back Original Text
+  select(doc_id, text, sentiment, n, words) # Apply BING
+
+
+set.seed(123)
+afinn_dictionary <- tidytext::get_sentiments("afinn") # Afinn Dictionary
+
+afinn_dictionary %>%
+  group_by(value) %>%
+  slice_sample(n = 1) %>%
+  ungroup() %>%
+  arrange(value) %>%
+  select(value, word) %>%
+  { setNames(.$word, .$value) } # Sample Words (Value -5 to 5)
+
+
+strings_tokens %>%
+  inner_join(tidytext::get_sentiments(lexicon = 'afinn'), by = 'word') %>%
+  group_by(doc_id, value) %>%
+  summarise(n = n(), # Total Word Matches
+            words = paste(word, collapse = ", "), # Combine Word matches
+            .groups = "drop") %>%
+  left_join(strings, by = "doc_id") %>% # Add Back Original Text
+  select(doc_id, text, value, n, words)
+
+
+strings %>%
+  mutate(sentiment = sentimentr::sentiment_by(text)$ave_sentiment) # Apply SentimentR
+
+
+strings <- c("The recent peace agreement between the two nations is a remarkable step toward stability",
+             "The summit produced some promising proposals, though implementation will take time",
+             "The delegation met to discuss ongoing trade negotiations without reaching a conclusion",
+             "The sanctions imposed by the council are likely to harm the civilian population disproportionately",
+             "The military escalation is a disastrous and reckless move that threatens global security")
+
+strings <- sapply(strings, function(x) reduce_complexity(x))
+strings <- unname(strings)
+attributes(strings) <- NULL
+strings <- tibble(
+  doc_id = seq_along(strings),
+  text = strings)
+
+strings_tokens <- strings %>% # Convert to tibble
+  tidytext::unnest_tokens(word, text) # Convert to Unnested Tokens
+
+bing <- strings_tokens %>%
+  inner_join(tidytext::get_sentiments("bing"), by = "word") %>% # Get Sentiment
+  group_by(doc_id, sentiment) %>%
+  summarise(n = n(), # Total Word Matches
+            words = paste(word, collapse = ", "), # Combine Word matches
+            .groups = "drop") %>%
+  left_join(strings, by = "doc_id") %>% # Add Back Original Text
+  select(doc_id, text, sentiment, n, words) # Apply BING
+
+afinn <- strings_tokens %>%
+  inner_join(tidytext::get_sentiments(lexicon = 'afinn'), by = 'word') %>%
+  group_by(doc_id, value) %>%
+  summarise(n = n(), # Total Word Matches
+            words = paste(word, collapse = ", "), # Combine Word matches
+            .groups = "drop") %>%
+  left_join(strings, by = "doc_id") %>% # Add Back Original Text
+  select(doc_id, text, value, n, words)
+
+sentimentr <- strings %>%
+  mutate(sentiment = sentimentr::sentiment_by(text)$ave_sentiment) # Apply SentimentR
+
+
 ################################################################################
 # Multinomial Language Model
 # Federalist Papers -- Partition & Clean Data

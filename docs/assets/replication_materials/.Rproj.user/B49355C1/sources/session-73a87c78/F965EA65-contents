@@ -1,0 +1,156 @@
+---
+title: "Class 5 Problem Set"
+subtitle: "POS6933: Computational Social Science"
+author: "Truscott (Spring 2026)"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = TRUE,
+	warning = TRUE
+)
+library(ggplot2)
+library(dplyr)
+library(cowplot)
+library(stargazer)
+library(doParallel)
+library(parallel)
+library(snow)
+library(tm)
+library(quanteda)
+library(gutenbergr)
+library(stringr)
+
+
+```
+
+------------------------------------------------------------------------
+
+<b>Note</b>: Students should always aim to produce <i>publication-worthy</i> tables and figures. Unless otherwise stated, tables should be rendered using <code>stargazer::()</code>, while figures can be rendered using <code>ggplot2::()</code> or <code>plot()</code>. Regardless, tables and figures should always be presented with necessary formatting -- e.g., (sub)title, axis (variable) labels and titles, a clearly-identifiable legend and key, etc. Problem sets must always be compiled using <code>LaTex</code> or <code>RMarkdown</code> and include the full coding routine (with notes explaining your implementation) used to complete each problem (10pts).
+
+------------------------------------------------------------------------
+
+1.  Using the <code>sotu()</code> library, recover the State of the Union addresses for Presidents Clinton and (W.) Bush between 1993-2008. Complete the following tasks:
+
+    A.  Select a policy sphere (e.g., *Military*, *Economy*, etc.). Using a <code>for</code> loop, select terms that you believe represent that policy sphere and partition the speeches. In some form, provide a table that prints the number of sentences recovered for each speech (2pts)
+
+    B.  Construct a <code>function</code> that reduces the complexity of your texts – including, but not limited to: lemmatizing and removing stopwords, punctuation, and numerals, etc.. Afterwards, use a <code>for</code> loop to apply the function. Convert to a corpus DFM then print the top-20 most frequent words shared among the administrations' speeches (2pts)
+
+    C.  Construct a word cloud graphic using <code>textplot_wordcloud()</code> (or similar) (1pt).
+
+```{r 1.A}
+
+# 1.A
+
+sotu_info <-  sotu::sotu_meta %>%
+  filter(president %in% c('William J. Clinton', 'George W. Bush')) # Get Info for Eisenhower and H.W. 
+indices <- c(sotu_info$X) # Indices to Partition sotu_text 
+
+sotu_clinton_bush <- setNames(
+  lapply(seq_len(nrow(sotu_info)), function(i) {
+    cbind(sotu_info[i, ], text = sotu::sotu_text[[indices[i]]])
+  }),
+  paste0(sotu_info$president, " (", sotu_info$year, ")")
+) # Nest Each Speech in List
+
+economy_words_regex <- paste0('(', paste(c('trade', 'recession', 'inflation', 'productivity', 'efficiency', 'markets', 'trade', 'labor', 'industry', 'output'), collapse = '|'), ')')  # "Economy" Words Regex 
+
+for (speech in 1:length(sotu_clinton_bush)){
+  temp_speech <- sotu_clinton_bush[[speech]]
+  temp_speech <- data.frame(stringr::str_split(temp_speech$text, pattern = '\\n')) %>%
+  setNames('text') %>%
+  filter(!text == '') # Grab Speech -- Partition to Sentences 
+  
+  sotu_clinton_bush[[speech]]$text <- list(temp_speech) # Append Back to Original
+
+  
+  economy_sentences <- temp_speech %>%
+    filter(grepl(economy_words_regex, text, ignore.case = T)) # All Sentences w/ "economy" Words
+  
+  sotu_clinton_bush[[speech]]$economy_text <- list(economy_sentences) # Append
+  
+} # Process Speeches & Isolate "economy" Sentences
+
+for (speech in 1:length(sotu_clinton_bush)){
+  temp_speech_name <- names(sotu_clinton_bush[speech])
+  economy_sentences <- length(unlist(sotu_clinton_bush[[speech]]$economy_text))
+  cat(temp_speech_name, ' -- ', economy_sentences, ' Sentences \n')
+} # Prints # of "economy" Sentences Per Speech
+
+
+```
+
+
+```{r 1.B}
+
+# 1.B
+
+economy_speeches <- data.frame()
+
+for (i in 1:length(sotu_clinton_bush)){
+  temp_economy <- unlist(sotu_clinton_bush[[i]]$economy_text)
+  if (length(temp_economy) == 0){
+    next
+  }
+  temp_speech <- names(sotu_clinton_bush[i])
+  temp_df <- data.frame(speech = temp_speech, 
+                        economy_text = temp_economy)
+  economy_speeches <- bind_rows(economy_speeches, temp_df)
+} # Combine to Single DF
+
+
+economy_speeches$president <- ifelse(grepl("Clinton", economy_speeches$speech), 
+                                      "Clinton", "Bush") # Add President ID
+
+
+reduce_complexity <- function(text){
+  text <- tolower(text) # Lower Case
+  text <- tm::removePunctuation(text) # Punctuation
+  text <- tm::removeNumbers(text) # Numbers
+  text <- removeWords(text, tm::stopwords("english")) # Stop Words
+  text <- unlist(stringr::str_split(text, '\\s+')) # Tokenize 
+  text <- textstem::lemmatize_words(text) # Lemmatize
+  text <- paste(text, collapse = ' ') # Re-Append
+  text <- gsub("\\s{2,}", ' ', text) # 2 or More Spaces --> One Space
+  text <- trimws(text) # White Space
+  return(text)
+} # Function to Process Text for Bag of Words
+
+
+economy_speeches <- economy_speeches %>%
+  mutate(economy_text_clean = sapply(economy_text, reduce_complexity)) # Apply Complexity Reduction
+
+sotu_corpus <- quanteda::corpus(economy_speeches, text_field = "economy_text_clean") # Convert to Corpus Object
+
+sotu_tokens <- quanteda::tokens(sotu_corpus) # Recover Tokens from Corpus Object
+
+sotu_dfm <- dfm(sotu_tokens) %>%
+  dfm_trim(min_termfreq = 2)  # Convert to DFM -- Remove Words w/ Less Than 2 Appearances
+
+topfeatures(sotu_dfm, 20) # 20-top Features (Words)
+
+
+
+```
+
+
+```{r 1.C, message=FALSE, warning=FALSE}
+
+# 1. C
+
+president_dfm <- dfm_group(sotu_dfm, groups = economy_speeches$president) # Group DFM by President
+
+# View top words per president
+top_words_president <- quanteda.textstats::textstat_frequency(sotu_dfm, n = 15, groups = economy_speeches$president) # Top Words by Admin
+
+
+quanteda.textplots::textplot_wordcloud(president_dfm, comparison = TRUE, max_words = 100,
+                   color = c("blue", "red"))
+
+```
+
+------------------------------------------------------------------------
+
+2.  Complete the same tasks with two document groups of your choice. The only requirements are that you must have [(at minimum]{.underline}) 20 documents and 2 groups, and you [cannot]{.underline} use State of the Union addresses (5pts)
