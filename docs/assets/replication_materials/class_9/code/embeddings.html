@@ -170,10 +170,10 @@ pre code {
 
 <hr />
 <div
-id="embeddings-or-how-i-learned-to-stop-worrying-and-love-words-as-numbers"
+id="embeddings-or-how-i-learned-to-stop-worrying-and-embrace-distributed-representations-of-words"
 class="section level2">
-<h2>Embeddings: Or, How I Learned to Stop Worrying and Love Words as
-Numbers</h2>
+<h2>Embeddings: Or, How I Learned to Stop Worrying and Embrace
+Distributed Representations of Words</h2>
 <p>To this point, our analyses of text have largely relied on one-hot
 encoding. From rudimentary co-occurrence measures using dictionaries to
 more advanced approaches like Naive Bayes, we have remained firmly
@@ -304,6 +304,28 @@ expect <em>Pooch</em> to appear in usage settings much closer to
 <em>Dog</em> than to <em>Fire Truck</em>. One-hot encodings cannot
 represent this graded notion of similarity.</p></li>
 </ol>
+</div>
+<div id="distributed-representations-of-words" class="section level2">
+<h2>Distributed Representations of Words</h2>
+<p><strong>Distributed Representations of Words</strong> are dense
+vectors that replace the one-hot encoding representation of words that
+build in some measure of similarity. In short, rather than a sparse
+vector of mostly-zeros to represent a word, we’ll use data to construct
+a vector of length <em>K</em> (where <em>K</em> is less than <em>J</em>
+– the total number of unique words int he vocabulary). Reducing the
+dimensionality like this is what allows <strong>word embeddings</strong>
+to capture similarity structure (e.g., <em>semantic</em> or
+<em>syntactic</em> relationships) efficiently. The key advantage is that
+the representation is no longer (essentially) dichotomous, where a word
+is coded as 0/1 in a high-dimensional sparse vector. Instead, we
+construct a low-dimensional representation of each word, such that its
+position along each dimension can be used to infer similarity to other
+words. As <em>GSR</em> note, these distributed representations are
+typically learned through the <em>distributional hypothesis</em>, which
+holds that words appearing in similar contexts tend to have similar
+meanings. In this sense, word embeddings operationalize contextual
+co-occurrence patterns in a way that moves beyond the independence
+assumptions of the traditional Bag of Words approach.</p>
 </div>
 
 
