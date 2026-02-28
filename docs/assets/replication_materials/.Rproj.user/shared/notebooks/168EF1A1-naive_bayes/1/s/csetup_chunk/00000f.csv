@@ -43,8 +43,12 @@ Attaching package: ‘snow’
 "
 "2","The following objects are masked from ‘package:parallel’:
 
-    closeNode, clusterApply, clusterApplyLB, clusterCall, clusterEvalQ, clusterExport, clusterMap, clusterSplit, makeCluster,
-    parApply, parCapply, parLapply, parRapply, parSapply, recvData, recvOneData, sendData, splitIndices, stopCluster
+    closeNode, clusterApply, clusterApplyLB,
+    clusterCall, clusterEvalQ, clusterExport,
+    clusterMap, clusterSplit, makeCluster,
+    parApply, parCapply, parLapply, parRapply,
+    parSapply, recvData, recvOneData, sendData,
+    splitIndices, stopCluster
 
 "
 "0","library(tm)"
@@ -89,5 +93,11 @@ Attaching package: ‘quanteda’
 
 "
 "0","library(gutenbergr)"
+"2","Warning:"
+"2"," package ‘gutenbergr’ was built under R version 4.4.3
+"
+"2","gutenbergr: using session (temporary) cache
+  cache directory: C:\Users\JAKETR~1\AppData\Local\Temp\Rtmp25rhmJ/gutenbergr_cache
+"
 "0","library(stringr)"
 "0",""

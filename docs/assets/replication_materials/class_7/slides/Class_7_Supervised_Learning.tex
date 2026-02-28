@@ -1,0 +1,431 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  ignorenonframetext,
+  aspectratio=169]{beamer}
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\newif\ifbibliography
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\PassOptionsToClass{aspectratio=169}{beamer}
+\usepackage{../../../beamer_style/beamer_style}
+\setbeamersize{text margin left=3.5mm,text margin right=3.5mm}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Supervised Learning},
+  pdfauthor={Jake S. Truscott, Ph.D},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Supervised Learning}
+\subtitle{POS6933: Computational Social Science}
+\author{Jake S. Truscott, Ph.D}
+\date{}
+\institute{\vspace{-5mm}
+
+University of Florida \newline Spring 2026 \newline \newline \newline
+\includegraphics[width=3cm]{../../../beamer_style/UF.png} \quad 
+\includegraphics[width=3.1cm]{../../../images/CSS_POLS_UF_Logo.png}}
+
+\begin{document}
+\frame{\titlepage}
+
+\section{Overview}\label{overview}
+
+\begin{frame}{Overview}
+\phantomsection\label{overview-1}
+\begin{itemize}
+\item Supervised Classification
+\item Naive Bayes
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Supervised Classification}
+\phantomsection\label{supervised-classification}
+\begin{itemize}
+\item \textbf{Supervised Learning}: A statistical (or ML) approach in which a model is trained on a set of texts that have been labeled \textbf{in advance}, so that it can learn the relationship between textual features and known outcomes and then predict those outcomes for new, unseen texts. \par \vspace{2.5mm} \pause
+\item \textbf{Goal}: Prediction of a known label, not general language representation or word scoring \par \vspace{2.5mm} \pause
+\item Relationship b/w text features and outcomes (classes/labels) is \textbf{learned from labeled data}, rather than fixed invariably by dictionaries. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Supervised Classification (Compared to Earlier Stuff)}
+\phantomsection\label{supervised-classification-compared-to-earlier-stuff}
+\begin{itemize}
+\item \textbf{Dictionaries}: I'm going to create a dictionary with classes assigned to words, where the scores I derive are the result of locating and identifying which features from the different classes are found in a document. 
+  \begin{itemize}
+  \item[]Ex: A string can best be labeled as \textit{positive} because more words from that class appear than words in the \textit{negative} class. 
+  \end{itemize} \par \vspace{2.5mm} \pause
+\item \textbf{MLM} and \textbf{VSM}: I'm able to make probabilistic assessments based on the features of a document
+  \begin{itemize}
+  \item[]Ex: Madison most likely wrote \textit{Federalist 51} because of the lexical variance in that document versus Madison's broader profile
+  \end{itemize}  \par \vspace{2.5mm} 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Supervised Classification (Compared to Earlier Stuff --
+Cont.)}
+\phantomsection\label{supervised-classification-compared-to-earlier-stuff-cont.}
+\begin{itemize}
+\item \textbf{Supervised Learning}: I'm able to use (perhaps) a small portion of the available data, assign labels (classes), then use that data to train a model for a task with unseen (testing) data (i.e., the larger volume of remaining data)
+\begin{itemize}
+  \item[]Ex: If I want to understand how members of the Senate Judiciary Committee communicate with nominees to the US Supreme Court or whether social media posts are relaying positive sentiments with respect to certain policy areas, I can label a small portion of that data to train a model/structure an algorithm for assessing the larger (remaining) set of data -- rather than having to label it by hand.  
+  \end{itemize} \par \vspace{2.5mm} \pause
+\item Trade-off: Incredibly flexible, theory-driven, and training based (rather than rules based), \textbf{but} reliable models require sufficient training. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Supervised Classification -- Building a Training Set}
+\phantomsection\label{supervised-classification-building-a-training-set}
+\begin{itemize}
+  \item Imagine you have a dataset with 10,000 observations. \par \vspace{2.5mm}
+  \item From that 10,000 -- partition an 80/20 split, such that a random subset of 2,000 are removed to develop a training set, while those remaining will constitute the unseen (\textit{testing}) set.  \par \vspace{2.5mm}
+  \item With that 2,000 -- assign a binary or multiclass label that you contend best represents its features \par \vspace{2.5mm}
+  \item Use that labeled data to train a classifier -- we will discuss \textbf{Naive Bayes} in a moment. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Supervised Classification -- Building a Training Set
+(Cont.)}
+\phantomsection\label{supervised-classification-building-a-training-set-cont.}
+\begin{itemize}
+\item To make sure training set is representative, draw from a (stratified) random sample. Generally speaking, a 70/30 or 80/20 split seems to be the most common -- though validation will be necessary always! \par \vspace{2.5mm} \pause
+\item In the realm of validation, it's best practice to do so with more than one perspective -- i.e., incorporate one (or more) individuals to validate both your labels and the model results from that training 
+  \begin{itemize}
+  \item[] Ex: Parrots Paper
+  \end{itemize} \par \vspace{2.5mm} \pause
+\item Training sets need to retain: objective-intersubjectivity, an a priori design, reliability, validity, and replicability.
+\begin{itemize}
+  \item[] Ex: If you say term (n-gram, string, document, etc.) is $x$, it must be $x$ -- not $x'$!
+  \end{itemize} 
+\end{itemize}
+\end{frame}
+
+\section{Naive Bayes}\label{naive-bayes}
+
+\begin{frame}{Bayes' Rule of Conditional Probability}
+\phantomsection\label{bayes-rule-of-conditional-probability}
+\[P(A\mid B) = \frac{P(B\mid A) P(A)}{P(B)} \quad \text{ Bayes Rule}\]
+\vspace{5mm}
+
+\begin{itemize}
+\item The probability of $A$ given $B$ equals the probability of observing $B$ if $A$ were true, multiplied by the prior probability of $A$, and divided by the overall probability of observing $B$. \vspace{2.5mm}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Naive Bayes -- Canonical Supevised Learning Model}
+\phantomsection\label{naive-bayes-canonical-supevised-learning-model}
+\begin{itemize}
+\item \textbf{Naive Bayes}: leverages Bayes' rule of conditional probability to recover probability that an unseen document ($D_{i}$) containing words ($w_{i1}, w_{ij}$) belongs to a certain classification ($\pi_{ik}$), where $\pi_{ik}$ is represented as 0 or 1 given the membership of $D_{i}$ in class $k$. \par \vspace{2.5mm} \pause
+\item \textbf{Conditional Independence (Naive) Assumption}: Conditional on class, words are independent of each other – i.e., once you know the class of any document, learning that one appears in it tells you nothing additional about whether another word appears. This is almost certainty wrong (\textit{More Later...}) -- but assumption makes this tractable. \par \vspace{2.5mm} \pause 
+\item \textit{In Short...}: The probability that a document (sentence, string, etc.) is a certain classification is conditioned on Bayes' Rule of conditional probability, where prior probabilities are set by the training data \par \vspace{2.5mm} \pause
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Naive Bayes -- Walkthrough}
+\phantomsection\label{naive-bayes-walkthrough}
+\[p(\pi_{ik}\mid D_i) = \frac{p(\pi_{ik} = 1)p(D_i\mid \pi_{ik} =1)}{p(D_i)} \quad \text{ Bayes' Rule -- Conditional Probability} \]
+\vspace{2.5mm}
+\[p(\pi_{ik} = 1) \quad \text{ Baseline Probability that } D_i \text{ Belongs to Class } k \text{ Before Reading It} \]
+\vspace{2.5mm}
+\[p(D_i\mid \pi_{ik} = 1) \quad \text{ Probability of Observing } w_{i1}...w_{ij} \text{ if } D_i \text{ in Class } k\]
+\vspace{2.5mm}
+\[p(D_i) \quad \text{ Probability of Observing } D_i \text{ in Any Class -- Will Use to Normalize At End}\]
+\vspace{2.5mm}
+\end{frame}
+
+\begin{frame}{Naive Bayes -- Walkthrough (Cont.)}
+\phantomsection\label{naive-bayes-walkthrough-cont.}
+\[W_i\mid \pi_{ik} = 1 \sim \text{ Multinomial}(\sum_jW_{ij},\mu_k)\]
+Conditional on class \(k\) (=1), the words in document \(i\) are drawn
+froma a multinomial distribution with the total word count equal to the
+document length and word probabilities \(\mu_{k}\) estimated from the
+training data. \vspace{2.5mm}
+\[p(W_i\mid \pi_{ik} = 1) \propto \prod^j_{j=1}\mu_{kj}^{W_{ij}} \]
+Probability of document \(i\) being class \(k\) is thus proportional to
+product of probabilities estimated from the training data for each word
+and raised to their actual appearance in document \(i\) \vspace{2.5mm}
+\end{frame}
+
+\begin{frame}{Naive Bayes -- Walkthrough (Cont.)}
+\phantomsection\label{naive-bayes-walkthrough-cont.-1}
+\[\hat{\mu}_{kj} = \frac{c + \sum^N_i \pi_{ik}W_{ij}}{Jc + \sum_i \sum_j \pi_{ik}W_{ij}}\]
+Word probabilities for class \(k\) are estimated as the count of word
+\(j\) across all documents in class \(k\) divided by the total word
+count in class \(k\), with \(c\) as a smoothing constant (e.g.,
+\textit{Laplace} smoothing) to avoid zero probabilities \vspace{2.5mm}
+
+\textbf{Basically:} The probability that a word belongs to a class \(k\)
+(versus \(k'\)) is determined by how often it appears in training
+documents labeled as \(k\) (versus \(k'\)).
+\end{frame}
+
+\begin{frame}{Naive Bayes -- Putting it All Together}
+\phantomsection\label{naive-bayes-putting-it-all-together}
+\[p(\pi_{ik}=1\mid W_i) \propto \frac{\sum^N_i I(y_i=k)}{N} \prod^j_{j=1} \mu_{kj}^{ij}\]
+\vspace{2.5mm}
+
+\begin{itemize}
+\item \textit{Simplified}: The probability that document $i$ belongs in class $k$ is proportional to the class's prior frequency in the training data multiplied by the product of the probabilities of each word in the document given that class.  \vspace{2.5mm}
+\item \textit{Or...} The probability that a document belongs to class $k$ is proportional to the class's prior probability and the likelihood of the document's observed features given that class.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Naive Bayes -- Example (News Coverage)}
+\phantomsection\label{naive-bayes-example-news-coverage}
+Training Set: \vspace{2.5mm}
+
+\begin{longtable}[]{@{}ccc@{}}
+\toprule\noalign{}
+Document & Class & Words (Counts) \\
+\midrule\noalign{}
+\endhead
+1 & Sports & Game (2), Team (1), Vote (0) \\
+2 & Sports & Game (1), Team (2), Vote (0) \\
+3 & Politics & Game (0), Team (0), Vote (3) \\
+\bottomrule\noalign{}
+\end{longtable}
+
+\vspace{2.5mm}
+
+Class (\(k\)) Priors: \(\frac{\sum^N_i I(y_i=k)}{N}\) = The total number
+of documents with class \(k\) over the total number of documents in the
+training set. \pause
+
+\begin{itemize}
+\item $\frac{1}{3}$ \textit{Politics} 
+\item $\frac{2}{3}$ \textit{Sports} 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Naive Bayes Example -- Calculate \(\mu_{kj}\)}
+\phantomsection\label{naive-bayes-example-calculate-mu_kj}
+\begin{itemize}
+\item Like MLM, our next step is to calculate $\mu$ for each word but add a layer for each class label ($\mu_{kj}$). \par \vspace{2.5mm} \pause
+\item Because we have a small vocabulary (\texttt{Game, Team, Vote}, J = 3), there are instances where some words don't appear for a class (e.g., no \texttt{Game} or \texttt{Team} in \textit{Politics}) -- So we're going to add Laplace smoothing ($c$) to avoid zero probabilities.  \par \vspace{2.5mm}
+\item[] $$\hat{\mu}_{kj} = \frac{c + \sum^N_i \pi_{ik}W_{ij}}{Jc + \sum_i \sum_j \pi_{ik}W_{ij}}$$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Naive Bayes Example -- Calculate \(\mu_{kj}\) (Cont.)}
+\phantomsection\label{naive-bayes-example-calculate-mu_kj-cont.}
+\begin{longtable}[]{@{}ccc@{}}
+\toprule\noalign{}
+Document & Class & Words (Counts) \\
+\midrule\noalign{}
+\endhead
+1 & Sports & Game (2), Team (1), Vote (0) \\
+2 & Sports & Game (1), Team (2), Vote (0) \\
+3 & Politics & Game (0), Team (0), Vote (3) \\
+\bottomrule\noalign{}
+\end{longtable}
+
+\vspace{2.5mm}
+\begin{itemize}
+\item Ex: $\hat{\mu}_{kj} = \frac{c + \sum^N_i \pi_{ik}W_{ij}}{Jc + \sum_i \sum_j \pi_{ik}W_{ij}}$ \quad $\mu_{Sports,Game} = \frac{1_{(c)} + Game_{(3)}}{ 3_{(J)}\cdot1_{(c)} + Game_{(3)} + Team_{(3)} + Vote_{(0)}} = \frac{4}{9} \approx 0.444$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Naive Bayes Example -- Calculate \(\mu_{kj}\) (Cont.)}
+\phantomsection\label{naive-bayes-example-calculate-mu_kj-cont.-1}
+\begin{longtable}[]{@{}ccc@{}}
+\toprule\noalign{}
+Document & Class & Words (Counts) \\
+\midrule\noalign{}
+\endhead
+1 & Sports & Game (2), Team (1), Vote (0) \\
+2 & Sports & Game (1), Team (2), Vote (0) \\
+3 & Politics & Game (0), Team (0), Vote (3) \\
+\bottomrule\noalign{}
+\end{longtable}
+
+\vspace{2.5mm}
+\begin{itemize}
+\item \textbf{Your Turn}: $\mu_{Sports, Team}$ \pause
+\item $\mu_{Sports, Team} = \frac{1 + 3}{3+6} \approx 0.444$ \pause
+\item $\mu_{Sports, Vote} = \frac{1 + 0}{3 + 6} \approx 0.111$ 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Naive Bayes Example -- Calculate \(\mu_{kj}\) (Cont.)}
+\phantomsection\label{naive-bayes-example-calculate-mu_kj-cont.-2}
+\begin{longtable}[]{@{}ccc@{}}
+\toprule\noalign{}
+Document & Class & Words (Counts) \\
+\midrule\noalign{}
+\endhead
+1 & Sports & Game (2), Team (1), Vote (0) \\
+2 & Sports & Game (1), Team (2), Vote (0) \\
+3 & Politics & Game (0), Team (0), Vote (3) \\
+\bottomrule\noalign{}
+\end{longtable}
+
+\vspace{2.5mm}
+\begin{itemize}
+\item \textbf{Your Turn}: $\mu_{Politics, Game}$ \pause
+\item $\mu_{Politics, Game} = \frac{1 + 0}{3 + 3} \approx 0.167$
+\item $\mu_{Politics, Team} = \frac{1 + 0}{3 + 3} \approx 0.167$
+\item $\mu_{Politics, Vote} = \frac{1 + 3}{3 + 3} \approx 0.667$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Naive Bayes Example -- Putting Together: Testing on New
+(Unseen) Document}
+\phantomsection\label{naive-bayes-example-putting-together-testing-on-new-unseen-document}
+\begin{itemize}
+\item Now that we've trained our classifier, let's test it on a new (unseen) document: $D_{New} = (Game, Team, Vote)$ \pause 
+\item Using Naive Bayes, what is the probability that it belongs to either class $(Sports, Politics)$? \pause
+\item[] $$
+p(Sports\mid D_{New}) \propto p(Sports) \times \mu_{Sports,Game} \times \mu_{Sports,Team}  \times  \mu_{Sports,Vote}$$ 
+$$\frac{2}{3} \times 0.444 \times 0.444 \times 0.111 \approx 0.0145$$ \pause 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Naive Bayes Example -- Putting Together: Testing on New
+(Unseen) Document (Cont.)}
+\phantomsection\label{naive-bayes-example-putting-together-testing-on-new-unseen-document-cont.}
+\begin{itemize}
+\item \textbf{Your Turn}: What about $p(Politics \mid D_{new}$? \pause
+\item[] $$p(Politics\mid D_{New}) \propto p(Politics) \times \mu_{Politics,Game} \times \mu_{Politics,Team}  \times  \mu_{Politics,Vote}$$ 
+$$\frac{1}{3} \times 0.167 \times 0.167 \times 0.667 \approx 0.0062$$ 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Naive Bayes Example -- Putting Together: Testing on New
+(Unseen) Document (Cont.)}
+\phantomsection\label{naive-bayes-example-putting-together-testing-on-new-unseen-document-cont.-1}
+\begin{itemize}
+\item After normalizing, we get: 
+\item[] $$p(Sport|D_{New}) = \frac{0.0145}{0.0145+0.0062} \approx 0.70$$ 
+\item[]
+$$p(Politics|D_{New}) = \frac{0.0062}{0.0145+0.0062} \approx 0.299 $$ \pause
+\item[] Although the non-normalized probabilities are (very) small, we can improve our chances with more training! 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Naive Bayes Example -- Another Example
+\(D_{New} = (Vote, Team, Team)\)}
+\phantomsection\label{naive-bayes-example-another-example-d_new-vote-team-team}
+\begin{itemize}
+\pause
+\item[] $$p(Sports\mid D_{New}) \propto p(Politics) \times \mu_{Sports,Vote} \times \mu_{Sports,Team}  \times  \mu_{Sports,Team}$$ 
+\item[] $$p(Sports\mid D_{New}) = \frac{2}{3} \times 0.111 \times 0.444 \times 0.444 \approx 0.014$$ \pause
+\item[] $$p(Politics\mid D_{New}) \propto p(Politics) \times \mu_{Politics,Vote} \times \mu_{Politics,Team}  \times  \mu_{Politics,Team}$$ 
+\item[] $$p(Sports\mid D_{New}) = \frac{1}{3} \times 0.667 \times 0.167 \times 0.167 \approx 0.0061$$ 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Naive Bayes Example -- Another Example
+\(D_{New} = (Vote, Team, Team)\)}
+\phantomsection\label{naive-bayes-example-another-example-d_new-vote-team-team-1}
+\begin{itemize}
+\item Normalized:
+\item[] $$ p(Sports\mid D_{New}) = \frac{0.014}{0.014+0.0061} \approx 69.7$$
+\item[] $$ p(Politics\mid D_{New}) = \frac{0.0061}{0.0061+0.014} \approx 0.33 $$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Naive Bayes Example -- Larger Train \& Test Set (IMDB)}
+\phantomsection\label{naive-bayes-example-larger-train-test-set-imdb}
+\begin{itemize}
+\item Maneuver to \texttt{R} File \pause
+\item Adjust the size of the training set -- Does that improve predictive accuracy? 
+\end{itemize}
+\end{frame}
+
+\section{Looking Forward}\label{looking-forward}
+
+\begin{frame}{Looking Forward}
+\begin{itemize}
+\item Next Class: Topic Selection \& Clustering -- Another dense series of material 
+\item Class 6 \textbf{and} Class 7 Problem Sets due Sunday
+\item \textbf{Reminder}: Keep working on papers!
+\end{itemize}
+\end{frame}
+
+\end{document}

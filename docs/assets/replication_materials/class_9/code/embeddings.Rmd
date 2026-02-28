@@ -54,13 +54,11 @@ But what if we have a vocabulary like this?
 
 Suddenly we're at risk of some information loss – because *Dog*, *Pooch*, and *K9* are reasonably describing the same thing. Put a different way, if we were to approach this as a clustering task, how would we organize this vocabulary? Certainly we wouldn't want to say each word represents it's own cluster center. Rather, the assortment would probably be $K_{1} = (\text{Dog, Pooch, K9})$ and $K_{2} = (\text{Fire Truck})$. Yet this structure is invisible in a one-hot representation, where all distinct words are equally dissimilar.
 
-So, I am going to posit we consider a few things: 
+So, I am going to posit we consider a few things:
 
-1. **Words have similar meaning**. Recall that we discussed a few classes ago just how broad and diverse the English language is. Move from a dictionary to a thesaurus and you'll quickly realize that virtually every word has a worthy synonym to replace it given syntax or other some reasoning. Word choice is certainly an important indicator of author's intent (it was good enough to attribute authorship of disputed *Federalist Papers*!), but treating each word as entirely distinct is often too restrictive. Moreover, many words are polysemous, taking on different meanings depending on context. A good example (I think) from my own research is *Judge* -- which, given context as a verb (*to judge*) versus a noun (*a judge*) can prescribe very different meanings. 
+1.  **Words have similar meaning**. Recall that we discussed a few classes ago just how broad and diverse the English language is. Move from a dictionary to a thesaurus and you'll quickly realize that virtually every word has a worthy synonym to replace it given syntax or other some reasoning. Word choice is certainly an important indicator of author's intent (it was good enough to attribute authorship of disputed *Federalist Papers*!), but treating each word as entirely distinct is often too restrictive. Moreover, many words are polysemous, taking on different meanings depending on context. A good example (I think) from my own research is *Judge* -- which, given context as a verb (*to judge*) versus a noun (*a judge*) can prescribe very different meanings.
 
-
-2. **Similarity is not fully captured in word co-occurrence**: Rather than asking whether two words are exactly the same, a more useful question is whether they tend to appear in similar contexts. If we were to compare words across a corpus, we would expect *Pooch* to appear in usage settings much closer to *Dog* than to *Fire Truck*. One-hot encodings cannot represent this graded notion of similarity. 
-
+2.  **Similarity is not fully captured in word co-occurrence**: Rather than asking whether two words are exactly the same, a more useful question is whether they tend to appear in similar contexts. If we were to compare words across a corpus, we would expect *Pooch* to appear in usage settings much closer to *Dog* than to *Fire Truck*. One-hot encodings cannot represent this graded notion of similarity.
 
 ## Distributed Representations of Words
 
