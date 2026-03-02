@@ -368,14 +368,14 @@ Positive Negative  Neutral
 
 \begin{verbatim}
 # A tibble: 6 x 2
-  word       sentiment
-  <chr>      <chr>    
-1 backbiting negative 
-2 grainy     negative 
-3 liability  negative 
-4 articulate positive 
-5 raptureous positive 
-6 goood      positive 
+  word          sentiment
+  <chr>         <chr>    
+1 vomit         negative 
+2 chasten       negative 
+3 zombie        negative 
+4 ebulliently   positive 
+5 irreplaceable positive 
+6 correct       positive 
 \end{verbatim}
 \end{frame}
 
@@ -1049,7 +1049,7 @@ $$
 \begin{frame}{TF-IDF}
 \phantomsection\label{tf-idf}
 \begin{itemize}
-\item \textbf{Term Frequency - Inverse Frequency} (TF-IDF): Strategy that rescales a DFM by its inverse document frequency, down-weighting terms that appear in many documents. \par \vspace{2.5mm}
+\item \textbf{Term Frequency - Inverse Document Frequency} (TF-IDF): Strategy that rescales a DFM by its inverse document frequency, down-weighting terms that appear in many documents. \par \vspace{2.5mm}
 \item In Short: Words that occur frequently in individual documents while remaining relatively uncommon in the broader corpus receive greater weight \par \vspace{2.5mm}
 \item Terms that satisfy both conditions are in the \textit{Goldilocks zone} -- those that violate both are penalized.
 \end{itemize}
