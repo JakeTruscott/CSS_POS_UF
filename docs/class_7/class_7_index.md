@@ -55,7 +55,7 @@ has_children: true
 
 ## Homework
 
-- Practice Set (Class 7)
+- NA
 
 # Class Seven Learning Objectives: 
 
