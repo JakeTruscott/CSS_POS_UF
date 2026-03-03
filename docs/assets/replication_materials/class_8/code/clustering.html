@@ -254,8 +254,8 @@ class="math inline">\(\mu_k\)</span> – the more a film aligns with a
 cluster’s center, the more likely it is to be assigned to that
 cluster.</p>
 </div>
-<div id="k-means-example" class="section level4">
-<h4>K-Means Example</h4>
+<div id="k-means-example-numeric-data" class="section level4">
+<h4>K-Means Example (Numeric Data)</h4>
 <p>Below are two example implementations of k-means in <code>R</code>
 using the <code>iris</code> dataset (a built-in dataset of iris flowers
 from three species). The only difference between the two being the
@@ -282,6 +282,36 @@ kmeans_example &lt;- kmeans(data, # Iris Data
 kmeans_example$tot.withinss # Within-Cluster Sum of Squares (Dispersion Measure)</code></pre>
 <pre><code>## [1] 78.85144</code></pre>
 <p><img src="clustering_files/figure-html/kmeans_figure-1.png" width="672" /><img src="clustering_files/figure-html/kmeans_figure-2.png" width="672" /></p>
+</div>
+<div id="k-means-example-text-data" class="section level4">
+<h4>K-Means Example (Text Data)</h4>
+<p>Now that we’ve worked with K-Means for numeric data, let’s do the
+same but for text data. We’re going to use the same IMDB data from our
+previous discussion on
+<a href="https://jaketruscott.github.io/CSS_POS_UF/class_7/naive_bayes.html">Naive
+Bayes</a>. In particular, we’re going to convert the negative training
+data into a corpus, reduce the complexity to normalize the text,
+construct a document term matrix, and finally recover two different
+outputs that again set different cluster centers.</p>
+<pre class="r"><code>imdb_data &lt;- imdb_data$text[1:500] # Only First 500 Rows
+imdb_data &lt;- iconv(imdb_data, from = &quot;UTF-8&quot;, to = &quot;UTF-8&quot;, sub = &quot;&quot;) # Fixing Some Characters in IMDB Data
+corpus &lt;- VCorpus(VectorSource(sapply(imdb_data, reduce_complexity)))
+dtm &lt;- DocumentTermMatrix(corpus, control = list(weighting = weightTfIdf)) # TF-IDF DTM
+dtm &lt;- removeSparseTerms(dtm, 0.95)  # (Optional) Reducing Further Sparsity
+dtm_matrix &lt;- as.matrix(dtm) # Convert DTM Matrix for K-Means
+
+kmeans_example_3_centers &lt;- kmeans(dtm_matrix, 
+                         centers = 3, 
+                         nstart = 25)
+
+kmeans_example_3_centers$tot.withinss # Within-Cluster Sum of Squares (Dispersion Measure)</code></pre>
+<pre><code>## [1] 28.61744</code></pre>
+<pre class="r"><code>kmeans_example_10_centers &lt;- kmeans(dtm_matrix, 
+                         centers = 10, 
+                         nstart = 25)
+
+kmeans_example_10_centers$tot.withinss # Within-Cluster Sum of Squares (Dispersion Measure)</code></pre>
+<pre><code>## [1] 26.32531</code></pre>
 </div>
 </div>
 <div id="clustering-components" class="section level3">

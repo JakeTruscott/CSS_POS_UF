@@ -1,0 +1,1 @@
+{"frames":[{"func":"gsub(\"\\\\s{2,}\", \" \", text)","file":"","line_number":0,"end_line_number":0,"character_number":0,"end_character_number":0}],"message":"Error in as.character(x) : \n  cannot coerce type 'closure' to vector of type 'character'\n"}

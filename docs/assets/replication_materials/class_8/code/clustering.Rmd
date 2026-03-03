@@ -24,6 +24,19 @@ library(quanteda)
 library(gutenbergr)
 library(stringr)
 
+reduce_complexity <- function(text){
+  text <- tolower(text) # Lower Case
+  text <- tm::removePunctuation(text) # Punctuation
+  text <- tm::removeNumbers(text) # Numbers
+  text <- tm::removeWords(text, tm::stopwords("english")) # Stop Words
+  text <- unlist(stringr::str_split(text, '\\s+')) # Tokenize 
+  text <- textstem::lemmatize_words(text) # Lemmatize
+  text <- paste(text, collapse = ' ') # Re-Append
+  text <- gsub("\\s{2,}", ' ', text) # 2 or More Spaces --> One Space
+  text <- trimws(text) # White Space
+  return(text)
+} # Function to Process Text for Bag of Words
+
 ```
 
 ------------------------------------------------------------------------
@@ -56,7 +69,7 @@ We then repeat the assignment step, reassigning each film to the nearest updated
 
 In short: a film that is (hypothetically) 30% Comedy, 60 % Drama, and 10% Action should more readily cluster with other dramatic films because cluster assignment is based on proximity to $\mu_k$ -- the more a film aligns with a cluster's center, the more likely it is to be assigned to that cluster. 
 
-#### K-Means Example
+#### K-Means Example (Numeric Data)
 
 Below are two example implementations of k-means in <code>R</code> using the <code>iris</code> dataset (a built-in dataset of iris flowers from three species). The only difference between the two being the number of assigned cluster centers ($K$ = 3 or 4). As you can see, adding another cluster affects the objective function -- i.e., the sum of squared differences is reduced. However, I want to emphasize that we may not want to read too much into this. Adding more clusters is going to reduce the objective, but that doesn't necessarily imply a better or more meaningful solution. Especially with text data, it's important to be holistic in your assessment of clustering -- **GSR** Ch. 12.4-12.5 does a great job discussing this! 
 
@@ -116,6 +129,39 @@ data %>%
         legend.title.position = 'top', 
         legend.title = element_text(size = 12, hjust = 0.5),
         legend.text = element_text(size = 10)) 
+
+
+```
+
+#### K-Means Example (Text Data)
+
+Now that we've worked with K-Means for numeric data, let's do the same but for text data. We're going to use the same IMDB data from our previous discussion on <a href="https://jaketruscott.github.io/CSS_POS_UF/class_7/naive_bayes.html">Naive Bayes</a>. In particular, we're going to convert the negative training data into a corpus, reduce the complexity to normalize the text, construct a document term matrix, and finally recover two different outputs that again set different cluster centers. 
+
+```{r, k_means_text_load, include = F}
+imdb_data <- get(load(url('https://raw.githubusercontent.com/JakeTruscott/CSS_POS_UF/main/docs/assets/replication_materials/class_7/data/imdb_train_neg.rdata')))
+
+```
+
+```{r, k_means_text}
+
+imdb_data <- imdb_data$text[1:500] # Only First 500 Rows
+imdb_data <- iconv(imdb_data, from = "UTF-8", to = "UTF-8", sub = "") # Fixing Some Characters in IMDB Data
+corpus <- VCorpus(VectorSource(sapply(imdb_data, reduce_complexity)))
+dtm <- DocumentTermMatrix(corpus, control = list(weighting = weightTfIdf)) # TF-IDF DTM
+dtm <- removeSparseTerms(dtm, 0.95)  # (Optional) Reducing Further Sparsity
+dtm_matrix <- as.matrix(dtm) # Convert DTM Matrix for K-Means
+
+kmeans_example_3_centers <- kmeans(dtm_matrix, 
+                         centers = 3, 
+                         nstart = 25)
+
+kmeans_example_3_centers$tot.withinss # Within-Cluster Sum of Squares (Dispersion Measure)
+
+kmeans_example_10_centers <- kmeans(dtm_matrix, 
+                         centers = 10, 
+                         nstart = 25)
+
+kmeans_example_10_centers$tot.withinss # Within-Cluster Sum of Squares (Dispersion Measure)
 
 
 ```

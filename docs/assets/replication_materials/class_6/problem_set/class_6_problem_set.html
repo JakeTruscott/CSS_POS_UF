@@ -381,36 +381,86 @@ and John Jay – the latter author (Jay) is known to have not authored any
 beyond those directly attributed to him. Using the remaining essays
 whose authorship we can attribute to Madison or Hamilton, complete the
 following tasks:</p>
-<p><br></p>
-<ol style="list-style-type: upper-alpha">
-<li><p>Develop a corpus and recover the most commonly used words for
-each author. Further, produce both a data frame (or tibble) representing
-the 10 most common terms with their associated volumes, as well as a
-word cloud graphic of the 50 most common terms for each author
-(1pt).</p>
-<p><br></p></li>
-</ol>
-<!-- -->
-<ol start="2" style="list-style-type: upper-alpha">
-<li><p>With your corpus, construct the same items as (A) but aggregated
+<p>A. Using only those essays where authorship is not disputed (i.e.,
+authorship is known to be Hamilton, Madison, or Jay individually),
+reduce the complexity of the text and construct a corpus to recover the
+most commonly used words for each author. Further, produce both a data
+frame (or tibble) representing the 10 most common terms with their
+associated volumes, as well as a word cloud graphic of the 50 most
+common terms for each author (1pt).</p>
+<p>B. With your corpus, construct the same items as (A) but aggregated
 across both authors – e.g., a data frame and word cloud of the most
 common terms for both Hamilton <u>and</u> Madison (1pt).</p>
-<p><br></p></li>
-</ol>
-<!-- -->
-<ol start="3" style="list-style-type: upper-alpha">
-<li><p>Using the multinomial language model appraoch, employ (B) to
+<p>C. Using the multinomial language model approach, employ (B) to
 construct a vocabulary and associated multinomial probability vectors
 (<span class="math inline">\(\mu\)</span>) for each author using <u>at
 least</u> five unique words (2pts)</p>
-<p><br></p></li>
-<li><p>For each of the listed <i>Federalist Papers</i>, recover <span class="math inline">\(\mathbf{W_{Hamilton}}\)</span> and <span class="math inline">\(\mathbf{W_{Madison}}\)</span> (2pts).</p>
-<p><br></p></li>
-<li><p>Using only <i>Federalist 58</i>, measure the cosine similarity
-and the Euclidean distance between both <span class="math inline">\(\mathbf{W}_{Hamilton/Madison}\)</span> and <span class="math inline">\(\mathbf{W}_{Federalist\hspace{0.5mm}55}\)</span>
+<p>D. For each of the listed and disputed <i>Federalist Papers</i> (55,
+56, 57, 58, 62, and 63), recover <span class="math inline">\(\mathbf{W_{Hamilton}}\)</span> and <span class="math inline">\(\mathbf{W_{Madison}}\)</span> (2pts).</p>
+<p>E. Using only <i>Federalist 58</i>, measure the cosine similarity
+between both <span class="math inline">\(\mathbf{W}_{Hamilton/Madison}\)</span> and <span class="math inline">\(\mathbf{W}_{Federalist\hspace{0.5mm}55}\)</span>
 (2pts).</p></li>
-</ol></li>
 </ol>
+<div id="q2-a" class="section level3">
+<h3>Q2 (A)</h3>
+<hr />
+</div>
+<div id="q2-b" class="section level3">
+<h3>Q2 (B)</h3>
+<hr />
+</div>
+<div id="q2-c" class="section level3">
+<h3>Q2 (C)</h3>
+<pre class="r"><code>federalist_essays &lt;- text %&gt;%
+  filter(stringr::str_detect(text, &#39;slightly different version&#39;, negate = TRUE)) %&gt;%
+  mutate(author = text %&gt;%
+           str_extract(&#39;HAMILTON AND MADISON|HAMILTON OR MADISON|HAMILTON|MADISON|JAY&#39;) %&gt;%
+           str_to_title(),
+         title = str_extract(text, &#39;No. [A-Z].*&#39;)) %&gt;%
+  filter(author %in% c(&#39;Madison&#39;, &#39;Hamilton&#39;)) %&gt;%
+  tidytext::unnest_tokens(input = &#39;text&#39;, output = &#39;word&#39;) 
+
+federalist_essays %&gt;%
+  filter(word %in% c(combined$word[1:5])) %&gt;%
+  count(author, word) %&gt;%          
+  tidyr:: pivot_wider(names_from = author,values_from = n, values_fill = 0) %&gt;%
+  { 
+    wide &lt;- .                      
+    bind_rows(
+      wide,
+      wide %&gt;%
+        select(-word) %&gt;%
+        summarise(across(everything(), sum)) %&gt;%
+        mutate(word = &quot;TOTAL&quot;) %&gt;%
+        select(word, everything()))
+  }</code></pre>
+<pre><code>## # A tibble: 6 × 3
+##   word       Hamilton Madison
+##   &lt;chr&gt;         &lt;int&gt;   &lt;int&gt;
+## 1 government      420     240
+## 2 may             473     189
+## 3 power           419     142
+## 4 state           486     177
+## 5 will            703     285
+## 6 TOTAL          2501    1033</code></pre>
+<p><span class="math display">\[\mathbf{W_{Hamilton}} =
+\text{Multinomial}(2501, \mu_{H})\]</span> <span class="math display">\[\mathbf{W_{Madison}} = \text{Multinomial}(1033,
+\mu_{M})\]</span></p>
+<p><span class="math display">\[\mu_{Hamilton} =
+(\frac{420}{2501}),(\frac{473}{2501}),(\frac{419}{2501}),(\frac{486}{2501}),(\frac{703}{2501})\]</span>
+<span class="math display">\[\mu_{Hamilton} = (0.16, 0.18, 0.16, 0.19,
+0.28) \]</span> <span class="math display">\[\mu_{Madison} =
+(\frac{240}{1033}),(\frac{189}{1033}),(\frac{142}{1033}),(\frac{177}{1033}),(\frac{285}{1033})\]</span>
+<span class="math display">\[\mu_{Madison} = (0.23, 0.18, 0.13, 0.17,
+0.27) \]</span></p>
+<hr />
+</div>
+<div id="q2-d" class="section level3">
+<h3>Q2 (D)</h3>
+</div>
+<div id="q2-e" class="section level3">
+<h3>Q2 (E)</h3>
+</div>
 
 
 

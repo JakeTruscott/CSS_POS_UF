@@ -22,6 +22,22 @@ library(tm)
 library(quanteda)
 library(gutenbergr)
 library(stringr)
+library(rvest)
+
+reduce_complexity <- function(text){
+  text <- tolower(text) # Lower Case
+  text <- tm::removePunctuation(text) # Punctuation
+  text <- tm::removeNumbers(text) # Numbers
+  text <- tm::removeWords(text, tm::stopwords("english")) # Stop Words
+  text <- unlist(stringr::str_split(text, '\\s+')) # Tokenize 
+  text <- textstem::lemmatize_words(text) # Lemmatize
+  text <- paste(text, collapse = ' ') # Re-Append
+  text <- gsub("\\s{2,}", ' ', text) # 2 or More Spaces --> One Space
+  text <- trimws(text) # White Space
+  return(text)
+} # Function to Process Text for Bag of Word
+
+library(topicmodels)
 
 
 ```
@@ -32,3 +48,96 @@ library(stringr)
 
 ------------------------------------------------------------------------
 
+1.  The sample data below represent terms recovered from American party platforms, where each row represents a party and terms from similar policy areas (4pt). 
+
+::: {style="text-align:center;"}
+| Document_ID | Category   | Terms                             |
+| ----------- | ---------- | --------------------------------- |
+| 1           | Democrat   | healthcare, taxes, security       |
+| 2           | Democrat   | climate, energy, security         |
+| 3           | Democrat   | healthcare, equity, border        |
+| 4           | Democrat   | immigration, pathway, energy      |
+| 5           | Democrat   | taxes, diplomacy, defense         |
+| 6           | Republican | taxes, energy, security           |
+| 7           | Republican | border, enforcement, energy       |
+| 8           | Republican | healthcare, market, defense       |
+| 9           | Republican | taxes, domestic, security         |
+| 10          | Republican | immigration, enforcement, defense |
+
+:::
+
+  A. For two words found in both classes (<code>Democratic</code> and <code>Republican</code>), calculate the mutual information. There are <b>six</b> total, but you only need to choose <b>two</b>.
+  
+  B. For the words <code>Healthcare</code>, <code>Energy</code>, and <code>Security</code>, use the Fightin' Words approach to recover the log odds ratio that each is a predictor of either class. 
+  
+---
+  
+2. Using the <i>Federalist Papers</i> authored by <b>James Madison</b> (no co-authors or disputed authors), apply TF-IDF weighting and run k-means clustering using 5, 10, 15, 20, 25 cluster centers. Report the within-cluster sum of squares for each. What is the average reduction in the sum of squares for the addition of each cluster center? Is the answer the same if I ask this question for bins 5-15 versus 15-25? (3pt)
+
+
+```{r fed_papers_clusters, eval=FALSE, include=FALSE}
+
+fed_papers <- read_html('https://www.gutenberg.org/cache/epub/18/pg18-images.html')
+essays <- html_elements(fed_papers, '.chapter')
+text <- html_text2(essays)
+text <- tibble(text)
+federalist <- text %>%
+  filter(stringr::str_detect(text, 'slightly different version', negate = TRUE)) %>%
+  mutate(author = text %>%
+           str_extract('HAMILTON AND MADISON|HAMILTON OR MADISON|HAMILTON|MADISON|JAY') %>%
+           str_to_title(),
+         title = str_extract(text, 'No. [A-Z].*')) %>%
+  filter(author == 'Madison') # Clean & Partition
+
+corpus <- VCorpus(VectorSource(sapply(federalist$text, reduce_complexity)))
+dtm <- DocumentTermMatrix(corpus, control = list(weighting = weightTfIdf)) # TF-IDF DTM
+dtm <- removeSparseTerms(dtm, 0.95)  # (Optional) Reducing Further Sparsity
+dtm_matrix <- as.matrix(dtm) # Convert DTM Matrix for K-Means
+cluster_centers <- seq(5, 25, 5)
+k_means_output <- data.frame()
+
+for (cluster in 1:length(cluster_centers)){
+  temp_k_means <- kmeans(dtm_matrix, 
+                         centers = cluster_centers[cluster], 
+                         nstart = 25)
+  k_means_output <- bind_rows(k_means_output, 
+                              data.frame(cluster_center = cluster_centers[cluster], 
+                                         sum_of_squares = temp_k_means$tot.withinss))
+}
+
+
+k_means_output$reduction <- c(NA, diff(k_means_output$sum_of_squares) * -1)
+colnames(k_means_output) <- c("Cluster Center", "Sum of Squares", "Reduction")
+
+stargazer::stargazer(k_means_output, 
+                     summary=F, 
+                     type = 'text')
+
+mean(k_means_output$Reduction[2:3], na.rm = TRUE)  # 5 to 15
+mean(k_means_output$Reduction[3:5], na.rm = TRUE)  # 15 to 25
+```
+
+3. Using the same <i>Federalist Papers</i> data (Madison authorship only), construct an LDA topic model with 10 topics. Print the top-10 words associated with each of those topics. 
+
+  A. For each topic, report the posterior probabilities for the top 10 documents (words) in each. 
+  
+  B. For <b>at least 5</b> of the topics, write 2-3 sentences explaining what you think the "topic" identified by the model is -- i.e., what do these words tell you about the substantive content of the pooled words?  (3pt)
+  
+  
+
+
+```{r, lda_topic, eval=FALSE, include=FALSE}
+
+corpus <- VCorpus(VectorSource(sapply(federalist$text, reduce_complexity)))
+dtm <- DocumentTermMatrix(corpus) # TF-IDF DTM
+
+lda_federalist <- LDA(dtm, k = 10, method = "Gibbs", control = list(seed = 1234)) # LDA w/ 5 Topics & Gibbs Sampling 
+
+
+topic_probs <- posterior(lda_federalist)$topics
+print(round(topic_probs[c(1:10), c(1:5)], 2))
+
+topicmodels::terms(lda_federalist, 10) # 10 Terms
+
+
+```

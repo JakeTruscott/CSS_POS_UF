@@ -369,6 +369,99 @@ sets must always be compiled using <code>LaTex</code> or
 explaining your implementation) used to complete each problem
 (10pts).</p>
 <hr />
+<ol style="list-style-type: decimal">
+<li>The sample data below represent terms recovered from American party
+platforms, where each row represents a party and terms from similar
+policy areas (4pt).</li>
+</ol>
+<div style="text-align:center;">
+<table>
+<thead>
+<tr class="header">
+<th>Document_ID</th>
+<th>Category</th>
+<th>Terms</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Democrat</td>
+<td>healthcare, taxes, security</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>Democrat</td>
+<td>climate, energy, security</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>Democrat</td>
+<td>healthcare, equity, border</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>Democrat</td>
+<td>immigration, pathway, energy</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>Democrat</td>
+<td>taxes, diplomacy, defense</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>Republican</td>
+<td>taxes, energy, security</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>Republican</td>
+<td>border, enforcement, energy</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>Republican</td>
+<td>healthcare, market, defense</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>Republican</td>
+<td>taxes, domestic, security</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>Republican</td>
+<td>immigration, enforcement, defense</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>A. For two words found in both classes (<code>Democratic</code> and
+<code>Republican</code>), calculate the mutual information. There are
+<b>six</b> total, but you only need to choose <b>two</b>.</p>
+<p>B. For the words <code>Healthcare</code>, <code>Energy</code>, and
+<code>Security</code>, use the Fightin’ Words approach to recover the
+log odds ratio that each is a predictor of either class.</p>
+<hr />
+<ol start="2" style="list-style-type: decimal">
+<li><p>Using the <i>Federalist Papers</i> authored by <b>James
+Madison</b> (no co-authors or disputed authors), apply TF-IDF weighting
+and run k-means clustering using 5, 10, 15, 20, 25 cluster centers.
+Report the within-cluster sum of squares for each. What is the average
+reduction in the sum of squares for the addition of each cluster center?
+Is the answer the same if I ask this question for bins 5-15 versus
+15-25? (3pt)</p></li>
+<li><p>Using the same <i>Federalist Papers</i> data (Madison authorship
+only), construct an LDA topic model with 10 topics. Print the top-10
+words associated with each of those topics.</p></li>
+</ol>
+<p>A. For each topic, report the posterior probabilities for the top 10
+documents (words) in each.</p>
+<p>B. For <b>at least 5</b> of the topics, write 2-3 sentences
+explaining what you think the “topic” identified by the model is – i.e.,
+what do these words tell you about the substantive content of the pooled
+words? (3pt)</p>
 
 
 

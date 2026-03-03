@@ -10,7 +10,7 @@
 # note: install.packages('PACKAGE') if not already installed
 ################################################################################
 
-library(dplyr); library(ggplot2); library(stringr);  library(tm); library(quanteda); (quanteda.textstats); library(quanteda.textstats)
+library(dplyr); library(ggplot2); library(stringr);  library(tm); library(quanteda); library(quanteda.textstats); library(quanteda.textstats)
 
 
 ################################################################################
