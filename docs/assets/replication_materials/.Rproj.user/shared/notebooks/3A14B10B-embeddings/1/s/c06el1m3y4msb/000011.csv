@@ -1,0 +1,4 @@
+"0","cbow_lookslike <- predict(cbow_model, c(""terrible"", ""incredible""), type = ""nearest"", top_n = 5)
+"
+"2","Error: external pointer is not valid
+"

@@ -1,0 +1,4 @@
+"0","reviews = sapply(imdb$text, reduce_complexity)
+"
+"2","Error in imdb$text : $ operator is invalid for atomic vectors
+"
