@@ -1,0 +1,85 @@
+---
+title: "Wordscores"
+subtitle: "POS6933: Computational Social Science"
+author: "Truscott (Spring 2026)"
+output:
+  html_document:
+    self_contained: false
+    layout: null
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(warning = FALSE)
+
+library(ggplot2)
+library(dplyr)
+library(cowplot)
+library(stargazer)
+library(doParallel)
+library(parallel)
+library(snow)
+library(tm)
+library(quanteda)
+library(gutenbergr)
+library(stringr)
+library(word2vec)
+library(Rtsne)
+library(scales)
+library(textdata)
+library(reticulate)
+
+default_ggplot_theme <- theme_minimal() + 
+  theme(panel.border = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+        axis.text = element_text(size = 12, colour = 'black'), 
+        axis.title = element_text(size = 14, colour = 'black'), 
+        strip.background = element_rect(linewidth = 1, colour = 'black', fill = 'grey75'),
+        strip.text = element_text(size = 12, colour = 'black'), 
+        legend.position = 'none', 
+        plot.caption = element_text(hjust = 0, size = 10)) 
+
+
+library(stringr)
+library(textstem)
+library(tm)
+
+reduce_complexity <- function(text) {
+  text <- tolower(text)
+  text <- gsub("[^a-z\\s]", " ", text)
+  words <- unlist(str_split(text, "\\s+"))
+  words <- words[words != "" & !words %in% tm::stopwords("english")]
+  words <- textstem::lemmatize_words(words)
+  words <- words[str_detect(words, "^[a-z]+$")]
+  text <- str_squish(paste(words, collapse = " "))
+  return(text)
+}
+
+
+```
+
+------------------------------------------------------------------------
+
+### Wordscores (Laver, Benoit, and Garry)
+
+Although probably (maybe?) not the first methodology for scaling ideology from texts, <code>Wordscores</code> --  introduced by Laver, Benoit, and Garry (2003) -- was the first to gain significant traction among political scientists. In a roundabout way, the methodology is a Naive Bayes–like generative model whose output is converted into a continuous ideological score rather than a class prediction. In essence, it's effectively (sort of) Naive Bayes + Value Projection onto a Reference Scale + Rescaling. 
+
+Recall that for a standard (multinomial) Naive Bayes classifier, we first estimate how likely each word is to appear in each class $p(w|k)$. Then, for a new document ($D_{i}$), we use those learned word probabilities to calculate $\pi_{ik}$ -- the probability that $D_{i}$ belongs to each possible class $p(k\mid D_{i})$. The result is a classification assigned to the document because it has the highest probability. 
+
+What <code>Wordscores</code> does instead is that after estimating how likely it is that each word belongs to a reference document ($p(w\mid r)$) -- e.g., a pair of left and right-aligned documents, we then calculate the expected ideological position of each word: 
+
+$$ S_{w} = \sum_{r}p(r\mid w)A_{r} $$
+
+Where $A_{r}$ is the ideological score of the reference text $r$. Rather than a categorical classification, the result is now a continuous ideological location. New documents $v$ are finally rescaled to account for weighted averages of word scores -- such that a document's position is the average ideology of the words it uses (from the reference documents) and weighted by the word frequences: 
+
+$$ S_{v} = \sum_{w}p(w\mid v)S_{w} $$
+
+#### Wordscores -- Example
+
+Let's imagine we have two reference texts $r$ -- where $A_{r}$ is Left Party (-1) versus Right Party (+1) to represent the polarity of their ideologies. The two reference documents produce these word frequences: 
+
+| Word | Left Ref. | Right Ref. |
+| :----: | :----: | :----: |
+| welfare | 8 | 1 |
+| tax | 2 | 6 |
+| military | 1 | 7
+
