@@ -21,6 +21,7 @@ library(parallel)
 library(snow)
 library(tm)
 library(quanteda)
+library(quanteda.textmodels)
 library(gutenbergr)
 library(stringr)
 library(word2vec)
@@ -59,7 +60,7 @@ reduce_complexity <- function(text) {
 
 ------------------------------------------------------------------------
 
-### Wordscores (Laver, Benoit, and Garry)
+## Wordscores (Laver, Benoit, and Garry)
 
 Although probably (maybe?) not the first methodology for scaling ideology from texts, <code>Wordscores</code> --  introduced by Laver, Benoit, and Garry (2003) -- was the first to gain significant traction among political scientists. In a roundabout way, the methodology is a Naive Bayes–like generative model whose output is converted into a continuous ideological score rather than a class prediction. In essence, it's effectively (sort of) Naive Bayes + Value Projection onto a Reference Scale + Rescaling. 
 
@@ -73,13 +74,140 @@ Where $A_{r}$ is the ideological score of the reference text $r$. Rather than a 
 
 $$ S_{v} = \sum_{w}p(w\mid v)S_{w} $$
 
-#### Wordscores -- Example
+### Wordscores -- Example (Manual)
 
 Let's imagine we have two reference texts $r$ -- where $A_{r}$ is Left Party (-1) versus Right Party (+1) to represent the polarity of their ideologies. The two reference documents produce these word frequences: 
 
-| Word | Left Ref. | Right Ref. |
-| :----: | :----: | :----: |
-| welfare | 8 | 1 |
-| tax | 2 | 6 |
-| military | 1 | 7
+| Word | Left Ref. | Right Ref. | TOTAL |
+| :----: | :----: | :----: | :---: |
+| welfare | 8 | 1 | 9 |
+| tax | 2 | 6 | 8 |
+| military | 1 | 7 | 8 |
+| <b>TOTAL</b> | 11 | 14 | 25 | 
 
+Similar to Naive Bayes, we're going to compute the word probabilities for each of the polarities in the reference documents (classes): 
+
+<b>welfare (9)</b>
+
+$$p(\text{left}\mid \text{welfare}) = \frac{8}{9} = 0.889 \quad p(\text{right}\mid \text{welfare}) = \frac{1}{9} = 0.111  $$
+<b>tax (8)</b>
+$$p(\text{left}\mid \text{tax}) = \frac{2}{8} = 0.25 \quad p(\text{right}\mid \text{tax}) = \frac{2}{8} = 0.75 $$
+<b>military (8)</b> 
+$$p(\text{left}\mid \text{military}) = \frac{1}{8} = 0.125  \quad p(\text{right}\mid \text{military}) = \frac{7}{8} = 0.875 $$
+
+Now we can compute the word scores using $S_{w} = \sum_{r}p(r\mid w)A_{r}$: 
+
+$$S_{\text{welfare}} = 0.889(-1_{Neg}) + 0.111(1_{Pos}) = -0.778 $$
+$$S_{\text{tax}} = 0.25(-1_{Neg}) + 0.75(1_{Pos}) = 0.50 $$
+
+$$S_{\text{military}} = 0.125(-1_{Neg}) + 0.875(1_{Pos}) = 0.75 $$
+
+We now have all the prior probabilities we need to start computing document scores for new documents ($v$). Suppose a new document contains the following: <b>Welfare</b> (3), <b>Tax</b> (1), and </b>Military</b> (0). From this, we know that $p(\text{welfare}\mid v) = \frac{3}{4} = 0.75$, and $p(\text{tax}\mid v) = \frac{1}{4} = 0.25$. 
+
+To compute the document score using $S_{v} = \sum_{w}p(w\mid v)S_{w}$, we just plug in our new values and known probabilities from the reference documents: 
+
+$$ S_{v} = 0.75(-0.778) + 0.25(0.5) = (-0.458)$$ 
+```{r visualizing_wordscores, echo=FALSE}
+
+data.frame(x = c(-1, -0.458, 1)) %>%
+  ggplot() + 
+    geom_vline(xintercept = 0, linetype = 2, alpha = 1/3) +
+  geom_segment(aes(x = -1, xend = 1, y = 0, yend = 0), size = 1, colour = 'black') + 
+  geom_point(aes(x = -0.458, y = 0), size = 5, shape = 21, colour = 'blue', fill = 'black') +
+  geom_point(aes(x = -1, y = 0), size = 5, shape = 21, colour = 'black', fill = 'blue') +
+  geom_point(aes(x = 1, y = 0), size = 5, shape = 21, colour = 'black', fill = 'red') +
+    geom_text(label = 'New Document\n(Moderately Left)', x = -0.458, y = 0.015) + 
+  geom_text(label = 'Left Ref.', x = -0.95, y = 0.025) + 
+  geom_text(label = 'Right Ref.', x = 0.95, y = 0.025) + 
+  scale_y_continuous(expand = c(0, 0), limits = c(-0.1, 0.1)) +
+  theme_minimal() +
+  theme(
+    panel.background = element_rect(size = 1, colour = 'black', fill = NA), 
+    panel.grid = element_blank(),        
+    axis.text.y = element_blank(), 
+    axis.title = element_blank(), 
+    axis.text.x = element_text(size = 12, colour = 'black'),
+    axis.ticks.y = element_blank()     
+  ) 
+```
+
+### Wordscores -- Example (R Manual)
+
+```{r, wordscores_manual}
+
+A_r <- c(left = -1, right = 1) # Reference Ideologies
+
+reference <- data.frame(word = c('welfare', 'tax', 'military'), 
+                        left = c(8, 2, 1), 
+                        right = c(1, 6, 7)) # Reference Documents
+
+reference <- reference %>%
+  mutate(p_left = reference$left/(reference$left + reference$right), 
+         p_right = reference$right/(reference$right + reference$left), 
+         p_left = round(p_left, 3), 
+         p_right = round(p_right, 3)) # Assign P(r|w)
+
+reference$S_w <- reference$p_left * A_r["left"] + reference$p_right * A_r["right"] # Calculate Word Scores
+
+stargazer::stargazer(tibble(reference), summary = F, type = 'text')
+
+new_document <- c(welfare = 3, 
+                  tax = 1, 
+                  military = 0) # New Document
+
+new_document_total <- sum(new_document) # New Document Total Words
+
+p_w_v = new_document/new_document_total # Prob. of Word from New Document
+
+sum(p_w_v * reference$S_w) # Calculate Document Scores
+
+```
+### Wordscores -- Example (Quanteda)
+
+
+```{r, wordscores_quanteda}
+
+library(quanteda) # Load Quanteda
+
+texts <- c(left_ref  = paste(c(rep('welfare', 8), rep('tax', 2), 'military'), collapse = " "),
+           right_ref = paste(c('welfare', rep('tax', 6), rep('military', 7)), collapse = " "),
+           new_doc = paste(c(rep('welfare', 3), 'tax'), collapse = " "))
+
+dfm <- quanteda::dfm(quanteda::tokens(quanteda::corpus(texts))) # Create DFM from Tokenized Corpus
+
+dfm
+
+reference_scores <- c(-1, 1, NA) # Set Reference Scores
+
+wordscores_model <- textmodel_wordscores(dfm, y = reference_scores)  # Run Wordscores Model
+
+predict(wordscores_model, rescaling = "lbg") # Predict (Lavar, Benoit, and Garry Rescaling Method)
+
+# Results Going to be a Bit Different Than Manual -- Rescaling with Small Corpora Tend to Stretch Scores, Often Overshooting Original Reference Anchors. Adding More Documents Will Improve Stability of Reference Anchors 
+
+
+```
+
+### Wordscores -- Example (Quanteda - Lots of Data)
+
+```{r wordscores_german_example, message=FALSE, warning=FALSE}
+
+corp_ger <- get(load('../data/german_manifestos.rdata')) # Load German Manifestos Corpus
+
+corp_ger
+
+dfm_ger <- quanteda::dfm(quanteda::tokens(corp_ger, remove_punct = T)) %>% # DFM from Tokenized Corpus
+  dfm_remove(pattern = stopwords("de"))  # Remove German Stopwords
+
+wordscores_german <- textmodel_wordscores(dfm_ger, 
+                                         y = corp_ger$ref_score, 
+                                         smooth = 1) # Apply Wordscors
+
+summary(wordscores_german)
+
+pred_ws <- predict(wordscores_german, se.fit = TRUE, newdata = dfm_ger) # Predict Scores from Unseen
+
+quanteda.textplots::textplot_scale1d(pred_ws) # Quanteda Built-In Function
+
+
+```

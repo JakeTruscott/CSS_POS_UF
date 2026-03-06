@@ -169,8 +169,8 @@ pre code {
 
 
 <hr />
-<div id="wordscores-laver-benoit-and-garry" class="section level3">
-<h3>Wordscores (Laver, Benoit, and Garry)</h3>
+<div id="wordscores-laver-benoit-and-garry" class="section level2">
+<h2>Wordscores (Laver, Benoit, and Garry)</h2>
 <p>Although probably (maybe?) not the first methodology for scaling
 ideology from texts, <code>Wordscores</code> – introduced by Laver,
 Benoit, and Garry (2003) – was the first to gain significant traction
@@ -205,8 +205,8 @@ the average ideology of the words it uses (from the reference documents)
 and weighted by the word frequences:</p>
 <p><span class="math display">\[ S_{v} = \sum_{w}p(w\mid v)S_{w}
 \]</span></p>
-<div id="wordscores-example" class="section level4">
-<h4>Wordscores – Example</h4>
+<div id="wordscores-example-manual" class="section level3">
+<h3>Wordscores – Example (Manual)</h3>
 <p>Let’s imagine we have two reference texts <span
 class="math inline">\(r\)</span> – where <span
 class="math inline">\(A_{r}\)</span> is Left Party (-1) versus Right
@@ -218,6 +218,7 @@ reference documents produce these word frequences:</p>
 <th align="center">Word</th>
 <th align="center">Left Ref.</th>
 <th align="center">Right Ref.</th>
+<th align="center">TOTAL</th>
 </tr>
 </thead>
 <tbody>
@@ -225,19 +226,204 @@ reference documents produce these word frequences:</p>
 <td align="center">welfare</td>
 <td align="center">8</td>
 <td align="center">1</td>
+<td align="center">9</td>
 </tr>
 <tr class="even">
 <td align="center">tax</td>
 <td align="center">2</td>
 <td align="center">6</td>
+<td align="center">8</td>
 </tr>
 <tr class="odd">
 <td align="center">military</td>
 <td align="center">1</td>
 <td align="center">7</td>
+<td align="center">8</td>
+</tr>
+<tr class="even">
+<td align="center"><b>TOTAL</b></td>
+<td align="center">11</td>
+<td align="center">14</td>
+<td align="center">25</td>
 </tr>
 </tbody>
 </table>
+<p>Similar to Naive Bayes, we’re going to compute the word probabilities
+for each of the polarities in the reference documents (classes):</p>
+<p><b>welfare (9)</b></p>
+<p><span class="math display">\[p(\text{left}\mid \text{welfare}) =
+\frac{8}{9} = 0.889 \quad p(\text{right}\mid \text{welfare}) =
+\frac{1}{9} = 0.111  \]</span> <b>tax (8)</b> <span
+class="math display">\[p(\text{left}\mid \text{tax}) = \frac{2}{8} =
+0.25 \quad p(\text{right}\mid \text{tax}) = \frac{2}{8} = 0.75 \]</span>
+<b>military (8)</b> <span class="math display">\[p(\text{left}\mid
+\text{military}) = \frac{1}{8} = 0.125  \quad p(\text{right}\mid
+\text{military}) = \frac{7}{8} = 0.875 \]</span></p>
+<p>Now we can compute the word scores using <span
+class="math inline">\(S_{w} = \sum_{r}p(r\mid w)A_{r}\)</span>:</p>
+<p><span class="math display">\[S_{\text{welfare}} = 0.889(-1_{Neg}) +
+0.111(1_{Pos}) = -0.778 \]</span> <span
+class="math display">\[S_{\text{tax}} = 0.25(-1_{Neg}) + 0.75(1_{Pos}) =
+0.50 \]</span></p>
+<p><span class="math display">\[S_{\text{military}} = 0.125(-1_{Neg}) +
+0.875(1_{Pos}) = 0.75 \]</span></p>
+<p>We now have all the prior probabilities we need to start computing
+document scores for new documents (<span
+class="math inline">\(v\)</span>). Suppose a new document contains the
+following: <b>Welfare</b> (3), <b>Tax</b> (1), and </b>Military</b> (0).
+From this, we know that <span class="math inline">\(p(\text{welfare}\mid
+v) = \frac{3}{4} = 0.75\)</span>, and <span
+class="math inline">\(p(\text{tax}\mid v) = \frac{1}{4} =
+0.25\)</span>.</p>
+<p>To compute the document score using <span class="math inline">\(S_{v}
+= \sum_{w}p(w\mid v)S_{w}\)</span>, we just plug in our new values and
+known probabilities from the reference documents:</p>
+<p><span class="math display">\[ S_{v} = 0.75(-0.778) + 0.25(0.5) =
+(-0.458)\]</span>
+<img src="wordscores_files/figure-html/visualizing_wordscores-1.png" width="672" /></p>
+</div>
+<div id="wordscores-example-r-manual" class="section level3">
+<h3>Wordscores – Example (R Manual)</h3>
+<pre class="r"><code>A_r &lt;- c(left = -1, right = 1) # Reference Ideologies
+
+reference &lt;- data.frame(word = c(&#39;welfare&#39;, &#39;tax&#39;, &#39;military&#39;), 
+                        left = c(8, 2, 1), 
+                        right = c(1, 6, 7)) # Reference Documents
+
+reference &lt;- reference %&gt;%
+  mutate(p_left = reference$left/(reference$left + reference$right), 
+         p_right = reference$right/(reference$right + reference$left), 
+         p_left = round(p_left, 3), 
+         p_right = round(p_right, 3)) # Assign P(r|w)
+
+reference$S_w &lt;- reference$p_left * A_r[&quot;left&quot;] + reference$p_right * A_r[&quot;right&quot;] # Calculate Word Scores
+
+stargazer::stargazer(tibble(reference), summary = F, type = &#39;text&#39;)</code></pre>
+<pre><code>## 
+## ===========================================
+##     word   left right p_left p_right  S_w  
+## -------------------------------------------
+## 1 welfare   8     1   0.889   0.111  -0.778
+## 2   tax     2     6    0.25   0.75    0.5  
+## 3 military  1     7   0.125   0.875   0.75 
+## -------------------------------------------</code></pre>
+<pre class="r"><code>new_document &lt;- c(welfare = 3, 
+                  tax = 1, 
+                  military = 0) # New Document
+
+new_document_total &lt;- sum(new_document) # New Document Total Words
+
+p_w_v = new_document/new_document_total # Prob. of Word from New Document
+
+sum(p_w_v * reference$S_w) # Calculate Document Scores</code></pre>
+<pre><code>## [1] -0.4585</code></pre>
+</div>
+<div id="wordscores-example-quanteda" class="section level3">
+<h3>Wordscores – Example (Quanteda)</h3>
+<pre class="r"><code>library(quanteda) # Load Quanteda
+
+texts &lt;- c(left_ref  = paste(c(rep(&#39;welfare&#39;, 8), rep(&#39;tax&#39;, 2), &#39;military&#39;), collapse = &quot; &quot;),
+           right_ref = paste(c(&#39;welfare&#39;, rep(&#39;tax&#39;, 6), rep(&#39;military&#39;, 7)), collapse = &quot; &quot;),
+           new_doc = paste(c(rep(&#39;welfare&#39;, 3), &#39;tax&#39;), collapse = &quot; &quot;))
+
+dfm &lt;- quanteda::dfm(quanteda::tokens(quanteda::corpus(texts))) # Create DFM from Tokenized Corpus
+
+dfm</code></pre>
+<pre><code>## Document-feature matrix of: 3 documents, 3 features (11.11% sparse) and 0 docvars.
+##            features
+## docs        welfare tax military
+##   left_ref        8   2        1
+##   right_ref       1   6        7
+##   new_doc         3   1        0</code></pre>
+<pre class="r"><code>reference_scores &lt;- c(-1, 1, NA) # Set Reference Scores
+
+wordscores_model &lt;- textmodel_wordscores(dfm, y = reference_scores)  # Run Wordscores Model
+
+predict(wordscores_model, rescaling = &quot;lbg&quot;) # Predict (Lavar, Benoit, and Garry Rescaling Method)</code></pre>
+<pre><code>##   left_ref  right_ref    new_doc 
+## -0.9174137  1.4594127 -1.0567889</code></pre>
+<pre class="r"><code># Results Going to be a Bit Different Than Manual -- Rescaling with Small Corpora Tend to Stretch Scores, Often Overshooting Original Reference Anchors. Adding More Documents Will Improve Stability of Reference Anchors </code></pre>
+</div>
+<div id="wordscores-example-quanteda---lots-of-data"
+class="section level3">
+<h3>Wordscores – Example (Quanteda - Lots of Data)</h3>
+<pre class="r"><code>corp_ger &lt;- get(load(&#39;../data/german_manifestos.rdata&#39;)) # Load German Manifestos Corpus
+
+corp_ger</code></pre>
+<pre><code>## Corpus consisting of 12 documents and 3 docvars.
+## AfD 2013 :
+## &quot;Alternative für Deutschland Wahlprogramm Währungspolitik - W...&quot;
+## 
+## CDU-CSU 2013 :
+## &quot;Gemeinsam erfolgreich für Deutschland. Regierungsprogramm 20...&quot;
+## 
+## FDP 2013 :
+## &quot;Bürgerprogramm 2013 Damit Deutschland  stark bleibt. Damit D...&quot;
+## 
+## Gruene 2013 :
+## &quot;ZEIT FÜR DEN GRÜNEN WANDEL TEILHABEN. EINMISCHEN. ZUKUNFT SC...&quot;
+## 
+## Linke 2013 :
+## &quot;100% SOZIAL Die Linke. Wahlprogramm zur Bundestagswahl 2013 ...&quot;
+## 
+## SPD 2013 :
+## &quot;DAS WIR ENTSCHEIDET. Das Regierungsprogramm 2013 - 2017 Bürg...&quot;
+## 
+## [ reached max_ndoc ... 6 more documents ]</code></pre>
+<pre class="r"><code>dfm_ger &lt;- quanteda::dfm(quanteda::tokens(corp_ger, remove_punct = T)) %&gt;% # DFM from Tokenized Corpus
+  dfm_remove(pattern = stopwords(&quot;de&quot;))  # Remove German Stopwords
+
+wordscores_german &lt;- textmodel_wordscores(dfm_ger, 
+                                         y = corp_ger$ref_score, 
+                                         smooth = 1) # Apply Wordscors
+
+summary(wordscores_german)</code></pre>
+<pre><code>## 
+## Call:
+## textmodel_wordscores.dfm(x = dfm_ger, y = corp_ger$ref_score, 
+##     smooth = 1)
+## 
+## Reference Document Statistics:
+##              score total min  max    mean median
+## AfD 2013        NA   455   0   23 0.01121      0
+## CDU-CSU 2013  5.92 23054   0  245 0.56789      0
+## FDP 2013      6.53 20593   0  187 0.50727      0
+## Gruene 2013   3.61 45751   0  398 1.12698      0
+## Linke 2013    1.23 21001   0  234 0.51732      0
+## SPD 2013      3.76 23142   0  214 0.57006      0
+## AfD 2017        NA  9850   0  108 0.24263      0
+## CDU-CSU 2017    NA 10711   0  136 0.26384      0
+## FDP 2017        NA 19292   0  261 0.47522      0
+## Gruene 2017     NA 40689   0 1100 1.00229      0
+## Linke 2017      NA 33246   0  788 0.81895      0
+## SPD 2017        NA 20768   0  186 0.51158      0
+## 
+## Wordscores:
+## (showing first 30 elements)
+##           alternative           deutschland          wahlprogramm 
+##                 3.290                 4.742                 3.296 
+##       währungspolitik               fordern             geordnete 
+##                 4.531                 3.255                 4.242 
+##             auflösung euro-währungsgebietes               braucht 
+##                 3.336                 4.242                 4.155 
+##                  euro               ländern               schadet 
+##                 3.333                 4.228                 3.912 
+##      wiedereinführung            nationaler             währungen 
+##                 4.466                 4.579                 4.242 
+##             schaffung             kleinerer            stabilerer 
+##                 4.290                 4.427                 4.242 
+##      währungsverbünde                    dm                  darf 
+##                 4.242                 4.242                 3.871 
+##                  tabu              änderung          europäischen 
+##                 4.159                 4.227                 4.360 
+##              verträge                 staat           ausscheiden 
+##                 3.553                 4.794                 3.698 
+##           ermöglichen                  volk          demokratisch 
+##                 4.356                 4.242                 2.271</code></pre>
+<pre class="r"><code>pred_ws &lt;- predict(wordscores_german, se.fit = TRUE, newdata = dfm_ger) # Predict Scores from Unseen
+
+quanteda.textplots::textplot_scale1d(pred_ws) # Quanteda Built-In Function</code></pre>
+<p><img src="wordscores_files/figure-html/wordscores_german_example-1.png" width="672" /></p>
 </div>
 </div>
 
