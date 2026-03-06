@@ -60,7 +60,7 @@ reduce_complexity <- function(text) {
 
 ------------------------------------------------------------------------
 
-## Wordfish (Shlapin and Proksch)
+## Wordfish (Slapin and Proksch)
 
 <code>Wordfish</code> is a poisson factor model that, like <code>Wordscores</code>, tries to scale the ideological positions of documents. However, rather than needing reference documents, <code>Wordfish</code> is unsupervised and uses maximum likelihood to infer both a document's latent ideological position ($\theta_{i}$) and word discriminations $\beta_{j}$ -- i.e., how strongly a word separates documents (see <a href="https://jaketruscott.github.io/CSS_POS_UF/class_8/discriminating_words.html">HERE</a> for our previous discussion on discriminating words). 
 

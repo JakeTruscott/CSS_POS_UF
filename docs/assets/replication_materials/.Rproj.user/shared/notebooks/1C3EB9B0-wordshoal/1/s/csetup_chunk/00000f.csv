@@ -1,0 +1,82 @@
+"0","
+library(ggplot2)
+library(dplyr)
+"
+"2","
+Attaching package: ‘dplyr’
+
+"
+"2","The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+"
+"0","library(stargazer)"
+"2","
+Please cite as: 
+
+"
+"2"," Hlavac, Marek (2022). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+"
+"2"," R package version 5.2.3. https://CRAN.R-project.org/package=stargazer 
+
+"
+"0","library(tm)"
+"2","Loading required package: NLP
+"
+"2","
+Attaching package: ‘NLP’
+
+"
+"2","The following object is masked from ‘package:ggplot2’:
+
+    annotate
+
+"
+"2","The following objects are masked from ‘package:quanteda’:
+
+    meta, meta<-
+
+"
+"2","
+Attaching package: ‘tm’
+
+"
+"2","The following object is masked from ‘package:quanteda’:
+
+    stopwords
+
+"
+"0","library(quanteda)"
+"0","library(quanteda.textmodels)"
+"0","library(stringr)"
+"0","library(textdata)"
+"0","library(wordshoal)"
+"0",""
+"0","default_ggplot_theme <- theme_minimal() + "
+"0","  theme(panel.border = element_rect(linewidth = 1, colour = 'black', fill = NA), "
+"0","        axis.text = element_text(size = 12, colour = 'black'), "
+"0","        axis.title = element_text(size = 14, colour = 'black'), "
+"0","        strip.background = element_rect(linewidth = 1, colour = 'black', fill = 'grey75'),"
+"0","        strip.text = element_text(size = 12, colour = 'black'), "
+"0","        legend.position = 'none', "
+"0","        plot.caption = element_text(hjust = 0, size = 10)) "
+"0",""
+"0",""
+"0","reduce_complexity <- function(text) {"
+"0","  text <- tolower(text)"
+"0","  text <- gsub(""[^a-z\\s]"", "" "", text)"
+"0","  words <- unlist(str_split(text, ""\\s+""))"
+"0","  words <- words[words != """" & !words %in% tm::stopwords(""english"")]"
+"0","  words <- textstem::lemmatize_words(words)"
+"0","  words <- words[str_detect(words, ""^[a-z]+$"")]"
+"0","  text <- str_squish(paste(words, collapse = "" ""))"
+"0","  return(text)"
+"0","}"
+"0",""
+"0",""
