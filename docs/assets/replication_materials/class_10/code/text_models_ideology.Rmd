@@ -1,0 +1,63 @@
+---
+title: "Text Models for Measuring Ideology"
+subtitle: "POS6933: Computational Social Science"
+author: "Truscott (Spring 2026)"
+output:
+  html_document:
+    self_contained: false
+    layout: null
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(warning = FALSE)
+
+library(ggplot2)
+library(dplyr)
+library(cowplot)
+library(stargazer)
+library(doParallel)
+library(parallel)
+library(snow)
+library(tm)
+library(quanteda)
+library(gutenbergr)
+library(stringr)
+library(word2vec)
+library(Rtsne)
+library(scales)
+library(textdata)
+library(reticulate)
+
+default_ggplot_theme <- theme_minimal() + 
+  theme(panel.border = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+        axis.text = element_text(size = 12, colour = 'black'), 
+        axis.title = element_text(size = 14, colour = 'black'), 
+        strip.background = element_rect(linewidth = 1, colour = 'black', fill = 'grey75'),
+        strip.text = element_text(size = 12, colour = 'black'), 
+        legend.position = 'none', 
+        plot.caption = element_text(hjust = 0, size = 10)) 
+
+
+library(stringr)
+library(textstem)
+library(tm)
+
+reduce_complexity <- function(text) {
+  text <- tolower(text)
+  text <- gsub("[^a-z\\s]", " ", text)
+  words <- unlist(str_split(text, "\\s+"))
+  words <- words[words != "" & !words %in% tm::stopwords("english")]
+  words <- textstem::lemmatize_words(words)
+  words <- words[str_detect(words, "^[a-z]+$")]
+  text <- str_squish(paste(words, collapse = " "))
+  return(text)
+}
+
+
+```
+
+------------------------------------------------------------------------
+
+## Text Models for Measuring Ideology
+
