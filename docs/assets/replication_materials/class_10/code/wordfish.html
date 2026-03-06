@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Truscott (Spring 2026)" />
+
+
+<title>Wordscores</title>
+
+<script src="wordfish_files/header-attrs-2.28/header-attrs.js"></script>
+<script src="wordfish_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="wordfish_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="wordfish_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="wordfish_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="wordfish_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="wordfish_files/navigation-1.1/tabsets.js"></script>
+<link href="wordfish_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="wordfish_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Wordscores</h1>
+<h3 class="subtitle">POS6933: Computational Social Science</h3>
+<h4 class="author">Truscott (Spring 2026)</h4>
+
+</div>
+
+
+<hr />
+<div id="wordfish-shlapin-and-proksch" class="section level2">
+<h2>Wordfish (Shlapin and Proksch)</h2>
+<p><code>Wordfish</code> is a poisson factor model that, like
+<code>Wordscores</code>, tries to scale the ideological positions of
+documents. However, rather than needing reference documents,
+<code>Wordfish</code> is unsupervised and uses maximum likelihood to
+infer both a document’s latent ideological position (<span
+class="math inline">\(\theta_{i}\)</span>) and word discriminations
+<span class="math inline">\(\beta_{j}\)</span> – i.e., how strongly a
+word separates documents (see
+<a href="https://jaketruscott.github.io/CSS_POS_UF/class_8/discriminating_words.html">HERE</a>
+for our previous discussion on discriminating words).</p>
+<p>The model is specified as:</p>
+<span class="math display">\[ x_{ij} \sim \text{Poisson}(\lambda_{ij})
+\]</span> <span class="math display">\[ \lambda_{ij} = \exp(\alpha_{j} +
+\psi_j + \beta_j\theta_i) \]</span> Where:
+<ul>
+<li>
+<span class="math inline">\(x_{ij}\)</span> = the count of word <span
+class="math inline">\(j\)</span> in document <span
+class="math inline">\(i\)</span>
+</li>
+<li>
+<span class="math inline">\(\alpha_{i}\)</span> = Document-specific
+verbosity (value to control for length of document – ensures <span
+class="math inline">\(\theta_i\)</span> reflects content differences,
+not just document size)
+</li>
+<li>
+<span class="math inline">\(\phi_j\)</span> = Word-specific baseline
+frequency
+</li>
+<li>
+<span class="math inline">\(\beta_j\)</span> = Word-specific
+discrimination
+</li>
+<li>
+<span class="math inline">\(\theta_i\)</span> = Latent position of
+document <span class="math inline">\(i\)</span> (<b>What we’re most
+interested in!</b>)
+</ul>
+<div id="wordfish-example-manual" class="section level3">
+<h3>Wordfish – Example (Manual)</h3>
+<p>Let’s use the same sample data from our
+<a href="https://jaketruscott.github.io/CSS_POS_UF/class_10/wordscores.html">Wordfish</a>
+example:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Document</th>
+<th align="center">welfare</th>
+<th align="center">tax</th>
+<th align="center">military</th>
+<th align="center">TOTAL</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Doc 1</td>
+<td align="center">8</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">11</td>
+</tr>
+<tr class="even">
+<td align="center">Doc 2</td>
+<td align="center">1</td>
+<td align="center">6</td>
+<td align="center">7</td>
+<td align="center">14</td>
+</tr>
+<tr class="odd">
+<td align="center">Doc 3</td>
+<td align="center">3</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">4</td>
+</tr>
+</tbody>
+</table>
+<p>We’re going to simplify a lot here because the model uses MLE, which
+involves an interative fitting of the parameters. For a small example
+like this, we’re going to substitute values for <span
+class="math inline">\(\alpha_i\)</span>, <span
+class="math inline">\(\theta_i\)</span>, <span
+class="math inline">\(\psi_j\)</span>, and <span
+class="math inline">\(\beta_j\)</span> that simulate the logic of this
+process – assuming values greater than 0 discriminate as
+<b>right-leaning</b>, while those lesser than zero discriminate
+<b>left</b></p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Parameter</th>
+<th align="center">Doc 1</th>
+<th align="center">Doc 2</th>
+<th align="center">Doc 3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">(<span class="math inline">\(\alpha_i\)</span>)</td>
+<td align="center">2.4</td>
+<td align="center">2.7</td>
+<td align="center">1.2</td>
+</tr>
+<tr class="even">
+<td align="center">(<span class="math inline">\(\theta_i\)</span>)</td>
+<td align="center">0.5</td>
+<td align="center">1.0</td>
+<td align="center">-0.3</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Word</th>
+<th align="center">(<span class="math inline">\(\psi_j\)</span>)</th>
+<th align="center">(<span class="math inline">\(\beta_j\)</span>)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">welfare</td>
+<td align="center">0.2</td>
+<td align="center">0.8</td>
+</tr>
+<tr class="even">
+<td align="center">tax</td>
+<td align="center">0.1</td>
+<td align="center">0.5</td>
+</tr>
+<tr class="odd">
+<td align="center">military</td>
+<td align="center">0.3</td>
+<td align="center">1.2</td>
+</tr>
+</tbody>
+</table>
+<p>From here, we’ll compute the expected counts: <span
+class="math inline">\(\lambda_{ij} = \exp(\alpha_i + \psi_j +
+\beta_j\theta_i)\)</span>:</p>
+<table>
+<colgroup>
+<col width="16%" />
+<col width="16%" />
+<col width="40%" />
+<col width="28%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Word</th>
+<th align="center">Document</th>
+<th align="center">Formula</th>
+<th align="center">Expected Count (<span
+class="math inline">\(\lambda_ij\)</span>)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">welfare</td>
+<td align="center">Doc 1</td>
+<td align="center"><span class="math inline">\(\exp(2.4_{\alpha_i} +
+0.2_{\psi_j} + 0.8_{\beta_j}\cdot0.5_{\theta_i})\)</span></td>
+<td align="center"><span class="math inline">\(\exp(3.0) \approx
+20.1\)</span></td>
+</tr>
+<tr class="even">
+<td align="center">tax</td>
+<td align="center">Doc 1</td>
+<td align="center"><span class="math inline">\(\exp(2.4 + 0.1 +
+0.5\times 0.5)\)</span></td>
+<td align="center"><span class="math inline">\(\exp(2.75) \approx
+15.6\)</span></td>
+</tr>
+<tr class="odd">
+<td align="center">military</td>
+<td align="center">Doc 1</td>
+<td align="center"><span class="math inline">\(\exp(2.4 + 0.3 +
+1.2\times 0.5)\)</span></td>
+<td align="center"><span class="math inline">\(\exp(3.3) \approx
+27.1\)</span></td>
+</tr>
+<tr class="even">
+<td align="center"> </td>
+<td align="center"> </td>
+<td align="center"> </td>
+<td align="center"> </td>
+</tr>
+<tr class="odd">
+<td align="center">welfare</td>
+<td align="center">Doc 2</td>
+<td align="center"><span class="math inline">\(\exp(2.7 + 0.2 +
+0.8\times 1)\)</span></td>
+<td align="center"><span class="math inline">\(\exp(3.7) \approx
+40.4\)</span></td>
+</tr>
+<tr class="even">
+<td align="center">tax</td>
+<td align="center">Doc 2</td>
+<td align="center"><span class="math inline">\(\exp(2.7 + 0.1 +
+0.5\times 1)\)</span></td>
+<td align="center"><span class="math inline">\(\exp(3.3) \approx
+27.1\)</span></td>
+</tr>
+<tr class="odd">
+<td align="center">military</td>
+<td align="center">Doc 2</td>
+<td align="center"><span class="math inline">\(\exp(2.7 + 0.3 +
+1.2\times 1)\)</span></td>
+<td align="center"><span class="math inline">\(\exp(4.2) \approx
+66.7\)</span></td>
+</tr>
+<tr class="even">
+<td align="center"> </td>
+<td align="center"> </td>
+<td align="center"> </td>
+<td align="center"> </td>
+</tr>
+<tr class="odd">
+<td align="center">welfare</td>
+<td align="center">Doc 3</td>
+<td align="center"><span class="math inline">\(\exp(1.2 + 0.2 +
+0.8\times -0.3)\)</span></td>
+<td align="center"><span class="math inline">\(\exp(1.16) \approx
+3.1\)</span></td>
+</tr>
+<tr class="even">
+<td align="center">tax</td>
+<td align="center">Doc 3</td>
+<td align="center"><span class="math inline">\(\exp(1.2 + 0.1 +
+0.5\times -0.3)\)</span></td>
+<td align="center"><span class="math inline">\(\exp(1.15) \approx
+3.1\)</span></td>
+</tr>
+<tr class="odd">
+<td align="center">military</td>
+<td align="center">Doc 3</td>
+<td align="center"><span class="math inline">\(\exp(1.2 + 0.3 +
+1.2\times -0.3)\)</span></td>
+<td align="center"><span class="math inline">\(\exp(1.14) \approx
+3.1\)</span></td>
+</tr>
+</tbody>
+</table>
+<b>Key Takeaways</b>:
+<ul>
+<li>
+Doc 2 is the most right leaning (<span
+class="math inline">\(\theta_i\)</span> = 1), while Doc 1 is moderately
+right and Doc 3 is moderately left.
+</li>
+<li>
+Doc 3 is the shortest document (<span
+class="math inline">\(\alpha_i\)</span> = 1.2), while Doc 2 is the
+longest – Doc 1 appears to be almost in between.
+</li>
+<li>
+Military proves to be the most important discriminating word (<span
+class="math inline">\(\beta_j\)</span> = 1.2), showing strong preference
+as a word that’s important for identifying right-leaning documents –
+e.g., Doc 1 and 2, where <span
+class="math inline">\(x_{Doc2,\text{Military}} = 66.7\)</span> and <span
+class="math inline">\(x_{Doc1,\text{Military}} = 27.1\)</span>, versus
+<span class="math inline">\(x_{Doc3,\text{Military}} = 3.1\)</span>
+</ul>
+</div>
+<div id="wordfish-example-r-manual" class="section level3">
+<h3>Wordfish – Example (R Manual)</h3>
+<p>The example below uses the same data and recovers the values
+manually.</p>
+<pre class="r"><code>docs &lt;- c(&#39;Doc1&#39;, &#39;Doc2&#39;, &#39;Doc3&#39;) # Documents
+words &lt;- c(&#39;welfare&#39;, &#39;tax&#39;, &#39;military&#39;) # Discriminating Words
+
+alpha_i &lt;- c(Doc1 = 2.4, Doc2 = 2.7, Doc3 = 1.2) # Verbosity
+theta_i &lt;- c(Doc1 = 0.5, Doc2 = 1.0, Doc3 = -0.3)  # Latent Ideology
+psi_j &lt;- c(welfare = 0.2, tax = 0.1, military = 0.3)  # Baseline Word Freq.
+beta_j &lt;- c(welfare = 0.8, tax = 0.5, military = 1.2) # Word Discrimination
+
+lambda &lt;- matrix(0, nrow = length(docs), ncol = length(words),
+                 dimnames = list(docs, words)) # Matrix to Input Recovered Lambda_ij Values
+
+for (d in docs) {
+  for (w in words) {
+    lambda[d, w] &lt;- exp(alpha_i[d] + psi_j[w] + beta_j[w] * theta_i[d])
+  }
+} # Function -- For Each Doc(i)-Word(j) Pair, Recover Lambda_ij
+
+as.data.frame(lambda) %&gt;%
+  mutate(document = rownames(lambda)) %&gt;%
+  tidyr::pivot_longer(cols = -document,
+               names_to = &quot;word&quot;,
+               values_to = &quot;lambda&quot;) %&gt;%
+  mutate(lambda = round(lambda, 2))</code></pre>
+<pre><code>## # A tibble: 9 × 3
+##   document word     lambda
+##   &lt;chr&gt;    &lt;chr&gt;     &lt;dbl&gt;
+## 1 Doc1     welfare   20.1 
+## 2 Doc1     tax       15.6 
+## 3 Doc1     military  27.1 
+## 4 Doc2     welfare   40.4 
+## 5 Doc2     tax       27.1 
+## 6 Doc2     military  66.7 
+## 7 Doc3     welfare    3.19
+## 8 Doc3     tax        3.16
+## 9 Doc3     military   3.13</code></pre>
+</div>
+<div id="wordfish-example-quanteda" class="section level3">
+<h3>Wordfish – Example (Quanteda)</h3>
+<p>Now we’re going to use a dataset of budget speeches from the Irish
+Dail. The date (<code>data_corpus_irishbudget2010</code>) is already
+available from <code>quanteda.textmodels</code>:</p>
+<p><i>Note:</i>: <code>dir()</code> in <code>textmodel_wordfish</code>
+specifies the ideological anchors, such that estimation should begin
+with the assumption that <code>dir(6,5)</code> means that <span
+class="math inline">\(psi_{(6)}\)</span> anchors the left (presumably
+<i>Liberal</i>), while <span class="math inline">\(psi_{(5)}\)</span>
+anchors the right (presumably <i>Conservative</i>). As we can see below,
+this will be Edna Kenny (Fine Gael) on the Left, and Brian Cowen (Fianna
+Fáil) on the Right. This does <b>not</b> mean they will ultimately be
+the furthest left or right legislators – but rather that estimation
+should start by orienting the scale with the assumption that Kenny is on
+the Left and Cowen on the Right</p>
+<pre class="r"><code>dail &lt;- quanteda::tokens(quanteda.textmodels::data_corpus_irishbudget2010, remove_punct = TRUE)
+dail_dfm &lt;- quanteda::dfm(dail) # DFM of Tokenized Dail Corpus
+
+quanteda::docnames(dail_dfm) # Legislator Names</code></pre>
+<pre><code>##  [1] &quot;Lenihan, Brian (FF)&quot;       &quot;Bruton, Richard (FG)&quot;     
+##  [3] &quot;Burton, Joan (LAB)&quot;        &quot;Morgan, Arthur (SF)&quot;      
+##  [5] &quot;Cowen, Brian (FF)&quot;         &quot;Kenny, Enda (FG)&quot;         
+##  [7] &quot;ODonnell, Kieran (FG)&quot;     &quot;Gilmore, Eamon (LAB)&quot;     
+##  [9] &quot;Higgins, Michael (LAB)&quot;    &quot;Quinn, Ruairi (LAB)&quot;      
+## [11] &quot;Gormley, John (Green)&quot;     &quot;Ryan, Eamon (Green)&quot;      
+## [13] &quot;Cuffe, Ciaran (Green)&quot;     &quot;OCaolain, Caoimhghin (SF)&quot;</code></pre>
+<pre class="r"><code>dail_wordfish &lt;- quanteda.textmodels::textmodel_wordfish(dail_dfm, 
+                                    dir = c(6, 5)) # Specifying Kenny on Left &amp; Cowen on Right
+
+quanteda.textplots::textplot_scale1d(dail_wordfish, groups = dail_dfm$party) # 1D Plot by Party</code></pre>
+<p><img src="wordfish_files/figure-html/wordfish-1.png" width="672" /></p>
+<pre class="r"><code>quanteda.textplots::textplot_scale1d(dail_wordfish, 
+                 margin = &quot;features&quot;, 
+                 highlighted = c(&quot;government&quot;, &quot;global&quot;, &quot;children&quot;, 
+                                 &quot;bank&quot;, &quot;economy&quot;, &quot;the&quot;, &quot;citizenship&quot;,
+                                 &quot;productivity&quot;, &quot;deficit&quot;)) </code></pre>
+<p><img src="wordfish_files/figure-html/wordfish-2.png" width="672" /></p>
+<pre class="r"><code># Psi x Beta W/ Highlighted Words
+# Recall: Psi = Baseline Freq. Beta = Discrimination
+# High Beta, Low Psi = Rare but Important for Telling L vs. R
+# High beta, High Psi = Common but Still Important
+# Low Beta = Not Important Words for Discriminating</code></pre>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
