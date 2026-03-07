@@ -1,0 +1,88 @@
+---
+title: "Clustering and Topic Discovery"
+author: "Jake S. Truscott, Ph.D"
+subtitle: |
+  POS6933: Computational Social Science
+institute: |
+  \vspace{-5mm} University of Florida \newline
+  Spring 2026 \newline \newline \newline
+  \includegraphics[width=3cm]{../../../beamer_style/UF.png} \quad 
+  \includegraphics[width=3.1cm]{../../../images/CSS_POLS_UF_Logo.png}
+output: 
+  beamer_presentation:
+    slide_level: 3
+    keep_tex: true
+    toc: false
+classoption: aspectratio=169  
+header-includes:
+  - \PassOptionsToClass{aspectratio=169}{beamer}
+  - \usepackage{../../../beamer_style/beamer_style}
+  - \setbeamersize{text margin left=3.5mm,text margin right=3.5mm}
+---
+
+```{r setup, include=FALSE}
+library(dplyr); library(ggplot2); library(cowplot); library(formatR); library(stargazer); library(parallel); library(doParallel); library(tm); library(stringr); library(quanteda); library(quanteda.textstats); library(quanteda.textstats); library(dplyr); library(ggplot2); library(stringr);  library(tm); library(quanteda); library(quanteda.textstats); library(quanteda.textstats); library(rvest); library(tibble); library(tidytext)
+
+knitr::opts_chunk$set(
+  warning = FALSE, 
+	fig.align = "center",
+	comment = NA,
+	dev = "pdf",
+  tidy.opts=list(width.cutoff=50), 
+  R.options = list(width = 120)
+)
+
+default_ggplot_theme  <- theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12),
+    axis.title = element_text(size = 12, colour = 'black'),
+    axis.text = element_text(size = 10, colour = 'black'),
+    panel.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+    legend.position = 'bottom', 
+    legend.title = element_blank(), 
+    legend.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+  )
+
+reduce_complexity <- function(text){
+  text <- tolower(text) # Lower Case
+  text <- tm::removePunctuation(text) # Punctuation
+  text <- tm::removeNumbers(text) # Numbers
+  text <- tm::removeWords(text, tm::stopwords("english")) # Stop Words
+  text <- unlist(stringr::str_split(text, '\\s+')) # Tokenize 
+  text <- textstem::lemmatize_words(text) # Lemmatize
+  text <- paste(text, collapse = ' ') # Re-Append
+  text <- gsub("\\s{2,}", ' ', text) # 2 or More Spaces --> One Space
+  text <- trimws(text) # White Space
+  return(text)
+} # Function to Process Text for Bag of Words
+
+```
+
+# Overview
+
+### Overview
+\begin{itemize}
+\item Housekeeping
+\item Class 6 Problem Set Review
+\item Discriminating Words
+\item Clustering 
+\item Topic Models (LDA \& STM)
+\end{itemize}
+
+# Housekeeping 
+
+### Housekeeping
+\begin{itemize}
+\item Final Paper Drafts Due 3/29 (\textit{Optional})
+\item Presentation \& Peer Assessment Schedule Coming 3/23
+\item Will canvas ideas for 4/6 class on 3/23
+\end{itemize}
+
+
+# Class 6 Problem Set
+
+### Class 6 Problem Set Review
+\begin{itemize}
+\item Notes...
+\end{itemize}
+
