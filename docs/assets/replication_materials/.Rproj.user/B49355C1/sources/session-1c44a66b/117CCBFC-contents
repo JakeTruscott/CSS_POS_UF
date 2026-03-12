@@ -69,20 +69,72 @@ reduce_complexity <- function(text){
 \item Topic Models (LDA \& STM)
 \end{itemize}
 
-# Housekeeping 
+
+# Housekeeping
 
 ### Housekeeping
+
 \begin{itemize}
 \item Final Paper Drafts Due 3/29 (\textit{Optional})
 \item Presentation \& Peer Assessment Schedule Coming 3/23
 \item Will canvas ideas for 4/6 class on 3/23
 \end{itemize}
 
-
 # Class 6 Problem Set
 
 ### Class 6 Problem Set Review
+
 \begin{itemize}
 \item Notes...
 \end{itemize}
+
+# Discriminating Words
+
+### Discriminating Words
+\begin{itemize}
+\item Not \textit{discriminatory} words... \par \vspace{2.5mm} \pause
+\item \textbf{Discrimination Words}: The frequency and distribution of words carry meaningful information about latent categories – i.e., words that appear more frequently in some categories than others are informative signals about that category  \par \vspace{2.5mm}
+\item Ex: \textit{Healthcare Provider} vs. \textit{Abortionist} -- Terms used in the same debate but relay competing sentiments/connotations/frames
+\end{itemize}
+
+
+### Discriminating Words -- Competing Terms Example (D v. R)
+\begin{columns}
+\column{0.5\textwidth}
+\begin{table}[h!]
+\centering
+\begin{tabular}{cc}
+\toprule
+\textbf{Democrats} & \textbf{Republicans} \\
+\midrule
+Climate     & Freedom  \\
+Healthcare  & Tax      \\
+Immigration & Border   \\
+Justice     & Security \\
+Welfare     & Economy  \\
+\bottomrule
+\end{tabular}
+\end{table}
+\column{0.5\textwidth}
+\begin{itemize}
+\item This is \underline{not} to say these words invariably represent parties (e.g., useful in vocabulary for dictionary/class assignment) \par \vspace{2.5mm} \pause
+\item Rather -- Words are useful to help us discriminate (distinguish) between them. 
+\item Ex: Democrats can use \textit{Border}, too -- but more likely to appear as term used in by Republicans. 
+\end{itemize}
+\end{columns}
+
+### Mutual Information
+\begin{itemize}
+\item \textbf{Mutual Information}: The amount of information one variable provides about another.  \pause \par \vspace{2.5mm}
+\item MI = 0 $\sim$ Information between two variables (ex: a label and a word) are completely independent (bad discriminator) \pause \par \vspace{2.5mm}
+\item MI = 1 $\sim$ Knowing about one variable completely informs us of the other (good discriminator). 
+
+\end{itemize}
+### Calculating Mutual Information
+\begin{itemize}
+\item[] $$H(k) = -\pi_k\log_2\pi_k-\pi_{-k}\log_2\pi_{-k,} $$
+$$H(k|j) = -\sum_{k,-k}\sum_{j,-j}\pi_{k,j}\log_2\pi_{k,j} $$
+$$\text{MI}_{kj} = H(k) - H(k|j)$$
+\end{itemize}
+
 
