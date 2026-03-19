@@ -1,0 +1,7 @@
+\beamer@sectionintoc {1}{Overview}{2}{0}{1}
+\beamer@sectionintoc {2}{Housekeeping}{3}{0}{2}
+\beamer@sectionintoc {3}{Class 6 Problem Set}{4}{0}{3}
+\beamer@sectionintoc {4}{Discriminating Words}{5}{0}{4}
+\beamer@subsectionintoc {4}{1}{Calculating Mutual Information (Example - Cont.)}{17}{0}{4}
+\beamer@subsectionintoc {4}{2}{Calculating Mutual Information (Example - Cont.)}{20}{0}{4}
+\beamer@subsectionintoc {4}{3}{Calculating Mutual Information (Example - Cont.)}{23}{0}{4}

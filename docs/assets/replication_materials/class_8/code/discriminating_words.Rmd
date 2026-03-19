@@ -160,7 +160,7 @@ Going back to our previous example of [Red]{style="color:red"} and [Blue]{style=
 | Ocean |  0  |  4   |   4   |
 | Water |  0  |  2   |   2   |
 
-Assuming $\alpha_j$ = 0.5 for each of the (7) words, the Dirichlet prior for *Apple* is: 
+Assuming $\alpha_j$ = 0.5 for each of the (7) words, the posterior mean for *Apple* is:
 
 $$
 \hat{\mu}(Apple|Red) = \frac{n_{(Apple,Red)} + \alpha_{Apple}}{n_{Red} + \sum_j\alpha_j} \\
@@ -168,8 +168,7 @@ $$
 \hat{\mu}(Apple|Blue) = \frac{0 + 0.05}{9 + 7 \times 0.5} = 0.04 
 $$
 
-
-From here, the log odds ratio that *Apple* is a predictor of [Red]{style="color:red"} is: 
+From here, the log odds ratio that *Apple* is a predictor of [Red]{style="color:red"} is:
 
 $$
 \delta{Red} = \log(\frac{0.33}{1-0.33}) \rightarrow \log(0.492) \approx -0.70 \\
@@ -177,4 +176,4 @@ $$
 \delta_{kj} = -0.70 - (-3.19) \approx 2.49
 $$
 
-Viewed conceptually, the difference in the log odds that *Apple* appears in a [Red]{style="color:red"} document is approximately 2.49 -- which, after  exponentiation $\exp(2.49)$ is revealed as being $\approx$ 12 times larger. Because it's regularized, we have a lot more power to assert that our belief re: *Apple* is not simply driven by the relative lack of observations in [Blue]{style="color:blue"} and that a larger value means the word's association is robust, not just accidental. 
+Viewed conceptually, the difference in the log odds that *Apple* appears in a [Red]{style="color:red"} document is approximately 2.49 -- which, after exponentiation $\exp(2.49)$ is revealed as being $\approx$ 12 times larger. Because it's regularized, we have a lot more power to assert that our belief re: *Apple* is not simply driven by the relative lack of observations in [Blue]{style="color:blue"} and that a larger value means the word's association is robust, not just accidental.

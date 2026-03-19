@@ -173,8 +173,8 @@ Welfare     & Economy  \\
 \column{0.5\textwidth}
 \begin{itemize}
 \item This is \underline{not} to say these words invariably represent parties (e.g., useful in vocabulary for dictionary/class assignment) \par \vspace{2.5mm} \pause
-\item Rather -- Words are useful to help us discriminate (distinguish) between them. 
-\item Ex: Democrats can use \textit{Border}, too -- but more likely to appear as term used in by Republicans. 
+\item Rather -- Words are useful to help us discriminate (distinguish) between them.  \par \vspace{2.5mm}
+\item Ex: Democrats can use \textit{Border}, too (similar or different frames) -- but more likely to appear as term used in by Republicans. 
 \end{itemize}
 \end{columns}
 \end{frame}
@@ -185,16 +185,196 @@ Welfare     & Economy  \\
 \item \textbf{Mutual Information}: The amount of information one variable provides about another.  \pause \par \vspace{2.5mm}
 \item MI = 0 $\sim$ Information between two variables (ex: a label and a word) are completely independent (bad discriminator) \pause \par \vspace{2.5mm}
 \item MI = 1 $\sim$ Knowing about one variable completely informs us of the other (good discriminator). 
-
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Calculating Mutual Information}
 \phantomsection\label{calculating-mutual-information}
 \begin{itemize}
-\item[] $$H(k) = -\pi_k\log_2\pi_k-\pi_{-k}\log_2\pi_{-k,} $$
-$$H(k|j) = -\sum_{k,-k}\sum_{j,-j}\pi_{k,j}\log_2\pi_{k,j} $$
-$$\text{MI}_{kj} = H(k) - H(k|j)$$
+\item $k$ = Categories
+\item $j$ = Word
+\item $\pi_k$ = Proportion of Documents for $k$
+\item $\pi_{-k}$ = Probability that Doc Doesn't Belong in $k$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Calculating Mutual Information (Cont.)}
+\phantomsection\label{calculating-mutual-information-cont.}
+\begin{center}
+ $H(k) = -\pi_k\log_2\pi_k-\pi_{-k}\log_2\pi_{-k,} $ \par \vspace{2.5mm} \textbf{Unconditional Certainty}:   \footnotesize{\textit{How likely are to assume any random document belongs to a particular category without even seeing a word}} \par \vspace{5mm} \pause \normalsize
+ $H(k|j) = -\sum_{k,-k}\sum_{j,-j}\pi_{k,j}\log_2\pi_{k,j} $ \\  Conditional Certainty  \par \vspace{5mm} \pause
+ $\text{MI}_{kj} = H(k) - H(k|j)$ \\ Mutual Information = Unconditional Certainty - Conditional Certainty
+\end{center}
+\end{frame}
+
+\begin{frame}{Calculating Mutual Information (Example)}
+\phantomsection\label{calculating-mutual-information-example}
+\begin{table}[h!]
+\centering
+\footnotesize
+\begin{tabular}{ccc}
+\toprule
+\textbf{Doc ID} & \textbf{Category ($k$)} & \textbf{Words ($j$)} \\ 
+\midrule
+ 1 & Red & Apple, Tree   \\ 
+ 2 & Red & Apple, Juice  \\ 
+ 3 & Red & Tree, Green  \\ 
+ 4 & Red & Apple, Green  \\ 
+ 5 & Blue & Blue, Ocean  \\ 
+ 6 & Blue & Ocean, Water  \\ 
+ 7 & Blue & Blue, Water  \\ 
+ 8 & Blue & Ocean, Blue  \\ 
+ 9 & Red & Apple, Tree  \\ 
+ 10 & Blue & Ocean, Tree  \\ 
+\bottomrule
+\end{tabular}
+\end{table}
+\end{frame}
+
+\subsection{Calculating Mutual Information (Example -
+Cont.)}\label{calculating-mutual-information-example---cont.}
+
+\begin{frame}{Calculating Mutual Information (Example - Cont.)}
+\begin{columns}
+\footnotesize
+\column{0.4\textwidth}
+\begin{table}[h!]
+\centering
+\begin{tabular}{ccc}
+\toprule
+\textbf{Doc ID} & \textbf{Category ($k$)} & \textbf{Words ($j$)} \\ 
+\midrule
+ 1 & Red & Apple, Tree   \\ 
+ 2 & Red & Apple, Juice  \\ 
+ 3 & Red & Tree, Green  \\ 
+ 4 & Red & Apple, Green  \\ 
+ 5 & Blue & Blue, Ocean  \\ 
+ 6 & Blue & Ocean, Water  \\ 
+ 7 & Blue & Blue, Water  \\ 
+ 8 & Blue & Ocean, Blue  \\ 
+ 9 & Red & Apple, Tree  \\ 
+ 10 & Blue & Ocean, Tree  \\ 
+\bottomrule
+\end{tabular}
+\end{table}
+\normalsize
+\column{0.6\textwidth}
+  \begin{itemize}
+  \centering
+  \item[] \hspace{2.5mm} \textbf{Calculate Unconditional Certainty ($\pi_{k}$)} \pause
+  \item[] \hspace{2.5mm} $\pi_{Red} = 5/10 = 0.5 $
+  \item[] \hspace{2.5mm} $\pi_{Blue} = 5/10 = 0.5$ \pause
+  \item[] \hspace{2.5mm} $H(K) = -\pi_{Red}\log_2\pi_{Red}-\pi_{Blue}\log_2\pi_{Blue}$
+  \item[] \hspace{2.5mm} $H(K) = -0.5\log_20.5-0.5\log_20.5$
+  \item[] \hspace{2.5mm} $H(K) = 1$
+  \end{itemize}
+  \vfill
+\end{columns}
+\end{frame}
+
+\subsection{Calculating Mutual Information (Example -
+Cont.)}\label{calculating-mutual-information-example---cont.-1}
+
+\begin{frame}{Calculating Mutual Information (Example - Cont.)}
+\begin{columns}
+\column{0.3\textwidth}
+\footnotesize
+\begin{table}[h!]
+\centering
+\begin{tabular}{ccc}
+\toprule
+\textbf{Doc ID} & \textbf{Category ($k$)} & \textbf{Words ($j$)} \\ 
+\midrule
+ 1 & Red & Apple, Tree   \\ 
+ 2 & Red & Apple, Juice  \\ 
+ 3 & Red & Tree, Green  \\ 
+ 4 & Red & Apple, Green  \\ 
+ 5 & Blue & Blue, Ocean  \\ 
+ 6 & Blue & Ocean, Water  \\ 
+ 7 & Blue & Blue, Water  \\ 
+ 8 & Blue & Ocean, Blue  \\ 
+ 9 & Red & Apple, Tree  \\ 
+ 10 & Blue & Ocean, Tree  \\ 
+\bottomrule
+\end{tabular}
+\end{table}
+\normalsize
+\column{0.7\textwidth}
+  \begin{itemize}
+  \centering
+  \item[] \hspace{2.5mm} \textbf{Calculate Conditional Certainty \\ For Tree ($\pi_{k}$)} \pause
+  \item[] \hspace{2.5mm} $P(Red|Tree) = 3/4 = 0.75$
+  \item[] \hspace{2.5mm} $P(Blue|Tree) = 1/4 = 0.25 $
+  \item[] \hspace{2.5mm} $H(K) = -\pi_{Red}\log_2\pi_{Red}-\pi_{Blue}\log_2\pi_{Blue}$ \pause
+  \vspace{2.5mm}
+  \item[] \hspace{2.5mm} $H(K|Tree) = -(0.75\log_20.75+0.25\log_20.25)$ \\ $= 0.811 $
+  \item[] \hspace{2.5mm} $MI(k,Tree) = H(k) - H(k|Tree)$ \\ $= 1 - 0.811 \approx 0.189 $
+  \end{itemize}
+  \vfill
+\end{columns}
+\end{frame}
+
+\subsection{Calculating Mutual Information (Example -
+Cont.)}\label{calculating-mutual-information-example---cont.-2}
+
+\begin{frame}{Calculating Mutual Information (Example - Cont.)}
+\begin{itemize}
+\item \textbf{What if we tried with \textit{Green}?} \par \vspace{2.5mm} \pause
+  \item[]  $P(Red|Green) = 2/2 = 1$
+  \item[]  $P(Blue|Green) = 0/2 = 0$ \par \vspace{5mm}
+  \item \textit{Tree} is the only word we can use to discriminate -- It's the only term that appears in both categories!
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Fightin' Words (Monroe, Coloresi, and Quinn 2008)}
+\phantomsection\label{fightin-words-monroe-coloresi-and-quinn-2008}
+\begin{itemize}
+\item Alternative strategy to identify words that discriminate b/w categories using regularized log-odds ratios -- $\alpha_j$ = Dirichlet prior \& $W^*_{k} \sim \text{Multinomial}(n_k,\mu_k)$ 
+\item[] $$\hat{\mu}_{jk} = \frac{W^*_{jk} + \alpha_j}{n_k + \sum^j_{j=1}\alpha_j}$$ \par \vspace{2.5mm}
+\item MI identifies words that are most informative about category membership overall -- Fightin’ Words stimates which words are disproportionately distinctive between groups by accounting for baseline frequencies and sampling variability.
+\item Estimate corresponds to expected value of posterior distribution $p(\mu|W)$ -- $\hat{\mu}_{jk}$ is smoothed probability of word $j$ in category $k$, allowing for small prior (e.g., Dirichlet). 
+\item[] $$ \text{Log Odds Ratio}_{kj} = \log(\frac{\mu_{kj}}{1-\mu_{kj}}) - \log(\frac{\mu-kj}{1-\mu_{-kj}}) $$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Fightin' Words (Monroe, Coloresi, and Quinn 2008)}
+\phantomsection\label{fightin-words-monroe-coloresi-and-quinn-2008-1}
+\begin{columns}
+\column{0.4\textwidth}
+\centering
+\begin{tabular}{lccc}
+\toprule
+Word & Red & Blue & Total \\
+\midrule
+Apple & 4 & 0 & 4 \\
+Tree  & 3 & 1 & 4 \\
+Green & 2 & 0 & 2 \\
+Juice & 1 & 0 & 1 \\
+Blue  & 0 & 3 & 3 \\
+Ocean & 0 & 4 & 4 \\
+Water & 0 & 2 & 2 \\
+\bottomrule
+\end{tabular}
+\column{0.6\textwidth}
+\begin{itemize}
+\item Assuming $\alpha_j$ = 0.5 for all -- Let's \par \vspace{2.5mm} \pause
+\item $\hat{\mu}(Apple|Red) = \frac{n_{(Apple,Red)} + \alpha_{Apple}}{n_{Red} + \sum_j\alpha_j}$ \par \vspace{2.5mm}
+\item $\hat{\mu}(Apple|Red) = \frac{4 + 0.5}{10 + 7 \times 0.5} = 0.33 $ \par \vspace{2.5mm} \pause
+\item \textbf{Let's solve for $\hat{\mu}(Apple|Blue)$} \par \vspace{2.5mm} \pause
+\item $\hat{\mu}(Apple|Blue) = \frac{0 + 0.05}{9 + 7 \times 0.5} = 0.04 $
+\end{itemize}
+\vfill
+\end{columns}
+\end{frame}
+
+\begin{frame}{Fightin' Words (Cont.)}
+\phantomsection\label{fightin-words-cont.}
+\begin{itemize}
+\item Now that we have $\hat{\mu}(\text{Apple}|\text{Red/Blue})$, the log odds ratio that \textbf{Apple} is a predictor of \textbf{Red} is: \par \vspace{2.5mm} \pause
+\item $\delta{Red} = \log(\frac{0.33}{1-0.33}) \rightarrow \log(0.492) \approx -0.70 $ \par \vspace{2.5mm}
+\item  $\delta{Blue} = \log(\frac{0.04}{1-0.04}) \rightarrow \log(0.041) \approx -3.19$ \par \vspace{2.5mm}
+\item $\delta_{kj} = -0.70 - (-3.19) \approx 2.49$ \pause \par \vspace{2.5mm}
+\item $exp(2.49) \approx$ 12x -- Meaning that the odds \textbf{Apple} appears in \textbf{Red} documents is approx. 12 times larger than \textbf{Blue} -- because it's regularized we know its not just the result of an imabalance in observations for Red vs. Blue
 \end{itemize}
 \end{frame}
 

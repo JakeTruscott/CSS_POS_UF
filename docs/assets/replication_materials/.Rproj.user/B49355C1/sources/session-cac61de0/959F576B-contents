@@ -1,0 +1,1 @@
+c <- get(load("E:/SCOTUS Text Data/scotus_opinions_1790_2023/2004_term_cases.rdata"))

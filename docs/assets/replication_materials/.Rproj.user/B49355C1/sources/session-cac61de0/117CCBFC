@@ -3,7 +3,7 @@
     "path": "C:/Users/jaketruscott/Github/CSS_POLS_UF/docs/assets/replication_materials/class_8/slides/class_8_clustering_topic_discovery.Rmd",
     "project_path": "class_8/slides/class_8_clustering_topic_discovery.Rmd",
     "type": "r_markdown",
-    "hash": "0",
+    "hash": "197358652",
     "contents": "",
     "dirty": false,
     "created": 1772847011060.0,
@@ -13,8 +13,8 @@
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "23,0",
-        "scrollLine": "13",
+        "cursorPosition": "302,77",
+        "scrollLine": "299",
         "rmdVisualMode": "false",
         "rmdVisualWrapConfigured": "true",
         "docOutlineVisible": "1",
@@ -22,11 +22,11 @@
         "rmdVisualCollapsedChunks": ""
     },
     "folds": "",
-    "lastKnownWriteTime": 1772903673,
+    "lastKnownWriteTime": 1773932617,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1772903673937,
+    "last_content_update": 1773932617466,
     "read_only": false,
     "read_only_alternatives": []
 }
