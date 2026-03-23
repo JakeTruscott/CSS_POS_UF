@@ -143,7 +143,7 @@ Welfare     & Economy  \\
 ### Calculating Mutual Information (Cont.)
 \begin{center}
  $H(k) = -\pi_k\log_2\pi_k-\pi_{-k}\log_2\pi_{-k,} $ \par \vspace{2.5mm} \textbf{Unconditional Certainty}:   \footnotesize{\textit{How likely we are to assume any random document belongs to a particular category, without even seeing a word}} \par \vspace{5mm} \pause \normalsize
- $H(k|j) = -\sum_{k,-k}\sum_{j,-j}\pi_{k,j}\log_2\pi_{k,j} $ \\  Conditional Certainty  \par \vspace{5mm} \pause
+ $H(k|j) = -\sum_{k,-k}\sum_{j,-j}\pi_{k,j}\log_2\pi_{k,j} $ \\  \textbf{Conditional Certainty}: \footnotesize{\textit{How likely we are to correctly identify a document’s category after observing a specific word, reflecting how much that word reduces our uncertainty about the category.}}  \par \vspace{5mm} \pause
  $\text{MI}_{kj} = H(k) - H(k|j)$ \\ Mutual Information = Unconditional Certainty - Conditional Certainty
 \end{center}
 
@@ -276,7 +276,7 @@ Welfare     & Economy  \\
 \toprule
 Word & Red & Blue & Total \\
 \midrule
-Apple & 4 & 0 & 4 \\
+Apple & 4 & 3 & 7 \\
 Tree  & 3 & 1 & 4 \\
 Green & 2 & 0 & 2 \\
 Juice & 1 & 0 & 1 \\
@@ -291,7 +291,7 @@ Water & 0 & 2 & 2 \\
 \item $\hat{\mu}(Apple|Red) = \frac{n_{(Apple,Red)} + \alpha_{Apple}}{n_{Red} + \sum_j\alpha_j}$ \par \vspace{2.5mm}
 \item $\hat{\mu}(Apple|Red) = \frac{4 + 0.5}{10 + 7 \times 0.5} = 0.33 $ \par \vspace{2.5mm} \pause
 \item \textbf{Let's solve for $\hat{\mu}(Apple|Blue)$} \par \vspace{2.5mm} \pause
-\item $\hat{\mu}(Apple|Blue) = \frac{0 + 0.05}{9 + 7 \times 0.5} = 0.04 $
+\item $\hat{\mu}(Apple|Blue) = \frac{3 + 0.05}{13 + 7 \times 0.5} = 0.212 $
 \end{itemize}
 \vfill
 \end{columns}
@@ -300,17 +300,23 @@ Water & 0 & 2 & 2 \\
 ### Fightin' Words (Cont.)
 \begin{itemize}
 \item Now that we have $\hat{\mu}(\text{Apple}|\text{Red/Blue})$, the log odds ratio that \textbf{Apple} is a predictor of \textbf{Red} is: \par \vspace{2.5mm} \pause
-\item $\delta{Red} = \log(\frac{0.33}{1-0.33}) \rightarrow \log(0.492) \approx -0.70 $ \par \vspace{2.5mm}
-\item  $\delta{Blue} = \log(\frac{0.04}{1-0.04}) \rightarrow \log(0.041) \approx -3.19$ \par \vspace{2.5mm}
-\item $\delta_{kj} = -0.70 - (-3.19) \approx 2.49$ \pause \par \vspace{2.5mm}
-\item $exp(2.49) \approx$ 12x -- Meaning that the odds \textbf{Apple} appears in \textbf{Red} documents is approx. 12 times larger than \textbf{Blue} -- because it's regularized we know its not just the result of an imabalance in observations for Red vs. Blue
+
+\item $\delta_{\text{Red}} = \log\left(\frac{0.33}{1-0.33}\right) = \log(0.492) \approx -0.71$ \par \vspace{2.5mm}
+
+\item $\delta_{\text{Blue}} = \log\left(\frac{0.212}{1-0.212}\right) = \log(0.269) \approx -1.31$ \par \vspace{2.5mm}
+
+\item $\delta_{kj} = -0.71 - (-1.31) \approx 0.60$ \pause \par \vspace{2.5mm}
+
+\item $\exp(0.60) \approx 1.82$ -- Meaning that the odds \textbf{Apple} appears in \textbf{Red} documents is about 1.8 times larger than in \textbf{Blue}. The regularization helps ensure this difference is not just due to imbalance in total word counts.
 \end{itemize}
 
 # Clustering
 
 ### Clustering
 \begin{itemize}
-\item Notes re: Clustering -- e.g., unsupervised and assignment-based rather than proportional
+\item Assuming some latent structure (i.e., a discrete grouping or classification) to organize data and explain lexical variance, \textbf{clustering algorithms} estimate this structure to represent what is most probable. \par \vspace{2.5mm} \pause
+\item They are \textbf{unsupervised} -- they infer latent group structure directly from patterns in the data, allowing word usage and co-occurrence to determinate how documents are grouped. \par \vspace{2.5mm} 
+\item In essence -- they \textbf{do not} require pre-defined labels like dictionary or other supervised methods! 
 \end{itemize}
 
 ### K-Means Steps (Canonical)
@@ -358,7 +364,7 @@ k_means_fig_3 <- data %>%
        title = paste0('3 Cluster Centers (Within-Cluster Sum of Squares = ', round(kmeans_example$tot.withinss, 2), ')')) + 
   theme(panel.border = element_rect(linewidth = 1, colour = 'black', fill = NA), 
         title = element_text(size = 5, colour = 'black'),
-        legend.position = 'bottom', 
+        legend.position = 'none', 
         legend.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
         legend.title.position = 'top', 
         legend.title = element_text(size = 12, hjust = 0.5),
@@ -379,7 +385,7 @@ k_means_fig_4 <- data %>%
        title = paste0('4 Cluster Centers (Within-Cluster Sum of Squares = ', round(kmeans_example_4$tot.withinss, 2), ')')) + 
   theme(panel.border = element_rect(linewidth = 1, colour = 'black', fill = NA), 
         title = element_text(size = 5, colour = 'black'),
-        legend.position = 'bottom', 
+        legend.position = 'none', 
         legend.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
         legend.title.position = 'top', 
         legend.title = element_text(size = 12, hjust = 0.5),
@@ -404,7 +410,7 @@ k_means_fig_4 <- data %>%
        title = paste0('4 Cluster Centers (Within-Cluster Sum of Squares = ', round(kmeans_example_4$tot.withinss, 2), ')')) + 
   theme(panel.border = element_rect(linewidth = 1, colour = 'black', fill = NA), 
         title = element_text(size = 5, colour = 'black'),
-        legend.position = 'bottom', 
+        legend.position = 'none', 
         legend.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
         legend.title.position = 'top', 
         legend.title = element_text(size = 12, hjust = 0.5),
@@ -425,7 +431,7 @@ k_means_fig_5 <- data %>%
        title = paste0('5 Cluster Centers (Within-Cluster Sum of Squares = ', round(kmeans_example_5$tot.withinss, 2), ')')) + 
   theme(panel.border = element_rect(linewidth = 1, colour = 'black', fill = NA), 
         title = element_text(size = 5, colour = 'black'),
-        legend.position = 'bottom', 
+        legend.position = 'none', 
         legend.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
         legend.title.position = 'top', 
         legend.title = element_text(size = 12, hjust = 0.5),
@@ -518,7 +524,7 @@ cowplot::plot_grid(
 \item \textbf{Algorithmic v. Probabilistic}: K-means is algorithmic (deterministic assignments via nearest centroid), while other models (e.g., LDA) are probabilistic and allow for documents to belonging in several clusters. \par \vspace{2.5mm} \pause
 \item \textbf{Soft v. Hard Partitions}: K-means uses hard partitions to assign to nearest cluster centroid. It will only be assigned to one cluster only. \par \vspace{2.5mm} \pause
 \item \textbf{Means v. Mediods}:  In the sense of k-means/mediods, its the difference between measuring (a) the location of the average document in the cluster (sensitive to outliers), or (b) the document that minimizes the distance to all others in the cluster (can theoretically omit behavior we're interested in). \par \vspace{2.5mm} \pause
-\item \textbf{Flat v. Hierarchical}:  Hierarchical: Flat clustering methods (like k-means) produce a single-level partition of the data into a fixed number of clusters. Hierarchical clustering produces a nested tree of clusters, either by successively merging individual observations or recursively splitting the dataset.
+\item \textbf{Flat v. Hierarchical}: Flat clustering methods (like k-means) produce a single-level partition of the data into a fixed number of clusters. Hierarchical clustering produces a nested tree of clusters, either by successively merging individual observations or recursively splitting the dataset.
 \end{itemize}
 
 

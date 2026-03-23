@@ -501,8 +501,8 @@ following:</p>
 <tr class="odd">
 <td align="center">Apple</td>
 <td align="center">4</td>
-<td align="center">0</td>
-<td align="center">4</td>
+<td align="center">3</td>
+<td align="center">7</td>
 </tr>
 <tr class="even">
 <td align="center">Tree</td>
@@ -548,22 +548,22 @@ of the (7) words, the posterior mean for <em>Apple</em> is:</p>
 \hat{\mu}(Apple|Red) = \frac{n_{(Apple,Red)} + \alpha_{Apple}}{n_{Red} +
 \sum_j\alpha_j} \\
 \hat{\mu}(Apple|Red) = \frac{4 + 0.5}{10 + 7 \times 0.5} = 0.33 \\
-\hat{\mu}(Apple|Blue) = \frac{0 + 0.05}{9 + 7 \times 0.5} = 0.04
+\hat{\mu}(Apple|Blue) = \frac{3 + 0.05}{13 + 7 \times 0.5} = 0.212
 \]</span></p>
 <p>From here, the log odds ratio that <em>Apple</em> is a predictor of
 <span style="color:red">Red</span> is:</p>
 <p><span class="math display">\[
-\delta{Red} = \log(\frac{0.33}{1-0.33}) \rightarrow \log(0.492) \approx
--0.70 \\
-\delta{Blue} = \log(\frac{0.04}{1-0.04}) \rightarrow \log(0.041) \approx
--3.19 \\
-\delta_{kj} = -0.70 - (-3.19) \approx 2.49
+\delta_{\text{Red}} = \log\left(\frac{0.33}{1-0.33}\right) \rightarrow
+\log(0.492) \approx -0.71 \\
+\delta_{\text{Blue}} = \log\left(\frac{0.212}{1-0.212}\right)
+\rightarrow \log(0.269) \approx -1.31 \\
+\delta_{kj} = -0.71 - (-1.31) \approx 0.60
 \]</span></p>
 <p>Viewed conceptually, the difference in the log odds that
 <em>Apple</em> appears in a <span style="color:red">Red</span> document
-is approximately 2.49 – which, after exponentiation <span
-class="math inline">\(\exp(2.49)\)</span> is revealed as being <span
-class="math inline">\(\approx\)</span> 12 times larger. Because it’s
+is approximately 0.60 – which, after exponentiation <span
+class="math inline">\(\exp(0.60)\)</span> is revealed as being <span
+class="math inline">\(\approx\)</span> 11.8 times larger. Because it’s
 regularized, we have a lot more power to assert that our belief re:
 <em>Apple</em> is not simply driven by the relative lack of observations
 in <span style="color:blue">Blue</span> and that a larger value means
