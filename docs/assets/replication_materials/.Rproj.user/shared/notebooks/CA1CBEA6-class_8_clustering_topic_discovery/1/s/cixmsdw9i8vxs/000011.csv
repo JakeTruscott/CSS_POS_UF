@@ -1,0 +1,7 @@
+"0","texts <- apply(AssociatedPress, 1, function(x) {
+  paste(rep(colnames(AssociatedPress), x), collapse = "" "")
+})
+"
+"2","Error in apply(AssociatedPress, 1, function(x) { : 
+  dim(X) must have a positive length
+"

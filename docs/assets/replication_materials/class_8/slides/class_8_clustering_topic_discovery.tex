@@ -76,6 +76,46 @@
 \makeatother
 \usepackage{xcolor}
 \newif\ifbibliography
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -127,8 +167,7 @@ University of Florida \newline Spring 2026 \newline \newline \newline
 \phantomsection\label{housekeeping-1}
 \begin{itemize}
 \item Final Paper Drafts Due 3/29 (\textit{Optional})
-\item Presentation \& Peer Assessment Schedule Coming 3/23
-\item Will canvas ideas for 4/6 class on 3/23
+\item Presentation \& Peer Assessment Schedule -- Emailed 
 \end{itemize}
 \end{frame}
 
@@ -137,7 +176,9 @@ University of Florida \newline Spring 2026 \newline \newline \newline
 \begin{frame}{Class 6 Problem Set Review}
 \phantomsection\label{class-6-problem-set-review}
 \begin{itemize}
-\item Notes...
+\item Generally did well \par \vspace{2.5mm}
+\item \textbf{Remember}: How you pre-process will have an effect on results downstream! \par \vspace{2.5mm}
+\item \textbf{Also...} strength and scope of vocabularies can also impact results! 
 \end{itemize}
 \end{frame}
 
@@ -174,7 +215,7 @@ Welfare     & Economy  \\
 \begin{itemize}
 \item This is \underline{not} to say these words invariably represent parties (e.g., useful in vocabulary for dictionary/class assignment) \par \vspace{2.5mm} \pause
 \item Rather -- Words are useful to help us discriminate (distinguish) between them.  \par \vspace{2.5mm}
-\item Ex: Democrats can use \textit{Border}, too (similar or different frames) -- but more likely to appear as term used in by Republicans. 
+\item Ex: Democrats can use \textit{Border}, too (similar or different frames) -- but more likely to appear as term used by Republicans. 
 \end{itemize}
 \end{columns}
 \end{frame}
@@ -201,7 +242,7 @@ Welfare     & Economy  \\
 \begin{frame}{Calculating Mutual Information (Cont.)}
 \phantomsection\label{calculating-mutual-information-cont.}
 \begin{center}
- $H(k) = -\pi_k\log_2\pi_k-\pi_{-k}\log_2\pi_{-k,} $ \par \vspace{2.5mm} \textbf{Unconditional Certainty}:   \footnotesize{\textit{How likely are to assume any random document belongs to a particular category without even seeing a word}} \par \vspace{5mm} \pause \normalsize
+ $H(k) = -\pi_k\log_2\pi_k-\pi_{-k}\log_2\pi_{-k,} $ \par \vspace{2.5mm} \textbf{Unconditional Certainty}:   \footnotesize{\textit{How likely we are to assume any random document belongs to a particular category, without even seeing a word}} \par \vspace{5mm} \pause \normalsize
  $H(k|j) = -\sum_{k,-k}\sum_{j,-j}\pi_{k,j}\log_2\pi_{k,j} $ \\  Conditional Certainty  \par \vspace{5mm} \pause
  $\text{MI}_{kj} = H(k) - H(k|j)$ \\ Mutual Information = Unconditional Certainty - Conditional Certainty
 \end{center}
@@ -267,6 +308,7 @@ Cont.)}\label{calculating-mutual-information-example---cont.}
   \item[] \hspace{2.5mm} $H(K) = -\pi_{Red}\log_2\pi_{Red}-\pi_{Blue}\log_2\pi_{Blue}$
   \item[] \hspace{2.5mm} $H(K) = -0.5\log_20.5-0.5\log_20.5$
   \item[] \hspace{2.5mm} $H(K) = 1$
+  \item[] \hspace{2.5mm} Maximum Uncertainty! 
   \end{itemize}
   \vfill
 \end{columns}
@@ -329,9 +371,9 @@ Cont.)}\label{calculating-mutual-information-example---cont.-2}
 \begin{frame}{Fightin' Words (Monroe, Coloresi, and Quinn 2008)}
 \phantomsection\label{fightin-words-monroe-coloresi-and-quinn-2008}
 \begin{itemize}
-\item Alternative strategy to identify words that discriminate b/w categories using regularized log-odds ratios -- $\alpha_j$ = Dirichlet prior \& $W^*_{k} \sim \text{Multinomial}(n_k,\mu_k)$ 
+\item Alternative strategy to identify words that discriminate b/w categories using regularized log-odds ratios: $\alpha_j$ = Dirichlet prior \& $W^*_{k} \sim \text{Multinomial}(n_k,\mu_k)$ 
 \item[] $$\hat{\mu}_{jk} = \frac{W^*_{jk} + \alpha_j}{n_k + \sum^j_{j=1}\alpha_j}$$ \par \vspace{2.5mm}
-\item MI identifies words that are most informative about category membership overall -- Fightin’ Words stimates which words are disproportionately distinctive between groups by accounting for baseline frequencies and sampling variability.
+\item MI identifies words that are most informative about category membership overall -- Fightin’ Words estimates which words are disproportionately distinctive between groups by accounting for baseline frequencies and sampling variability.
 \item Estimate corresponds to expected value of posterior distribution $p(\mu|W)$ -- $\hat{\mu}_{jk}$ is smoothed probability of word $j$ in category $k$, allowing for small prior (e.g., Dirichlet). 
 \item[] $$ \text{Log Odds Ratio}_{kj} = \log(\frac{\mu_{kj}}{1-\mu_{kj}}) - \log(\frac{\mu-kj}{1-\mu_{-kj}}) $$
 \end{itemize}
@@ -357,7 +399,7 @@ Water & 0 & 2 & 2 \\
 \end{tabular}
 \column{0.6\textwidth}
 \begin{itemize}
-\item Assuming $\alpha_j$ = 0.5 for all -- Let's \par \vspace{2.5mm} \pause
+\item Assuming $\alpha_j$ = 0.5 for all -- Let's do \textit{Apple} \par \vspace{2.5mm} \pause
 \item $\hat{\mu}(Apple|Red) = \frac{n_{(Apple,Red)} + \alpha_{Apple}}{n_{Red} + \sum_j\alpha_j}$ \par \vspace{2.5mm}
 \item $\hat{\mu}(Apple|Red) = \frac{4 + 0.5}{10 + 7 \times 0.5} = 0.33 $ \par \vspace{2.5mm} \pause
 \item \textbf{Let's solve for $\hat{\mu}(Apple|Blue)$} \par \vspace{2.5mm} \pause
@@ -375,6 +417,433 @@ Water & 0 & 2 & 2 \\
 \item  $\delta{Blue} = \log(\frac{0.04}{1-0.04}) \rightarrow \log(0.041) \approx -3.19$ \par \vspace{2.5mm}
 \item $\delta_{kj} = -0.70 - (-3.19) \approx 2.49$ \pause \par \vspace{2.5mm}
 \item $exp(2.49) \approx$ 12x -- Meaning that the odds \textbf{Apple} appears in \textbf{Red} documents is approx. 12 times larger than \textbf{Blue} -- because it's regularized we know its not just the result of an imabalance in observations for Red vs. Blue
+\end{itemize}
+\end{frame}
+
+\section{Clustering}\label{clustering}
+
+\begin{frame}{Clustering}
+\phantomsection\label{clustering-1}
+\begin{itemize}
+\item Notes re: Clustering -- e.g., unsupervised and assignment-based rather than proportional
+\end{itemize}
+\end{frame}
+
+\begin{frame}{K-Means Steps (Canonical)}
+\phantomsection\label{k-means-steps-canonical}
+\begin{enumerate}
+\item Choose groups $k$ -- ex: 3 groups of documents, topics, etc. \pause
+\item Start w/ Random Group Centers ($\mu_k$) -- The algorithm will randomly assign groups to start \pause (temporary guesses just to get the ball rolling...)
+\item Assign Each Document to Nearest Center based on proximity (e.g., eucledian distance) \pause
+\item Relocate the centers to the middle (average position in data space) of each the items assigned to it \pause
+\item Repeat this process until convergence or threshold met -- algorithm will keep reassigning items until things stabilize (local optimum or minimization of global objective function) \pause
+\end{enumerate}
+\begin{itemize}
+\item[] \textbf{In short...} k-means keeps reshuffling items into groups and repositioning the group centers until it finds a stable set of clusters where items in the same group are more similar to each other than to items in other groups.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{K-Means (Numeric Example)}
+\phantomsection\label{k-means-numeric-example}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data }\OtherTok{\textless{}{-}}\NormalTok{ iris }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{rename}\NormalTok{(}\AttributeTok{sepal\_length =}\NormalTok{ Sepal.Length, }
+         \AttributeTok{sepal\_width =}\NormalTok{ Sepal.Width, }
+         \AttributeTok{petal\_length =}\NormalTok{ Petal.Length, }
+         \AttributeTok{petal\_width =}\NormalTok{ Petal.Width) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(sepal\_length, sepal\_width, petal\_length, petal\_width)}
+
+\NormalTok{kmeans\_example }\OtherTok{\textless{}{-}} \FunctionTok{kmeans}\NormalTok{(data, }\CommentTok{\# Iris Data }
+                         \AttributeTok{centers =} \DecValTok{3}\NormalTok{, }\CommentTok{\# Cluster Centers (3 Defined)}
+                         \AttributeTok{nstart =} \DecValTok{25}\NormalTok{) }\CommentTok{\# No. Independent Runs }
+
+\NormalTok{kmeans\_example}\SpecialCharTok{$}\NormalTok{tot.withinss }\CommentTok{\# Within{-}Cluster Sum of Squares (Dispersion Measure)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 78.85144
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{K-Means (Numeric -- 3 vs.~4 Cluster Centers)}
+\phantomsection\label{k-means-numeric-3-vs.-4-cluster-centers}
+\begin{center}\includegraphics{class_8_clustering_topic_discovery_files/figure-beamer/kmeans_figure-1} \end{center}
+\end{frame}
+
+\begin{frame}{K-Means (Numeric -- 4 vs.~5 Cluster Centers)}
+\phantomsection\label{k-means-numeric-4-vs.-5-cluster-centers}
+\begin{center}\includegraphics{class_8_clustering_topic_discovery_files/figure-beamer/kmeans_figure_4_5-1} \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{K-Means (Text -- IMDB Data)}
+\phantomsection\label{k-means-text-imdb-data}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{imdb\_data }\OtherTok{\textless{}{-}}\NormalTok{ imdb\_data}\SpecialCharTok{$}\NormalTok{text[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{500}\NormalTok{] }\CommentTok{\# Only First 500 Rows}
+\NormalTok{imdb\_data }\OtherTok{\textless{}{-}} \FunctionTok{iconv}\NormalTok{(imdb\_data, }\AttributeTok{from =} \StringTok{"UTF{-}8"}\NormalTok{, }\AttributeTok{to =} \StringTok{"UTF{-}8"}\NormalTok{, }\AttributeTok{sub =} \StringTok{""}\NormalTok{) }\CommentTok{\# Fixing Some Characters in IMDB Data}
+\NormalTok{corpus }\OtherTok{\textless{}{-}} \FunctionTok{VCorpus}\NormalTok{(}\FunctionTok{VectorSource}\NormalTok{(}\FunctionTok{sapply}\NormalTok{(imdb\_data, reduce\_complexity)))}
+\NormalTok{dtm }\OtherTok{\textless{}{-}} \FunctionTok{DocumentTermMatrix}\NormalTok{(corpus, }\AttributeTok{control =} \FunctionTok{list}\NormalTok{(}\AttributeTok{weighting =}\NormalTok{ weightTfIdf)) }\CommentTok{\# TF{-}IDF DTM}
+\NormalTok{dtm }\OtherTok{\textless{}{-}} \FunctionTok{removeSparseTerms}\NormalTok{(dtm, }\FloatTok{0.95}\NormalTok{)  }\CommentTok{\# (Optional) Reducing Further Sparsity}
+\NormalTok{dtm\_matrix }\OtherTok{\textless{}{-}} \FunctionTok{as.matrix}\NormalTok{(dtm) }\CommentTok{\# Convert DTM Matrix for K{-}Means}
+
+\NormalTok{kmeans\_example\_3\_centers }\OtherTok{\textless{}{-}} \FunctionTok{kmeans}\NormalTok{(dtm\_matrix, }\AttributeTok{centers =} \DecValTok{3}\NormalTok{, }\AttributeTok{nstart =} \DecValTok{25}\NormalTok{)}
+
+\NormalTok{kmeans\_example\_3\_centers}\SpecialCharTok{$}\NormalTok{tot.withinss }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 28.59157
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{kmeans\_example\_10\_centers }\OtherTok{\textless{}{-}} \FunctionTok{kmeans}\NormalTok{(dtm\_matrix, }\AttributeTok{centers =} \DecValTok{10}\NormalTok{, }\AttributeTok{nstart =} \DecValTok{25}\NormalTok{)}
+
+\NormalTok{kmeans\_example\_10\_centers}\SpecialCharTok{$}\NormalTok{tot.withinss }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 26.32019
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{K-Means (Text -- IMDB Data)}
+\phantomsection\label{k-means-text-imdb-data-1}
+\begin{center}\includegraphics{class_8_clustering_topic_discovery_files/figure-beamer/plot_k_means-1} \end{center}
+\end{frame}
+
+\begin{frame}{K-Means (Text -- IMDB Data) -- Notes}
+\phantomsection\label{k-means-text-imdb-data-notes}
+\begin{itemize}
+\item \textbf{Remember}: Text data is high-dimensional -- not always possible to neatly cluster, especially when models are unsupervised. \par \vspace{2.5mm}
+\item Selection of clusters $k$ motivated by \textbf{Theory} and Subsequent \textbf{Validation} (multiple mechanisms to measure improvement technically and otherwise -- e.g., \textit{does clustering make sense?}) \par \vspace{2.5mm}
+\item Goal is to locate \textbf{local optimum} -- usually a convergence point where shuffling to minimize sum of squares again yields an improvement less than some determined amount. 
+\item This isn't linear algebra -- There can be multiple ``correct'' solutions...
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Clustering -- Other Notes}
+\phantomsection\label{clustering-other-notes}
+\begin{itemize}
+\item \textbf{Algorithmic v. Probabilistic}: K-means is algorithmic (deterministic assignments via nearest centroid), while other models (e.g., LDA) are probabilistic and allow for documents to belonging in several clusters. \par \vspace{2.5mm} \pause
+\item \textbf{Soft v. Hard Partitions}: K-means uses hard partitions to assign to nearest cluster centroid. It will only be assigned to one cluster only. \par \vspace{2.5mm} \pause
+\item \textbf{Means v. Mediods}:  In the sense of k-means/mediods, its the difference between measuring (a) the location of the average document in the cluster (sensitive to outliers), or (b) the document that minimizes the distance to all others in the cluster (can theoretically omit behavior we're interested in). \par \vspace{2.5mm} \pause
+\item \textbf{Flat v. Hierarchical}:  Hierarchical: Flat clustering methods (like k-means) produce a single-level partition of the data into a fixed number of clusters. Hierarchical clustering produces a nested tree of clusters, either by successively merging individual observations or recursively splitting the dataset.
+\end{itemize}
+\end{frame}
+
+\section{Topic Models}\label{topic-models}
+
+\begin{frame}{First Exercise (SOTU Addresses)}
+\phantomsection\label{first-exercise-sotu-addresses}
+\begin{itemize}
+\item \textbf{Recall...} First exercise we did re: text analysis was Presidential SOTU addresses \par \vspace{2.5mm} \pause
+\item Important Assumptions:  \pause
+  \begin{enumerate}
+  \item Presidents may touch on various policy areas and themes throughout these speeches. \par \vspace{2.5mm} \pause
+  \item Even though they may draw from different perspectives and contexts, we can define a word or assert a general vocabulary to identify those thematic elements -- e.g., I can use terms like \textbf{navy, army, marines}, etc. to reasonably identify periods where the president is discussing military matters.
+  \end{enumerate} \par \vspace{2.5mm} \pause
+\item \textbf{Problem}: Clustering algorithms (even with soft partitioning) might obscure results here -- speeches (documents) engage with multiple topics, frames, etc -- single-member clustering can be problematic. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Topic Models v. Clustering}
+\phantomsection\label{topic-models-v.-clustering}
+\begin{itemize}
+\item \textbf{Topic Model}: Rather than assign each document to only one cluster, topic models assign each document with proportional membership to all categories (topics). 
+\item That is...topic models suppose that each document is a mixture across categories – a mixed membership model \par \vspace{2.5mm}
+\item Ex: Re: SOTU Addresses -- topic models may help us understand this through the lens of more discrete items like the welfare state, taxation, foreign trade or other topics within the broader scope of discussion related to economic policy. \par \vspace{2.5mm}
+\item We'll focus on two: LDA \& STM
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Additional Notes re: Topic Models}
+\phantomsection\label{additional-notes-re-topic-models}
+\begin{itemize}
+\item Note: Like clustering, there is not about estimating the \textit{only} right answer \par \vspace{2.5mm} \pause
+\item Much of the inferential value is assessed post-hoc -- recovering useful topics to explain variances in the data recovered through its assignment process. \par \vspace{2.5mm} \pause
+\item Like clustering we can measure (for instance) improvement in log-likelihood to assess whether variance in $k$ are an improvement. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{LDA (Latent Dirichlet Allocation)}
+\phantomsection\label{lda-latent-dirichlet-allocation}
+\begin{itemize}
+\item Canonical topic model \par \vspace{2.5mm}
+\item Generative probabilistic model – explicitly posits a DGP for documents where documents are mixtures of latent topics and words are drawn conditional on those topics. \par \vspace{2.5mm}
+\item Tries to Recover: 
+  \begin{enumerate}
+  \item \textbf{Document-Topic Distributions}: Each document is represented a distribution over (perhaps multiple) different topics, each with a certain probability.
+  \item \textbf{Topic-Word Distributions}: Each topic is represented as a distribution over words, meaning that each topic is defined by a set of words (again all with an associated probability of appearing in that topic)
+  \end{enumerate} 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{LDA Notation}
+\phantomsection\label{lda-notation}
+\begin{itemize}
+\item Document Index = $i$ \par \vspace{2.5mm}
+\item Topic Index = $K$ \par \vspace{2.5mm}
+\item Word Position In Document ($i$) = $m$ \par \vspace{2.5mm}
+\item Observed Word = $W_{im}$ \par \vspace{2.5mm}
+\item Document-Topic Weights: $\pi_{ik}$ where $\sum_{K}\pi_{iK} =1$ (All Sum to 1) 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{LDA (Cont.)}
+\phantomsection\label{lda-cont.}
+\begin{itemize}
+\item[] \centering $Z_{im} \sim \text{Multinomial}(1,\pi_i) \quad \text{Topic Indicator for Each Word} $ \par \vspace{2.5mm}
+\item[] \centering  $W_{im} \sim \text{Multinomial}(1, \mu{Z_{im}}) \quad \text{Observed Word Token For Each Word Position}$ \par \vspace{2.5mm}
+\item \raggedright Probability of observing a word token in a document ($W_{im} = j$) conditional on both the document-topic weights ($\pi_{iK}$) and the topic-word distributions ($\mu_k$) is a weighted average of topic-specific word probabilities, where the weights are given by the document's topic proportions ($\pi_{iK}$): \par \vspace{2.5mm}
+\item[] \centering  $ p(W_{im} = j \mid \pi_i,\mu) = \sum_K\pi_{iK}\mu_{jK}$
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{LDA - Example}
+\phantomsection\label{lda---example}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(topicmodels)}
+\FunctionTok{data}\NormalTok{(}\StringTok{"AssociatedPress"}\NormalTok{)}
+\NormalTok{dtm }\OtherTok{\textless{}{-}}\NormalTok{ AssociatedPress}
+
+\NormalTok{lda\_model }\OtherTok{\textless{}{-}} \FunctionTok{LDA}\NormalTok{(dtm, }\AttributeTok{k =} \DecValTok{5}\NormalTok{, }\AttributeTok{method =} \StringTok{"Gibbs"}\NormalTok{, }\AttributeTok{control =} \FunctionTok{list}\NormalTok{(}\AttributeTok{seed =} \DecValTok{1234}\NormalTok{)) }\CommentTok{\# LDA w/ 5 Topics \& Gibbs Sampling }
+\NormalTok{topicmodels}\SpecialCharTok{::}\FunctionTok{terms}\NormalTok{(lda\_model, }\DecValTok{10}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+      Topic 1  Topic 2   Topic 3      Topic 4     Topic 5     
+ [1,] "i"      "percent" "court"      "i"         "government"
+ [2,] "people" "million" "police"     "president" "soviet"    
+ [3,] "two"    "year"    "two"        "bush"      "united"    
+ [4,] "air"    "billion" "state"      "house"     "states"    
+ [5,] "years"  "new"     "case"       "new"       "two"       
+ [6,] "new"    "company" "years"      "committee" "military"  
+ [7,] "just"   "last"    "federal"    "congress"  "people"    
+ [8,] "city"   "market"  "department" "dukakis"   "police"    
+ [9,] "like"   "prices"  "attorney"   "national"  "union"     
+[10,] "first"  "stock"   "drug"       "campaign"  "officials" 
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{LDA - Example (Cont.)}
+\phantomsection\label{lda---example-cont.}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{topic\_probs }\OtherTok{\textless{}{-}} \FunctionTok{posterior}\NormalTok{(lda\_model)}\SpecialCharTok{$}\NormalTok{topics }\CommentTok{\# Prob Document i Belongs to Topic K}
+\FunctionTok{print}\NormalTok{(}\FunctionTok{round}\NormalTok{(topic\_probs[}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{), }\FunctionTok{c}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{)], }\DecValTok{2}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+         1    2    3    4    5
+ [1,] 0.20 0.05 0.61 0.06 0.08
+ [2,] 0.07 0.31 0.12 0.20 0.30
+ [3,] 0.29 0.10 0.44 0.08 0.08
+ [4,] 0.30 0.17 0.13 0.14 0.25
+ [5,] 0.28 0.14 0.18 0.26 0.15
+ [6,] 0.06 0.08 0.08 0.38 0.40
+ [7,] 0.22 0.30 0.21 0.11 0.16
+ [8,] 0.13 0.13 0.10 0.39 0.25
+ [9,] 0.25 0.19 0.18 0.18 0.21
+[10,] 0.18 0.13 0.11 0.27 0.30
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{LDA - Example (Cont.)}
+\phantomsection\label{lda---example-cont.-1}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{word\_probs }\OtherTok{\textless{}{-}} \FunctionTok{posterior}\NormalTok{(lda\_model)}\SpecialCharTok{$}\NormalTok{terms }\CommentTok{\# Prob Word J in Topic K}
+\FunctionTok{head}\NormalTok{(}\FunctionTok{round}\NormalTok{(word\_probs[, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{], }\DecValTok{5}\NormalTok{))   }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+    aaron abandon abandoned abandoning abbott
+1 0.00000 0.00000   0.00039      0e+00  0e+00
+2 0.00000 0.00000   0.00000      0e+00  0e+00
+3 0.00000 0.00000   0.00000      0e+00  1e-04
+4 0.00011 0.00016   0.00001      7e-05  0e+00
+5 0.00000 0.00000   0.00006      0e+00  0e+00
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{LDA - Example (Cont.)}
+\phantomsection\label{lda---example-cont.-2}
+\begin{itemize}
+\item Your turn -- do the same with k = 10. What changes?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{STM - Structural Topic Models}
+\phantomsection\label{stm---structural-topic-models}
+\begin{itemize}
+\item STMs are another form of topic models that provide for the inclusion of covariates to help explain topic prevalence ($X^p_i$) and content ($X^c_i$).  \par \vspace{2.5mm} \pause 
+\item For each document -- Model first decides how much of each topic is likely to appear (topic prevalence) – this can be driven by features like authorship, publication date, etc. \par \vspace{2.5mm} \pause 
+\item For each word in document -- Model picks a topic according to those proportions and generates the word from that topic. \par \vspace{2.5mm}
+\item  It’s a way to combine topic discovery with regression-style analysis, giving you richer insights into both what topics are present and how they’re talked about.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{STM Example (Setup)}
+\phantomsection\label{stm-example-setup}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{texts }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(AssociatedPress, }\DecValTok{1}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) \{}
+  \FunctionTok{paste}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\FunctionTok{colnames}\NormalTok{(AssociatedPress), x), }\AttributeTok{collapse =} \StringTok{" "}\NormalTok{)}
+\NormalTok{\})}
+
+\NormalTok{texts\_reduced }\OtherTok{\textless{}{-}} \FunctionTok{vapply}\NormalTok{(texts, reduce\_complexity, }\FunctionTok{character}\NormalTok{(}\DecValTok{1}\NormalTok{))}
+
+\NormalTok{corpus\_reduced }\OtherTok{\textless{}{-}} \FunctionTok{VCorpus}\NormalTok{(}\FunctionTok{VectorSource}\NormalTok{(texts\_reduced))}
+
+\NormalTok{dtm\_reduced }\OtherTok{\textless{}{-}} \FunctionTok{DocumentTermMatrix}\NormalTok{( corpus\_reduced,}
+  \AttributeTok{control =} \FunctionTok{list}\NormalTok{(}\AttributeTok{wordLengths =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\ConstantTok{Inf}\NormalTok{))}
+\NormalTok{)}
+
+\NormalTok{dfm\_ap }\OtherTok{\textless{}{-}} \FunctionTok{as.dfm}\NormalTok{(dtm\_reduced)}
+
+\NormalTok{docs\_stm }\OtherTok{\textless{}{-}} \FunctionTok{convert}\NormalTok{(dfm\_ap, }\AttributeTok{to =} \StringTok{"stm"}\NormalTok{) }\CommentTok{\# STM Structure}
+
+\NormalTok{meta }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{dummy =} \FunctionTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\FunctionTok{length}\NormalTok{(docs\_stm}\SpecialCharTok{$}\NormalTok{documents))) }\CommentTok{\# Document Meta}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{STM Example}
+\phantomsection\label{stm-example}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stm\_model }\OtherTok{\textless{}{-}}\NormalTok{ stm}\SpecialCharTok{::}\FunctionTok{stm}\NormalTok{(}
+  \AttributeTok{documents  =}\NormalTok{ docs\_stm}\SpecialCharTok{$}\NormalTok{documents,}
+  \AttributeTok{vocab      =}\NormalTok{ docs\_stm}\SpecialCharTok{$}\NormalTok{vocab,}
+  \AttributeTok{K          =} \DecValTok{5}\NormalTok{,}
+  \AttributeTok{prevalence =} \SpecialCharTok{\textasciitilde{}}\DecValTok{1}\NormalTok{,}
+  \AttributeTok{data       =}\NormalTok{ meta,}
+  \AttributeTok{init.type  =} \StringTok{"Spectral"}\NormalTok{,}
+  \AttributeTok{seed       =} \DecValTok{1234}\NormalTok{,}
+  \AttributeTok{max.em.its =} \DecValTok{500}\NormalTok{,}
+  \AttributeTok{verbose    =} \ConstantTok{FALSE}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{STM Example (Cont.)}
+\phantomsection\label{stm-example-cont.}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stm}\SpecialCharTok{::}\FunctionTok{labelTopics}\NormalTok{(stm\_model, }\AttributeTok{n =} \DecValTok{10}\NormalTok{) }\CommentTok{\# Top Words/Topic}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Topic 1 Top Words:
+     Highest Prob: court, year, case, charge, say, two, attorney, go, police, school 
+     FREX: court, attorney, judge, trial, sentence, justice, lawyer, book, mother, convict 
+     Lift: male, moore, souter, abrams, abyss, acquit, actress, adjourn, adkins, admission 
+     Score: court, attorney, sentence, trial, police, lawyer, judge, prison, jury, convict 
+Topic 2 Top Words:
+     Highest Prob: official, report, air, department, state, two, service, test, area, fire 
+     FREX: water, plane, flight, ship, accident, space, pilot, navy, pentagon, aircraft 
+     Lift: virus, airplane, aspirin, bay, bomber, cargo, carrier, creek, crow, defect 
+     Score: plane, flight, pilot, nasa, aircraft, shuttle, airline, accident, ship, pentagon 
+Topic 3 Top Words:
+     Highest Prob: percent, million, year, market, price, company, billion, trade, new, stock 
+     FREX: market, price, stock, dollar, sale, cent, index, yen, gold, investor 
+     Lift: chrysler, trader, troy, abboud, acquisition, acustar, aftertax, ag, alkaline, alltime 
+     Score: stock, cent, percent, price, market, yen, index, rate, dollar, billion 
+Topic 4 Top Words:
+     Highest Prob: soviet, government, official, people, police, state, unite, party, force, military 
+     FREX: soviet, army, troop, gorbachev, communist, soldier, rebel, israel, africa, israeli 
+     Lift: abductor, abu, afghanistan, africas, ahmed, alfredo, algeria, algerian, algiers, amal 
+     Score: soviet, communist, police, gorbachev, troop, minister, guerrilla, palestinian, party, soldier 
+Topic 5 Top Words:
+     Highest Prob: bush, president, state, house, year, vote, new, go, say, make 
+     FREX: bush, dukakis, republican, senate, budget, sen, democrat, rep, jackson, legislation 
+     Lift: cavazos, dmass, sens, ad, legislation, marlin, nbc, abcs, accomplishment, adhere 
+     Score: dukakis, bush, republican, tax, percent, campaign, poll, democratic, budget, vote 
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{proportions }\OtherTok{\textless{}{-}}\NormalTok{ stm\_model}\SpecialCharTok{$}\NormalTok{theta }\CommentTok{\# Document{-}Topic Proportions}
+\FunctionTok{round}\NormalTok{(proportions[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{, ], }\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+      [,1] [,2] [,3] [,4] [,5]
+ [1,] 0.86 0.05 0.00 0.08 0.01
+ [2,] 0.27 0.04 0.18 0.48 0.02
+ [3,] 0.83 0.02 0.04 0.09 0.01
+ [4,] 0.35 0.04 0.11 0.34 0.15
+ [5,] 0.57 0.04 0.02 0.02 0.35
+ [6,] 0.01 0.24 0.01 0.25 0.50
+ [7,] 0.11 0.44 0.27 0.13 0.05
+ [8,] 0.01 0.01 0.02 0.17 0.79
+ [9,] 0.06 0.81 0.04 0.05 0.04
+[10,] 0.03 0.04 0.04 0.54 0.35
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{STM Example (Cont.)}
+\phantomsection\label{stm-example-cont.-1}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{topic\_word\_probs }\OtherTok{\textless{}{-}} \FunctionTok{exp}\NormalTok{(stm\_model}\SpecialCharTok{$}\NormalTok{beta}\SpecialCharTok{$}\NormalTok{logbeta[[}\DecValTok{1}\NormalTok{]]) }\CommentTok{\#Topic Word Probabilities}
+\FunctionTok{head}\NormalTok{(}\FunctionTok{round}\NormalTok{(topic\_word\_probs[,}\DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{], }\DecValTok{5}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+        [,1]    [,2]    [,3]    [,4]    [,5]
+[1,] 0.00079 0.00044 0.00032 0.00026 0.00009
+[2,] 0.00086 0.00000 0.00000 0.00014 0.00019
+[3,] 0.00078 0.00079 0.00029 0.00011 0.00004
+[4,] 0.00043 0.00041 0.00012 0.00000 0.00002
+[5,] 0.00071 0.00055 0.00021 0.00016 0.00001
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{STM Example (Cont.)}
+\phantomsection\label{stm-example-cont.-2}
+\begin{itemize}
+\item Your turn -- do the same but with different values of topics k. 
+\end{itemize}
+\end{frame}
+
+\section{Looking Forward}\label{looking-forward}
+
+\begin{frame}{Next Class}
+\phantomsection\label{next-class}
+\begin{itemize}
+\item Distributed Representations of Text (Embeddings)
 \end{itemize}
 \end{frame}
 

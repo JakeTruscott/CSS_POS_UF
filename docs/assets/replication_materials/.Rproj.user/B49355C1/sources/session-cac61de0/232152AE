@@ -3,7 +3,7 @@
     "path": "C:/Users/jaketruscott/Github/CSS_POLS_UF/docs/assets/replication_materials/class_8/code/topic_models.Rmd",
     "project_path": "class_8/code/topic_models.Rmd",
     "type": "r_markdown",
-    "hash": "3723733294",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1772846991676.0,
@@ -11,14 +11,17 @@
     "relative_order": 4,
     "properties": {
         "source_window_id": "",
-        "Source": "Source"
+        "Source": "Source",
+        "cursorPosition": "150,38",
+        "scrollLine": "125",
+        "last_setup_crc32": "cac61de01ae29658"
     },
     "folds": "",
     "lastKnownWriteTime": 1767381279,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1767381279,
+    "last_content_update": 1774114193173,
     "read_only": false,
     "read_only_alternatives": []
 }

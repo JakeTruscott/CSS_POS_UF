@@ -1,0 +1,19 @@
+\frametitle{STM Example (Cont.)}
+\phantomsection\label{stm-example-cont.-1}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{topic\_word\_probs }\OtherTok{\textless{}{-}} \FunctionTok{exp}\NormalTok{(stm\_model}\SpecialCharTok{$}\NormalTok{beta}\SpecialCharTok{$}\NormalTok{logbeta[[}\DecValTok{1}\NormalTok{]]) }\CommentTok{\#Topic Word Probabilities}
+\FunctionTok{head}\NormalTok{(}\FunctionTok{round}\NormalTok{(topic\_word\_probs[,}\DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{], }\DecValTok{5}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+        [,1]    [,2]    [,3]    [,4]    [,5]
+[1,] 0.00079 0.00044 0.00032 0.00026 0.00009
+[2,] 0.00086 0.00000 0.00000 0.00014 0.00019
+[3,] 0.00078 0.00079 0.00029 0.00011 0.00004
+[4,] 0.00043 0.00041 0.00012 0.00000 0.00002
+[5,] 0.00071 0.00055 0.00021 0.00016 0.00001
+\end{verbatim}

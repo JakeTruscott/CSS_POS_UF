@@ -5,3 +5,6 @@
 \beamer@subsectionintoc {4}{1}{Calculating Mutual Information (Example - Cont.)}{17}{0}{4}
 \beamer@subsectionintoc {4}{2}{Calculating Mutual Information (Example - Cont.)}{20}{0}{4}
 \beamer@subsectionintoc {4}{3}{Calculating Mutual Information (Example - Cont.)}{23}{0}{4}
+\beamer@sectionintoc {5}{Clustering}{33}{0}{5}
+\beamer@sectionintoc {6}{Topic Models}{50}{0}{6}
+\beamer@sectionintoc {7}{Looking Forward}{74}{0}{7}
