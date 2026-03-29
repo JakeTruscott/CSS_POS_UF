@@ -126,7 +126,7 @@ To also borrow from the canonical quote underpinning much of modern text analysi
 4. <b>Algorithm</b>: With the component parts above, the final consideration is how to execute and optimize -- i.e., how are you wanted to learn the embeddings from the data? 
 
 
-### Nueral Word Embeddings
+### Neural Word Embeddings
 
 Most modern embedding techniques are derived from neural networks, a computational framework modeled on the processes of the human brain. In short, these networks learn patterns by passing information through layers of “neurons” -- including "hidden" layers that help the model understand complex relationships. 
 
@@ -184,7 +184,7 @@ print(cbow_embedding)
 ```
 We can finally visualize the embedding space: 
 
-```{r, word2vec_visualization, eval = F}
+```{r, word2vec_visualization, eval = T}
 
 word_vectors <- as.matrix(cbow_model) # Convert Model to Matrix
 similar_words <- unique(c(c("terrible", "incredible") , unlist(predict(cbow_model, c("terrible", "incredible") , type = "nearest", top_n = 10))))

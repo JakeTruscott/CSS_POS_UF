@@ -1,0 +1,707 @@
+---
+title: "Clustering and Topic Discovery"
+author: "Jake S. Truscott, Ph.D"
+subtitle: |
+  POS6933: Computational Social Science
+institute: |
+  \vspace{-5mm} University of Florida \newline
+  Spring 2026 \newline \newline \newline
+  \includegraphics[width=3cm]{../../../beamer_style/UF.png} \quad 
+  \includegraphics[width=3.1cm]{../../../images/CSS_POLS_UF_Logo.png}
+output: 
+  beamer_presentation:
+    slide_level: 3
+    keep_tex: true
+    toc: false
+classoption: aspectratio=169  
+header-includes:
+  - \PassOptionsToClass{aspectratio=169}{beamer}
+  - \usepackage{../../../beamer_style/beamer_style}
+  - \setbeamersize{text margin left=3.5mm,text margin right=3.5mm}
+---
+
+```{r setup, include=FALSE}
+library(dplyr); library(ggplot2); library(cowplot); library(formatR); library(stargazer); library(parallel); library(doParallel); library(tm); library(stringr); library(quanteda); library(quanteda.textstats); library(quanteda.textstats); library(dplyr); library(ggplot2); library(stringr);  library(tm); library(quanteda); library(quanteda.textstats); library(quanteda.textstats); library(rvest); library(tibble); library(tidytext)
+
+knitr::opts_chunk$set(
+  warning = FALSE, 
+	fig.align = "center",
+	comment = NA,
+	dev = "pdf",
+  tidy.opts=list(width.cutoff=50), 
+  R.options = list(width = 120)
+)
+
+default_ggplot_theme  <- theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12),
+    axis.title = element_text(size = 12, colour = 'black'),
+    axis.text = element_text(size = 10, colour = 'black'),
+    panel.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+    legend.position = 'bottom', 
+    legend.title = element_blank(), 
+    legend.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+  )
+
+reduce_complexity <- function(text){
+  text <- tolower(text) # Lower Case
+  text <- tm::removePunctuation(text) # Punctuation
+  text <- tm::removeNumbers(text) # Numbers
+  text <- tm::removeWords(text, tm::stopwords("english")) # Stop Words
+  text <- unlist(stringr::str_split(text, '\\s+')) # Tokenize 
+  text <- textstem::lemmatize_words(text) # Lemmatize
+  text <- paste(text, collapse = ' ') # Re-Append
+  text <- gsub("\\s{2,}", ' ', text) # 2 or More Spaces --> One Space
+  text <- trimws(text) # White Space
+  return(text)
+} # Function to Process Text for Bag of Words
+
+```
+
+# Overview
+
+### Overview
+\begin{itemize}
+\item Housekeeping
+\item Class 6 Problem Set Review
+\item Discriminating Words
+\item Clustering 
+\item Topic Models (LDA \& STM)
+\end{itemize}
+
+
+# Housekeeping
+
+### Housekeeping
+
+\begin{itemize}
+\item Final Paper Drafts Due 3/29 (\textit{Optional})
+\item Presentation \& Peer Assessment Schedule -- Emailed 
+\end{itemize}
+
+# Class 6 Problem Set
+
+### Class 6 Problem Set Review
+
+\begin{itemize}
+\item Generally did well \par \vspace{2.5mm}
+\item \textbf{Remember}: How you pre-process will have an effect on results downstream! \par \vspace{2.5mm}
+\item \textbf{Also...} strength and scope of vocabularies can also impact results! 
+\end{itemize}
+
+# Discriminating Words
+
+### Discriminating Words
+\begin{itemize}
+\item Not \textit{discriminatory} words... \par \vspace{2.5mm} \pause
+\item \textbf{Discrimination Words}: The frequency and distribution of words carry meaningful information about latent categories – i.e., words that appear more frequently in some categories than others are informative signals about that category  \par \vspace{2.5mm}
+\item Ex: \textit{Healthcare Provider} vs. \textit{Abortionist} -- Terms used in the same debate but relay competing sentiments/connotations/frames
+\end{itemize}
+
+
+### Discriminating Words -- Competing Terms Example (D v. R)
+\begin{columns}
+\column{0.5\textwidth}
+\begin{table}[h!]
+\centering
+\begin{tabular}{cc}
+\toprule
+\textbf{Democrats} & \textbf{Republicans} \\
+\midrule
+Climate     & Freedom  \\
+Healthcare  & Tax      \\
+Immigration & Border   \\
+Justice     & Security \\
+Welfare     & Economy  \\
+\bottomrule
+\end{tabular}
+\end{table}
+\column{0.5\textwidth}
+\begin{itemize}
+\item This is \underline{not} to say these words invariably represent parties (e.g., useful in vocabulary for dictionary/class assignment) \par \vspace{2.5mm} \pause
+\item Rather -- Words are useful to help us discriminate (distinguish) between them.  \par \vspace{2.5mm}
+\item Ex: Democrats can use \textit{Border}, too (similar or different frames) -- but more likely to appear as term used by Republicans. 
+\end{itemize}
+\end{columns}
+
+### Mutual Information
+\begin{itemize}
+\item \textbf{Mutual Information}: The amount of information one variable provides about another.  \pause \par \vspace{2.5mm}
+\item MI = 0 $\sim$ Information between two variables (ex: a label and a word) are completely independent (bad discriminator) \pause \par \vspace{2.5mm}
+\item MI = 1 $\sim$ Knowing about one variable completely informs us of the other (good discriminator). 
+\end{itemize}
+
+
+### Calculating Mutual Information
+\begin{itemize}
+\item $k$ = Categories
+\item $j$ = Word
+\item $\pi_k$ = Proportion of Documents for $k$
+\item $\pi_{-k}$ = Probability that Doc Doesn't Belong in $k$
+\end{itemize} 
+
+### Calculating Mutual Information (Cont.)
+\begin{center}
+ $H(k) = -\pi_k\log_2\pi_k-\pi_{-k}\log_2\pi_{-k,} $ \par \vspace{2.5mm} \textbf{Unconditional Certainty}:   \footnotesize{\textit{How likely we are to assume any random document belongs to a particular category, without even seeing a word}} \par \vspace{5mm} \pause \normalsize
+ $H(k|j) = -\sum_{k,-k}\sum_{j,-j}\pi_{k,j}\log_2\pi_{k,j} $ \\  \textbf{Conditional Certainty}: \footnotesize{\textit{How likely we are to correctly identify a document’s category after observing a specific word, reflecting how much that word reduces our uncertainty about the category.}}  \par \vspace{5mm} \pause
+ $\text{MI}_{kj} = H(k) - H(k|j)$ \\ Mutual Information = Unconditional Certainty - Conditional Certainty
+\end{center}
+
+### Calculating Mutual Information (Example)
+\begin{table}[h!]
+\centering
+\footnotesize
+\begin{tabular}{ccc}
+\toprule
+\textbf{Doc ID} & \textbf{Category ($k$)} & \textbf{Words ($j$)} \\ 
+\midrule
+ 1 & Red & Apple, Tree   \\ 
+ 2 & Red & Apple, Juice  \\ 
+ 3 & Red & Tree, Green  \\ 
+ 4 & Red & Apple, Green  \\ 
+ 5 & Blue & Blue, Ocean  \\ 
+ 6 & Blue & Ocean, Water  \\ 
+ 7 & Blue & Blue, Water  \\ 
+ 8 & Blue & Ocean, Blue  \\ 
+ 9 & Red & Apple, Tree  \\ 
+ 10 & Blue & Ocean, Tree  \\ 
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+## Calculating Mutual Information (Example - Cont.)
+\begin{columns}
+\footnotesize
+\column{0.4\textwidth}
+\begin{table}[h!]
+\centering
+\begin{tabular}{ccc}
+\toprule
+\textbf{Doc ID} & \textbf{Category ($k$)} & \textbf{Words ($j$)} \\ 
+\midrule
+ 1 & Red & Apple, Tree   \\ 
+ 2 & Red & Apple, Juice  \\ 
+ 3 & Red & Tree, Green  \\ 
+ 4 & Red & Apple, Green  \\ 
+ 5 & Blue & Blue, Ocean  \\ 
+ 6 & Blue & Ocean, Water  \\ 
+ 7 & Blue & Blue, Water  \\ 
+ 8 & Blue & Ocean, Blue  \\ 
+ 9 & Red & Apple, Tree  \\ 
+ 10 & Blue & Ocean, Tree  \\ 
+\bottomrule
+\end{tabular}
+\end{table}
+\normalsize
+\column{0.6\textwidth}
+  \begin{itemize}
+  \centering
+  \item[] \hspace{2.5mm} \textbf{Calculate Unconditional Certainty ($\pi_{k}$)} \pause
+  \item[] \hspace{2.5mm} $\pi_{Red} = 5/10 = 0.5 $
+  \item[] \hspace{2.5mm} $\pi_{Blue} = 5/10 = 0.5$ \pause
+  \item[] \hspace{2.5mm} $H(K) = -\pi_{Red}\log_2\pi_{Red}-\pi_{Blue}\log_2\pi_{Blue}$
+  \item[] \hspace{2.5mm} $H(K) = -0.5\log_20.5-0.5\log_20.5$
+  \item[] \hspace{2.5mm} $H(K) = 1$
+  \item[] \hspace{2.5mm} Maximum Uncertainty! 
+  \end{itemize}
+  \vfill
+\end{columns}
+
+
+## Calculating Mutual Information (Example - Cont.)
+\begin{columns}
+\column{0.3\textwidth}
+\footnotesize
+\begin{table}[h!]
+\centering
+\begin{tabular}{ccc}
+\toprule
+\textbf{Doc ID} & \textbf{Category ($k$)} & \textbf{Words ($j$)} \\ 
+\midrule
+ 1 & Red & Apple, Tree   \\ 
+ 2 & Red & Apple, Juice  \\ 
+ 3 & Red & Tree, Green  \\ 
+ 4 & Red & Apple, Green  \\ 
+ 5 & Blue & Blue, Ocean  \\ 
+ 6 & Blue & Ocean, Water  \\ 
+ 7 & Blue & Blue, Water  \\ 
+ 8 & Blue & Ocean, Blue  \\ 
+ 9 & Red & Apple, Tree  \\ 
+ 10 & Blue & Ocean, Tree  \\ 
+\bottomrule
+\end{tabular}
+\end{table}
+\normalsize
+\column{0.7\textwidth}
+  \begin{itemize}
+  \centering
+  \item[] \hspace{2.5mm} \textbf{Calculate Conditional Certainty \\ For Tree ($\pi_{k}$)} \pause
+  \item[] \hspace{2.5mm} $P(Red|Tree) = 3/4 = 0.75$
+  \item[] \hspace{2.5mm} $P(Blue|Tree) = 1/4 = 0.25 $
+  \item[] \hspace{2.5mm} $H(K) = -\pi_{Red}\log_2\pi_{Red}-\pi_{Blue}\log_2\pi_{Blue}$ \pause
+  \vspace{2.5mm}
+  \item[] \hspace{2.5mm} $H(K|Tree) = -(0.75\log_20.75+0.25\log_20.25)$ \\ $= 0.811 $
+  \item[] \hspace{2.5mm} $MI(k,Tree) = H(k) - H(k|Tree)$ \\ $= 1 - 0.811 \approx 0.189 $
+  \end{itemize}
+  \vfill
+\end{columns}
+
+
+## Calculating Mutual Information (Example - Cont.)
+\begin{itemize}
+\item \textbf{What if we tried with \textit{Green}?} \par \vspace{2.5mm} \pause
+  \item[]  $P(Red|Green) = 2/2 = 1$
+  \item[]  $P(Blue|Green) = 0/2 = 0$ \par \vspace{5mm}
+  \item \textit{Tree} is the only word we can use to discriminate -- It's the only term that appears in both categories!
+\end{itemize}
+
+
+### Fightin' Words (Monroe, Coloresi, and Quinn 2008)
+\begin{itemize}
+\item Alternative strategy to identify words that discriminate b/w categories using regularized log-odds ratios: $\alpha_j$ = Dirichlet prior \& $W^*_{k} \sim \text{Multinomial}(n_k,\mu_k)$ 
+\item[] $$\hat{\mu}_{jk} = \frac{W^*_{jk} + \alpha_j}{n_k + \sum^j_{j=1}\alpha_j}$$ \par \vspace{2.5mm}
+\item MI identifies words that are most informative about category membership overall -- Fightin’ Words estimates which words are disproportionately distinctive between groups by accounting for baseline frequencies and sampling variability.
+\item Estimate corresponds to expected value of posterior distribution $p(\mu|W)$ -- $\hat{\mu}_{jk}$ is smoothed probability of word $j$ in category $k$, allowing for small prior (e.g., Dirichlet). 
+\item[] $$ \text{Log Odds Ratio}_{kj} = \log(\frac{\mu_{kj}}{1-\mu_{kj}}) - \log(\frac{\mu-kj}{1-\mu_{-kj}}) $$
+\end{itemize}
+
+
+### Fightin' Words (Monroe, Coloresi, and Quinn 2008)
+
+\begin{columns}
+\column{0.4\textwidth}
+\centering
+\begin{tabular}{lccc}
+\toprule
+Word & Red & Blue & Total \\
+\midrule
+Apple & 4 & 3 & 7 \\
+Tree  & 3 & 1 & 4 \\
+Green & 2 & 0 & 2 \\
+Juice & 1 & 0 & 1 \\
+Blue  & 0 & 3 & 3 \\
+Ocean & 0 & 4 & 4 \\
+Water & 0 & 2 & 2 \\
+\bottomrule
+\end{tabular}
+\column{0.6\textwidth}
+\begin{itemize}
+\item Assuming $\alpha_j$ = 0.5 for all -- Let's do \textit{Apple} \par \vspace{2.5mm} \pause
+\item $\hat{\mu}(Apple|Red) = \frac{n_{(Apple,Red)} + \alpha_{Apple}}{n_{Red} + \sum_j\alpha_j}$ \par \vspace{2.5mm}
+\item $\hat{\mu}(Apple|Red) = \frac{4 + 0.5}{10 + 7 \times 0.5} = 0.33 $ \par \vspace{2.5mm} \pause
+\item \textbf{Let's solve for $\hat{\mu}(Apple|Blue)$} \par \vspace{2.5mm} \pause
+\item $\hat{\mu}(Apple|Blue) = \frac{3 + 0.05}{13 + 7 \times 0.5} = 0.212 $
+\end{itemize}
+\vfill
+\end{columns}
+
+
+### Fightin' Words (Cont.)
+\begin{itemize}
+\item Now that we have $\hat{\mu}(\text{Apple}|\text{Red/Blue})$, the log odds ratio that \textbf{Apple} is a predictor of \textbf{Red} is: \par \vspace{2.5mm} \pause
+
+\item $\delta_{\text{Red}} = \log\left(\frac{0.33}{1-0.33}\right) = \log(0.492) \approx -0.71$ \par \vspace{2.5mm}
+
+\item $\delta_{\text{Blue}} = \log\left(\frac{0.212}{1-0.212}\right) = \log(0.269) \approx -1.31$ \par \vspace{2.5mm}
+
+\item $\delta_{kj} = -0.71 - (-1.31) \approx 0.60$ \pause \par \vspace{2.5mm}
+
+\item $\exp(0.60) \approx 1.82$ -- Meaning that the odds \textbf{Apple} appears in \textbf{Red} documents is about 1.8 times larger than in \textbf{Blue}. The regularization helps ensure this difference is not just due to imbalance in total word counts.
+\end{itemize}
+
+# Clustering
+
+### Clustering
+\begin{itemize}
+\item Assuming some latent structure (i.e., a discrete grouping or classification) to organize data and explain lexical variance, \textbf{clustering algorithms} estimate this structure to represent what is most probable. \par \vspace{2.5mm} \pause
+\item They are \textbf{unsupervised} -- they infer latent group structure directly from patterns in the data, allowing word usage and co-occurrence to determinate how documents are grouped. \par \vspace{2.5mm} 
+\item In essence -- they \textbf{do not} require pre-defined labels like dictionary or other supervised methods! 
+\end{itemize}
+
+### K-Means Steps (Canonical)
+\begin{enumerate}
+\item Choose groups $k$ -- ex: 3 groups of documents, topics, etc. \pause
+\item Start w/ Random Group Centers ($\mu_k$) -- The algorithm will randomly assign groups to start \pause (temporary guesses just to get the ball rolling...)
+\item Assign Each Document to Nearest Center based on proximity (e.g., eucledian distance) \pause
+\item Relocate the centers to the middle (average position in data space) of each the items assigned to it \pause
+\item Repeat this process until convergence or threshold met -- algorithm will keep reassigning items until things stabilize (local optimum or minimization of global objective function) \pause
+\end{enumerate}
+\begin{itemize}
+\item[] \textbf{In short...} k-means keeps reshuffling items into groups and repositioning the group centers until it finds a stable set of clusters where items in the same group are more similar to each other than to items in other groups.
+\end{itemize}
+
+### K-Means (Numeric Example)
+\scriptsize
+```{r, k_means_example}
+
+data <- iris %>%
+  rename(sepal_length = Sepal.Length, 
+         sepal_width = Sepal.Width, 
+         petal_length = Petal.Length, 
+         petal_width = Petal.Width) %>%
+  select(sepal_length, sepal_width, petal_length, petal_width)
+
+kmeans_example <- kmeans(data, # Iris Data 
+                         centers = 3, # Cluster Centers (3 Defined)
+                         nstart = 25) # No. Independent Runs 
+
+kmeans_example$tot.withinss # Within-Cluster Sum of Squares (Dispersion Measure)
+
+```
+
+### K-Means (Numeric -- 3 vs. 4 Cluster Centers)
+```{r kmeans_figure, echo=FALSE, fig.height=3.5, fig.width=6, message=FALSE, warning=FALSE}
+
+k_means_fig_3 <- data %>% 
+  mutate(cluster = factor(kmeans_example$cluster)) %>%
+  ggplot(aes(x = sepal_length, y = sepal_width, color = cluster)) + 
+  geom_point() + 
+  theme_minimal() + 
+  labs(x = '\nSepal Width', 
+       y = 'Sepal Length\n', 
+       colour = 'Cluster Assignment', 
+       title = paste0('3 Cluster Centers (Within-Cluster Sum of Squares = ', round(kmeans_example$tot.withinss, 2), ')')) + 
+  theme(panel.border = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+        title = element_text(size = 5, colour = 'black'),
+        legend.position = 'none', 
+        legend.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+        legend.title.position = 'top', 
+        legend.title = element_text(size = 12, hjust = 0.5),
+        legend.text = element_text(size = 10)) 
+
+kmeans_example_4 <- kmeans(data, # Iris Data 
+                         centers = 4, # Cluster Centers (4 Defined)
+                         nstart = 25) # No. Independent Runs 
+
+k_means_fig_4 <- data %>% 
+  mutate(cluster = factor(kmeans_example_4$cluster)) %>%
+  ggplot(aes(x = sepal_length, y = sepal_width, color = cluster)) + 
+  geom_point() + 
+  theme_minimal() + 
+  labs(x = '\nSepal Width', 
+       y = 'Sepal Length\n', 
+       colour = 'Cluster Assignment', 
+       title = paste0('4 Cluster Centers (Within-Cluster Sum of Squares = ', round(kmeans_example_4$tot.withinss, 2), ')')) + 
+  theme(panel.border = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+        title = element_text(size = 5, colour = 'black'),
+        legend.position = 'none', 
+        legend.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+        legend.title.position = 'top', 
+        legend.title = element_text(size = 12, hjust = 0.5),
+        legend.text = element_text(size = 10)) 
+
+
+cowplot::plot_grid(k_means_fig_3, k_means_fig_4)
+
+```
+
+### K-Means (Numeric -- 4 vs. 5 Cluster Centers)
+```{r kmeans_figure_4_5, echo=FALSE, fig.height=3.5, fig.width=6, message=FALSE, warning=FALSE}
+
+k_means_fig_4 <- data %>% 
+  mutate(cluster = factor(kmeans_example_4$cluster)) %>%
+  ggplot(aes(x = sepal_length, y = sepal_width, color = cluster)) + 
+  geom_point() + 
+  theme_minimal() + 
+  labs(x = '\nSepal Width', 
+       y = 'Sepal Length\n', 
+       colour = 'Cluster Assignment', 
+       title = paste0('4 Cluster Centers (Within-Cluster Sum of Squares = ', round(kmeans_example_4$tot.withinss, 2), ')')) + 
+  theme(panel.border = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+        title = element_text(size = 5, colour = 'black'),
+        legend.position = 'none', 
+        legend.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+        legend.title.position = 'top', 
+        legend.title = element_text(size = 12, hjust = 0.5),
+        legend.text = element_text(size = 10)) 
+
+kmeans_example_5 <- kmeans(data, # Iris Data 
+                         centers = 5, # Cluster Centers (4 Defined)
+                         nstart = 25) # No. Independent Runs 
+
+k_means_fig_5 <- data %>% 
+  mutate(cluster = factor(kmeans_example_5$cluster)) %>%
+  ggplot(aes(x = sepal_length, y = sepal_width, color = cluster)) + 
+  geom_point() + 
+  theme_minimal() + 
+  labs(x = '\nSepal Width', 
+       y = 'Sepal Length\n', 
+       colour = 'Cluster Assignment', 
+       title = paste0('5 Cluster Centers (Within-Cluster Sum of Squares = ', round(kmeans_example_5$tot.withinss, 2), ')')) + 
+  theme(panel.border = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+        title = element_text(size = 5, colour = 'black'),
+        legend.position = 'none', 
+        legend.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+        legend.title.position = 'top', 
+        legend.title = element_text(size = 12, hjust = 0.5),
+        legend.text = element_text(size = 10)) 
+
+
+cowplot::plot_grid(k_means_fig_4, k_means_fig_5)
+
+```
+
+### K-Means (Text -- IMDB Data)
+```{r, k_means_text_load, include = F}
+imdb_data <- get(load(url('https://raw.githubusercontent.com/JakeTruscott/CSS_POS_UF/main/docs/assets/replication_materials/class_7/data/imdb_train_neg.rdata')))
+
+```
+\scriptsize
+```{r, k_means_text}
+
+imdb_data <- imdb_data$text[1:500] # Only First 500 Rows
+imdb_data <- iconv(imdb_data, from = "UTF-8", to = "UTF-8", sub = "") # Fixing Some Characters in IMDB Data
+corpus <- VCorpus(VectorSource(sapply(imdb_data, reduce_complexity)))
+dtm <- DocumentTermMatrix(corpus, control = list(weighting = weightTfIdf)) # TF-IDF DTM
+dtm <- removeSparseTerms(dtm, 0.95)  # (Optional) Reducing Further Sparsity
+dtm_matrix <- as.matrix(dtm) # Convert DTM Matrix for K-Means
+
+kmeans_example_3_centers <- kmeans(dtm_matrix, centers = 3, nstart = 25)
+
+kmeans_example_3_centers$tot.withinss 
+
+kmeans_example_10_centers <- kmeans(dtm_matrix, centers = 10, nstart = 25)
+
+kmeans_example_10_centers$tot.withinss 
+
+```
+
+
+### K-Means (Text -- IMDB Data)
+```{r plot_k_means, echo=FALSE, fig.height=2.5, fig.width=6}
+
+pca <- prcomp(dtm_matrix, scale. = TRUE)
+pca_data_3 <- data.frame(x = pca$x[,1], y = pca$x[,2], cluster = factor(kmeans_example_3_centers$cluster))
+
+pca_data_10 <- data.frame(x = pca$x[,1], y = pca$x[,2], cluster = factor(kmeans_example_10_centers$cluster))
+
+
+cowplot::plot_grid(
+  
+  a <- pca_data_3 %>% 
+  ggplot(aes(x = x, y = y, color = cluster)) + 
+  geom_point() + 
+  theme_minimal() +
+  labs(x = '\nPCA Dim-1', 
+       y = 'PCA Dim-2\n', 
+       colour = 'Cluster Assignment', 
+       title = paste0('3 Cluster Centers (Within-Cluster Sum of Squares = ', round(kmeans_example_3_centers$tot.withinss, 2), ')')) + 
+  theme(panel.border = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+        title = element_text(size = 5, colour = 'black'),
+        legend.position = 'none'), 
+  
+  b <- pca_data_10 %>% 
+  ggplot(aes(x = x, y = y, color = cluster)) + 
+  geom_point() + 
+  theme_minimal() +
+  labs(x = '\nPCA Dim-1', 
+       y = 'PCA Dim-2\n', 
+       colour = 'Cluster Assignment', 
+       title = paste0('10 Cluster Centers (Within-Cluster Sum of Squares = ', round(kmeans_example_10_centers$tot.withinss, 2), ')')) + 
+  theme(panel.border = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+        title = element_text(size = 5, colour = 'black'),
+        legend.position = 'none')
+  
+  
+)
+
+
+
+```
+
+
+### K-Means (Text -- IMDB Data) -- Notes
+\begin{itemize}
+\item \textbf{Remember}: Text data is high-dimensional -- not always possible to neatly cluster, especially when models are unsupervised. \par \vspace{2.5mm}
+\item Selection of clusters $k$ motivated by \textbf{Theory} and Subsequent \textbf{Validation} (multiple mechanisms to measure improvement technically and otherwise -- e.g., \textit{does clustering make sense?}) \par \vspace{2.5mm}
+\item Goal is to locate \textbf{local optimum} -- usually a convergence point where shuffling to minimize sum of squares again yields an improvement less than some determined amount. 
+\item This isn't linear algebra -- There can be multiple ``correct'' solutions...
+\end{itemize}
+
+### Clustering -- Other Notes
+\begin{itemize}
+\item \textbf{Algorithmic v. Probabilistic}: K-means is algorithmic (deterministic assignments via nearest centroid), while other models (e.g., LDA) are probabilistic and allow for documents to belonging in several clusters. \par \vspace{2.5mm} \pause
+\item \textbf{Soft v. Hard Partitions}: K-means uses hard partitions to assign to nearest cluster centroid. It will only be assigned to one cluster only. \par \vspace{2.5mm} \pause
+\item \textbf{Means v. Mediods}:  In the sense of k-means/mediods, its the difference between measuring (a) the location of the average document in the cluster (sensitive to outliers), or (b) the document that minimizes the distance to all others in the cluster (can theoretically omit behavior we're interested in). \par \vspace{2.5mm} \pause
+\item \textbf{Flat v. Hierarchical}: Flat clustering methods (like k-means) produce a single-level partition of the data into a fixed number of clusters. Hierarchical clustering produces a nested tree of clusters, either by successively merging individual observations or recursively splitting the dataset.
+\end{itemize}
+
+
+# Topic Models
+
+### First Exercise (SOTU Addresses)
+\begin{itemize}
+\item \textbf{Recall...} First exercise we did re: text analysis was Presidential SOTU addresses \par \vspace{2.5mm} \pause
+\item Important Assumptions:  \pause
+  \begin{enumerate}
+  \item Presidents may touch on various policy areas and themes throughout these speeches. \par \vspace{2.5mm} \pause
+  \item Even though they may draw from different perspectives and contexts, we can define a word or assert a general vocabulary to identify those thematic elements -- e.g., I can use terms like \textbf{navy, army, marines}, etc. to reasonably identify periods where the president is discussing military matters.
+  \end{enumerate} \par \vspace{2.5mm} \pause
+\item \textbf{Problem}: Clustering algorithms (even with soft partitioning) might obscure results here -- speeches (documents) engage with multiple topics, frames, etc -- single-member clustering can be problematic. 
+\end{itemize}
+
+### Topic Models v. Clustering 
+\begin{itemize}
+\item \textbf{Topic Model}: Rather than assign each document to only one cluster, topic models assign each document with proportional membership to all categories (topics). 
+\item That is...topic models suppose that each document is a mixture across categories – a mixed membership model \par \vspace{2.5mm}
+\item Ex: Re: SOTU Addresses -- topic models may help us understand this through the lens of more discrete items like the welfare state, taxation, foreign trade or other topics within the broader scope of discussion related to economic policy. \par \vspace{2.5mm}
+\item We'll focus on two: LDA \& STM
+\end{itemize}
+
+### Additional Notes re: Topic Models
+\begin{itemize}
+\item Note: Like clustering, there is not about estimating the \textit{only} right answer \par \vspace{2.5mm} \pause
+\item Much of the inferential value is assessed post-hoc -- recovering useful topics to explain variances in the data recovered through its assignment process. \par \vspace{2.5mm} \pause
+\item Like clustering we can measure (for instance) improvement in log-likelihood to assess whether variance in $k$ are an improvement. 
+\end{itemize}
+
+### LDA (Latent Dirichlet Allocation)
+\begin{itemize}
+\item Canonical topic model \par \vspace{2.5mm}
+\item Generative probabilistic model – explicitly posits a DGP for documents where documents are mixtures of latent topics and words are drawn conditional on those topics. \par \vspace{2.5mm}
+\item Tries to Recover: 
+  \begin{enumerate}
+  \item \textbf{Document-Topic Distributions}: Each document is represented a distribution over (perhaps multiple) different topics, each with a certain probability.
+  \item \textbf{Topic-Word Distributions}: Each topic is represented as a distribution over words, meaning that each topic is defined by a set of words (again all with an associated probability of appearing in that topic)
+  \end{enumerate} 
+\end{itemize}
+
+### LDA Notation
+\begin{itemize}
+\item Document Index = $i$ \par \vspace{2.5mm}
+\item Topic Index = $K$ \par \vspace{2.5mm}
+\item Word Position In Document ($i$) = $m$ \par \vspace{2.5mm}
+\item Observed Word = $W_{im}$ \par \vspace{2.5mm}
+\item Document-Topic Weights: $\pi_{ik}$ where $\sum_{K}\pi_{iK} =1$ (All Sum to 1) 
+\end{itemize}
+
+### LDA (Cont.)
+\begin{itemize}
+\item[] \centering $Z_{im} \sim \text{Multinomial}(1,\pi_i) \quad \text{Topic Indicator for Each Word} $ \par \vspace{2.5mm}
+\item[] \centering  $W_{im} \sim \text{Multinomial}(1, \mu{Z_{im}}) \quad \text{Observed Word Token For Each Word Position}$ \par \vspace{2.5mm}
+\item \raggedright Probability of observing a word token in a document ($W_{im} = j$) conditional on both the document-topic weights ($\pi_{iK}$) and the topic-word distributions ($\mu_k$) is a weighted average of topic-specific word probabilities, where the weights are given by the document's topic proportions ($\pi_{iK}$): \par \vspace{2.5mm}
+\item[] \centering  $ p(W_{im} = j \mid \pi_i,\mu) = \sum_K\pi_{iK}\mu_{jK}$
+\end{itemize}
+
+### LDA - Example
+\scriptsize
+```{r lda_example}
+
+library(topicmodels)
+data("AssociatedPress")
+dtm <- AssociatedPress
+
+lda_model <- LDA(dtm, k = 5, method = "Gibbs", control = list(seed = 1234)) # LDA w/ 5 Topics & Gibbs Sampling 
+topicmodels::terms(lda_model, 10) 
+
+```
+
+### LDA - Example (Cont.)
+\scriptsize
+```{r lda_example_cont}
+
+topic_probs <- posterior(lda_model)$topics # Prob Document i Belongs to Topic K
+print(round(topic_probs[c(1:10), c(1:5)], 2))
+
+```
+
+
+### LDA - Example (Cont.)
+\scriptsize
+```{r lda_example_cont_2}
+
+word_probs <- posterior(lda_model)$terms # Prob Word J in Topic K
+head(round(word_probs[, 1:5], 5))   
+
+```
+
+
+### LDA - Example (Cont.)
+\begin{itemize}
+\item Your turn -- do the same with k = 10. What changes?
+\end{itemize}
+
+### STM - Structural Topic Models
+\begin{itemize}
+\item STMs are another form of topic models that provide for the inclusion of covariates to help explain topic prevalence ($X^p_i$) and content ($X^c_i$).  \par \vspace{2.5mm} \pause 
+\item For each document -- Model first decides how much of each topic is likely to appear (topic prevalence) – this can be driven by features like authorship, publication date, etc. \par \vspace{2.5mm} \pause 
+\item For each word in document -- Model picks a topic according to those proportions and generates the word from that topic. \par \vspace{2.5mm}
+\item  It’s a way to combine topic discovery with regression-style analysis, giving you richer insights into both what topics are present and how they’re talked about.
+\end{itemize}
+
+
+### STM Example (Setup)
+\scriptsize
+```{r stm_ex_setup}
+texts <- apply(AssociatedPress, 1, function(x) {
+  paste(rep(colnames(AssociatedPress), x), collapse = " ")
+})
+
+texts_reduced <- vapply(texts, reduce_complexity, character(1))
+
+corpus_reduced <- VCorpus(VectorSource(texts_reduced))
+
+dtm_reduced <- DocumentTermMatrix( corpus_reduced,
+  control = list(wordLengths = c(1, Inf))
+)
+
+dfm_ap <- as.dfm(dtm_reduced)
+
+docs_stm <- convert(dfm_ap, to = "stm") # STM Structure
+
+meta <- data.frame(dummy = rep(1, length(docs_stm$documents))) # Document Meta
+
+```
+
+
+### STM Example
+\scriptsize
+```{r stm_ex}
+
+stm_model <- stm::stm(
+  documents  = docs_stm$documents,
+  vocab      = docs_stm$vocab,
+  K          = 5,
+  prevalence = ~1,
+  data       = meta,
+  init.type  = "Spectral",
+  seed       = 1234,
+  max.em.its = 500,
+  verbose    = FALSE
+)
+
+```
+
+
+### STM Example (Cont.)
+\scriptsize
+```{r stm_ex_cont}
+
+stm::labelTopics(stm_model, n = 10) # Top Words/Topic
+
+proportions <- stm_model$theta # Document-Topic Proportions
+round(proportions[1:10, ], 2)
+
+```
+
+### STM Example (Cont.)
+\scriptsize
+```{r stm_ex_Cont}
+topic_word_probs <- exp(stm_model$beta$logbeta[[1]]) #Topic Word Probabilities
+head(round(topic_word_probs[,1:5], 5))
+
+```
+
+
+### STM Example (Cont.)
+\begin{itemize}
+\item Your turn -- do the same but with different values of topics k. 
+\end{itemize}
+
+
+# Looking Forward
+### Next Class
+\begin{itemize}
+\item Distributed Representations of Text (Embeddings)
+\end{itemize}

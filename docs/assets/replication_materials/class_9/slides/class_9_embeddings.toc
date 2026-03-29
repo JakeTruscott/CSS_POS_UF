@@ -1,0 +1,8 @@
+\beamer@sectionintoc {1}{Overview}{2}{0}{1}
+\beamer@sectionintoc {2}{Housekeeping}{3}{0}{2}
+\beamer@sectionintoc {3}{Class 8 Problem Set}{4}{0}{3}
+\beamer@sectionintoc {4}{Distributed Representations of Words}{5}{0}{4}
+\beamer@sectionintoc {5}{Library Analogy}{22}{0}{5}
+\beamer@sectionintoc {6}{Estimating Embeddings}{41}{0}{6}
+\beamer@sectionintoc {7}{Pre-Trained Embeddings}{47}{0}{7}
+\beamer@sectionintoc {8}{Looking Forward}{68}{0}{8}

@@ -1,0 +1,23 @@
+\frametitle{BERT -- Apply Using Python Code (Cont.)}
+\phantomsection\label{bert-apply-using-python-code-cont.}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sentence\_transformers }\OtherTok{\textless{}{-}} \FunctionTok{import}\NormalTok{(}\StringTok{"sentence\_transformers"}\NormalTok{) }\CommentTok{\# Import sentence{-}transformers}
+\NormalTok{model }\OtherTok{\textless{}{-}}\NormalTok{ sentence\_transformers}\SpecialCharTok{$}\FunctionTok{SentenceTransformer}\NormalTok{(}\StringTok{"all{-}MiniLM{-}L6{-}v2"}\NormalTok{) }\CommentTok{\# Call Small Bert Model}
+
+\NormalTok{words }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}dog\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}cat\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}horse\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}pig\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}firetruck\textquotesingle{}}\NormalTok{)}\CommentTok{\# Same Words as Earlier}
+\NormalTok{embeddings }\OtherTok{\textless{}{-}}\NormalTok{ model}\SpecialCharTok{$}\FunctionTok{encode}\NormalTok{(words) }\CommentTok{\# Recover Embeddings}
+
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(words)}
+\NormalTok{cosine\_sim\_matrix }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\AttributeTok{nrow =} \FunctionTok{length}\NormalTok{(words), }\AttributeTok{ncol =} \FunctionTok{length}\NormalTok{(words))}
+\FunctionTok{rownames}\NormalTok{(cosine\_sim\_matrix) }\OtherTok{\textless{}{-}} \FunctionTok{colnames}\NormalTok{(cosine\_sim\_matrix) }\OtherTok{\textless{}{-}}\NormalTok{ words}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{n) \{}
+  \ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{n) \{}
+\NormalTok{    cosine\_sim\_matrix[i, j] }\OtherTok{\textless{}{-}} \FunctionTok{cosine\_similarity}\NormalTok{(embeddings[i, ], embeddings[j, ])}
+\NormalTok{  \}}
+\NormalTok{\} }\CommentTok{\# Recover Cosine Sim for Each Word Pair}
+\end{Highlighting}
+\end{Shaded}
