@@ -44,5 +44,11 @@
 \beamer@slide {bert-bidirectional-encoder-representations-from-transformers}{62}
 \beamer@slide {bert-apply-using-python-code-reticulate}{65}
 \beamer@slide {bert-apply-using-python-code-cont.}{66}
-\beamer@slide {bert-same-application-as-glove-but-context-specific-results}{67}
-\beamer@slide {next-class}{68}
+\beamer@slide {bert-apply-using-python-code-cont.-1}{67}
+\beamer@slide {bert-same-application-as-glove-but-context-specific-results}{68}
+\beamer@slide {sbert-bert-optimized-for-sentences}{69}
+\beamer@slide {sbert-bert-optimized-for-sentences-cont.}{70}
+\beamer@slide {sbert-bert-optimized-for-sentences-cont.-1}{71}
+\beamer@slide {sbert-bert-optimized-for-sentences-cont.-2}{72}
+\beamer@slide {sbert-bert-optimized-for-sentences-cont.-3}{73}
+\beamer@slide {next-class}{74}

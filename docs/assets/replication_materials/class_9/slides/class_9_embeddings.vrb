@@ -1,23 +1,38 @@
-\frametitle{BERT -- Apply Using Python Code (Cont.)}
-\phantomsection\label{bert-apply-using-python-code-cont.}
+\frametitle{SBERT -- BERT Optimized for Sentences (Cont.)}
+\phantomsection\label{sbert-bert-optimized-for-sentences-cont.-3}
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{sentence\_transformers }\OtherTok{\textless{}{-}} \FunctionTok{import}\NormalTok{(}\StringTok{"sentence\_transformers"}\NormalTok{) }\CommentTok{\# Import sentence{-}transformers}
-\NormalTok{model }\OtherTok{\textless{}{-}}\NormalTok{ sentence\_transformers}\SpecialCharTok{$}\FunctionTok{SentenceTransformer}\NormalTok{(}\StringTok{"all{-}MiniLM{-}L6{-}v2"}\NormalTok{) }\CommentTok{\# Call Small Bert Model}
+\NormalTok{bottom\_3 }\OtherTok{\textless{}{-}}\NormalTok{ cosine\_sim }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{arrange}\NormalTok{(similarity) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{slice\_head}\NormalTok{(}\AttributeTok{n =} \DecValTok{3}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(similarity)) }\CommentTok{\# 5 Least Sim}
 
-\NormalTok{words }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}dog\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}cat\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}horse\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}pig\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}firetruck\textquotesingle{}}\NormalTok{)}\CommentTok{\# Same Words as Earlier}
-\NormalTok{embeddings }\OtherTok{\textless{}{-}}\NormalTok{ model}\SpecialCharTok{$}\FunctionTok{encode}\NormalTok{(words) }\CommentTok{\# Recover Embeddings}
-
-\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(words)}
-\NormalTok{cosine\_sim\_matrix }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\AttributeTok{nrow =} \FunctionTok{length}\NormalTok{(words), }\AttributeTok{ncol =} \FunctionTok{length}\NormalTok{(words))}
-\FunctionTok{rownames}\NormalTok{(cosine\_sim\_matrix) }\OtherTok{\textless{}{-}} \FunctionTok{colnames}\NormalTok{(cosine\_sim\_matrix) }\OtherTok{\textless{}{-}}\NormalTok{ words}
-
-\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{n) \{}
-  \ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{n) \{}
-\NormalTok{    cosine\_sim\_matrix[i, j] }\OtherTok{\textless{}{-}} \FunctionTok{cosine\_similarity}\NormalTok{(embeddings[i, ], embeddings[j, ])}
-\NormalTok{  \}}
-\NormalTok{\} }\CommentTok{\# Recover Cosine Sim for Each Word Pair}
+\NormalTok{bottom\_3}\SpecialCharTok{$}\NormalTok{text\_i[}\DecValTok{1}\NormalTok{]}
 \end{Highlighting}
 \end{Shaded}
+
+\begin{verbatim}
+[1] "Here are some examples of Pat Robertsons dubiously claimed \"relatively good track record\" on predictions<br /><br />In his widely reported comments from the January 2 edition of the Christian Broadcasting Network's The 700 Club, during which he predicted that there would be \"very serious terrorist attacks\" and \"mass killing\" in the United States in the \"second half\" of 2007, host Pat Robertson boasted that he had \"a relatively good track record\" on earlier predictions. But a review of Robertson's 2006 New Year's predictions undermines that claim. He predicted, for example, that:<br /><br />* \"President Bush is going to strengthen.\" WRONG<br /><br />* \"The fall elections will be inconclusive, but the outcome of the war and the success of the economy will leave the Republicans in charge.\" WRONG<br /><br />* \"The war in Iraq is going to come to a successful conclusion. We'll begin withdrawing troops before the end of this year.\" WAY WRONG<br /><br />Further, as a January 3 Associated Press article reported, Robertson has a history of making dubious predictions:<br /><br />The broadcaster predicted in January 2004 that President Bush would easily win re-election. Bush won 51% of the vote that fall, beating Democratic Sen. John Kerry of Massachusetts. WRONG<br /><br />In 2005, Robertson predicted that Bush would have victory after victory in his second term. He said Social Security reform proposals would be approved WRONG YET AGAIN! <br /><br />He claims to speak directly with god... If so god has quite the sense of humor watching Pat make a fool of himself again and again.."
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{bottom\_3}\SpecialCharTok{$}\NormalTok{text\_j[}\DecValTok{1}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] "Love is overwhelming... In all it's manifestations... Gorgeous, absolutely gorgeous... Tudor Chirila, Maria Popistasu and Ioana Barbu, one truly dramatic story about love in all it's shapes, a story about the undecipherable ways of young hearts, about life and lost innocence all directed by the skillful eye of Tudor Giurgiu. With a magnificent soundtrack featuring Faultline & Chris Martin and Vama Veche it surprises in every way leaving behind the sour taste of misunderstanding love... Truly remarkable... Is it me or is Romanian cinematography slowly but surely advancing and gaining respect? This is a brilliant film... Two thumbs up to everybody involved."
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{bottom\_3}\SpecialCharTok{$}\NormalTok{similarity[}\DecValTok{1}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] -0.05845736
+\end{verbatim}

@@ -3,24 +3,25 @@
     "path": "C:/Users/jaketruscott/Github/CSS_POLS_UF/docs/assets/replication_materials/class_9/problem_set/class_9_problem_set.Rmd",
     "project_path": "class_9/problem_set/class_9_problem_set.Rmd",
     "type": "r_markdown",
-    "hash": "4255323258",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1774614830669.0,
-    "source_on_save": false,
+    "source_on_save": true,
     "relative_order": 1,
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "1,15",
-        "scrollLine": "3"
+        "cursorPosition": "51,58",
+        "scrollLine": "41",
+        "last_setup_crc32": "4440617f202c995"
     },
     "folds": "",
-    "lastKnownWriteTime": 1767624788,
+    "lastKnownWriteTime": 1774803437,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1767624788,
+    "last_content_update": 1774803437835,
     "read_only": false,
     "read_only_alternatives": []
 }
