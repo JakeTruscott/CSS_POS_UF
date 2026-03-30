@@ -30,6 +30,5 @@
 "0","} # Function to Process Text for Bag of Word"
 "0",""
 "0","library(topicmodels)"
-"2","Warning:"
-"2"," package ‘topicmodels’ was built under R version 4.4.3
-"
+"0",""
+"0",""

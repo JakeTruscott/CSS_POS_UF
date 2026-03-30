@@ -439,22 +439,134 @@ policy areas (4pt).</li>
 </div>
 <p>A. For two words found in both classes (<code>Democratic</code> and
 <code>Republican</code>), calculate the mutual information. There are
-<b>six</b> total, but you only need to choose <b>two</b>.</p>
+<b>seven</b> total, but you only need to choose <b>two</b>.</p>
+<pre class="r"><code>pi_dem = 5/10 #Unconditional (Dem)
+pi_rep = 5/10 # Unconditional (Rep)
+hk = -pi_dem * log2(pi_dem) - pi_rep * log2(pi_rep) # Unconditional
+
+# Healthcare
+
+health_dem = 2/3 # Dem (Docs 1 and 3)
+health_rep = 1/3 # Rep (Doc 8)
+hk_healthcare = -(health_dem*log2(health_dem)+health_rep*log2(health_rep))
+
+mi_healthcare = hk - hk_healthcare
+
+mi_healthcare # Mutual Information (Healthcare)</code></pre>
+<pre><code>## [1] 0.08170417</code></pre>
+<pre class="r"><code># Taxes
+
+taxes_dem = 2/4 # Dem (Docs 1 and 5)
+taxes_rep = 2/4 # Rep (Docs 6 and 9)
+hk_taxes = -(taxes_dem*log2(taxes_dem)+taxes_rep*log2(taxes_rep))
+
+mi_taxes = hk - hk_taxes
+
+mi_taxes # Mutual Information (Taxes)</code></pre>
+<pre><code>## [1] 0</code></pre>
 <p>B. For the words <code>Healthcare</code>, <code>Energy</code>, and
 <code>Security</code>, use the Fightin’ Words approach to recover the
 log odds ratio that each is a predictor of either class.</p>
+<pre class="r"><code># Posterior Means = (n[word,class] + alpha_j)/(n[total words in class] + n[unique words]*alpha_j)
+ 
+
+# Healthcare
+
+posterior_health_dem = (2 + 0.5)/(15 + 14*0.5) # Posterior for Dem
+posterior_health_rep = (1 + 0.5)/(15 + 14*0.5) # Posterior for Rep
+log_health_dem = log(posterior_health_dem/(1-posterior_health_dem))
+log_health_rep = log(posterior_health_rep/(1-posterior_health_rep))
+
+log_health_dem-log_health_rep # Log Odds Ratio</code></pre>
+<pre><code>## [1] 0.560836</code></pre>
+<pre class="r"><code>exp(log_health_dem-log_health_rep) # Exponentiation Log Odds Ratio</code></pre>
+<pre><code>## [1] 1.752137</code></pre>
+<pre class="r"><code># Energy
+
+posterior_energy_dem = (2 + 0.5)/(15 + 14*0.5) # Posterior for Dem
+posterior_energy_rep = (2 + 0.5)/(15 + 14*0.5) # Posterior for Rep
+log_energy_dem = log(posterior_energy_dem/(1-posterior_energy_dem))
+log_energy_rep = log(posterior_energy_rep/(1-posterior_energy_rep))
+
+log_energy_dem-log_energy_rep # Log Odds Ratio</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>exp(log_energy_dem-log_energy_rep) # Exponentiated Log Odds Ratio</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code># Security
+
+posterior_security_dem = (2 + 0.5)/(15 + 14*0.5) # Posterior for Dem
+posterior_security_rep = (2 + 0.5)/(15 + 14*0.5) # Posterior for Rep
+log_security_dem = log(posterior_security_dem/(1-posterior_security_dem))
+log_security_rep = log(posterior_security_rep/(1-posterior_security_rep))
+
+log_security_dem-log_security_rep # Log Odds Ratio</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>exp(log_security_dem-log_security_rep) # Exponentiated Log Odds Ratio</code></pre>
+<pre><code>## [1] 1</code></pre>
 <hr />
 <ol start="2" style="list-style-type: decimal">
-<li><p>Using the <i>Federalist Papers</i> authored by <b>James
-Madison</b> (no co-authors or disputed authors), apply TF-IDF weighting
-and run k-means clustering using 5, 10, 15, 20, 25 cluster centers.
-Report the within-cluster sum of squares for each. What is the average
-reduction in the sum of squares for the addition of each cluster center?
-Is the answer the same if I ask this question for bins 5-15 versus
-15-25? (3pt)</p></li>
-<li><p>Using the same <i>Federalist Papers</i> data (Madison authorship
+<li>Using the <i>Federalist Papers</i> authored by <b>James Madison</b>
+(no co-authors or disputed authors), apply TF-IDF weighting and run
+k-means clustering using 5, 10, 15, 20, 25 cluster centers. Report the
+within-cluster sum of squares for each. What is the average reduction in
+the sum of squares for the addition of each cluster center? Is the
+answer the same if I ask this question for bins 5-15 versus 15-25?
+(3pt)</li>
+</ol>
+<pre class="r"><code>fed_papers &lt;- read_html(&#39;https://www.gutenberg.org/cache/epub/18/pg18-images.html&#39;)
+essays &lt;- html_elements(fed_papers, &#39;.chapter&#39;)
+text &lt;- html_text2(essays)
+text &lt;- tibble(text)
+federalist &lt;- text %&gt;%
+  filter(stringr::str_detect(text, &#39;slightly different version&#39;, negate = TRUE)) %&gt;%
+  mutate(author = text %&gt;%
+           str_extract(&#39;HAMILTON AND MADISON|HAMILTON OR MADISON|HAMILTON|MADISON|JAY&#39;) %&gt;%
+           str_to_title(),
+         title = str_extract(text, &#39;No. [A-Z].*&#39;)) %&gt;%
+  filter(str_detect(author, &quot;Madison&quot;)) # Clean &amp; Partition
+
+corpus &lt;- VCorpus(VectorSource(sapply(federalist$text, reduce_complexity)))
+dtm &lt;- DocumentTermMatrix(corpus, control = list(weighting = weightTfIdf)) # TF-IDF DTM
+dtm &lt;- removeSparseTerms(dtm, 0.95)  # (Optional) Reducing Further Sparsity
+dtm_matrix &lt;- as.matrix(dtm) # Convert DTM Matrix for K-Means
+cluster_centers &lt;- seq(5, 25, 5)
+k_means_output &lt;- data.frame()
+
+for (cluster in 1:length(cluster_centers)){
+  temp_k_means &lt;- kmeans(dtm_matrix, 
+                         centers = cluster_centers[cluster], 
+                         nstart = 25)
+  k_means_output &lt;- bind_rows(k_means_output, 
+                              data.frame(cluster_center = cluster_centers[cluster], 
+                                         sum_of_squares = temp_k_means$tot.withinss))
+
+  }
+
+
+k_means_output$reduction &lt;- c(NA, diff(k_means_output$sum_of_squares) * -1)
+colnames(k_means_output) &lt;- c(&quot;Cluster Center&quot;, &quot;Sum of Squares&quot;, &quot;Reduction&quot;)
+
+stargazer::stargazer(k_means_output, 
+                     summary=F, 
+                     type = &#39;text&#39;)</code></pre>
+<pre><code>## 
+## =========================================
+##   Cluster Center Sum of Squares Reduction
+## -----------------------------------------
+## 1       5            0.101               
+## 2       10           0.068        0.033  
+## 3       15           0.045        0.023  
+## 4       20           0.026        0.018  
+## 5       25           0.010        0.016  
+## -----------------------------------------</code></pre>
+<pre class="r"><code>mean(k_means_output$Reduction[2:3], na.rm = TRUE)  # 5 to 15</code></pre>
+<pre><code>## [1] 0.0280525</code></pre>
+<pre class="r"><code>mean(k_means_output$Reduction[3:5], na.rm = TRUE)  # 15 to 25</code></pre>
+<pre><code>## [1] 0.01902038</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Using the same <i>Federalist Papers</i> data (Madison authorship
 only), construct an LDA topic model with 10 topics. Print the top-10
-words associated with each of those topics.</p></li>
+words associated with each of those topics.</li>
 </ol>
 <p>A. For each topic, report the posterior probabilities for the top 10
 documents (words) in each.</p>
@@ -462,6 +574,59 @@ documents (words) in each.</p>
 explaining what you think the “topic” identified by the model is – i.e.,
 what do these words tell you about the substantive content of the pooled
 words? (3pt)</p>
+<pre class="r"><code>corpus &lt;- VCorpus(VectorSource(sapply(federalist$text, reduce_complexity)))
+dtm &lt;- DocumentTermMatrix(corpus) # TF-IDF DTM
+
+lda_federalist &lt;- LDA(dtm, k = 10, method = &quot;Gibbs&quot;, control = list(seed = 1234)) # LDA w/ 5 Topics &amp; Gibbs Sampling 
+
+
+topic_probs &lt;- posterior(lda_federalist)$topics
+print(round(topic_probs[c(1:10), c(1:5)], 2))</code></pre>
+<pre><code>##       1    2    3    4    5
+## 1  0.02 0.04 0.01 0.09 0.24
+## 2  0.18 0.07 0.08 0.08 0.28
+## 3  0.08 0.02 0.51 0.02 0.07
+## 4  0.08 0.02 0.45 0.06 0.11
+## 5  0.12 0.06 0.29 0.08 0.13
+## 6  0.04 0.24 0.03 0.03 0.29
+## 7  0.13 0.02 0.06 0.04 0.21
+## 8  0.01 0.01 0.01 0.05 0.28
+## 9  0.04 0.02 0.02 0.02 0.21
+## 10 0.33 0.02 0.03 0.07 0.24</code></pre>
+<pre class="r"><code>topicmodels::terms(lda_federalist, 10) # 10 Terms</code></pre>
+<pre><code>##       Topic 1         Topic 2        Topic 3       Topic 4         
+##  [1,] &quot;general&quot;       &quot;law&quot;          &quot;member&quot;      &quot;representative&quot;
+##  [2,] &quot;power&quot;         &quot;election&quot;     &quot;city&quot;        &quot;will&quot;          
+##  [3,] &quot;establishment&quot; &quot;within&quot;       &quot;confederacy&quot; &quot;people&quot;        
+##  [4,] &quot;force&quot;         &quot;period&quot;       &quot;war&quot;         &quot;numb&quot;          
+##  [5,] &quot;long&quot;          &quot;circumstance&quot; &quot;empire&quot;      &quot;time&quot;          
+##  [6,] &quot;liberty&quot;       &quot;knowledge&quot;    &quot;among&quot;       &quot;house&quot;         
+##  [7,] &quot;necessary&quot;     &quot;affair&quot;       &quot;sovereign&quot;   &quot;every&quot;         
+##  [8,] &quot;army&quot;          &quot;legislation&quot;  &quot;union&quot;       &quot;can&quot;           
+##  [9,] &quot;necessity&quot;     &quot;remark&quot;       &quot;province&quot;    &quot;elect&quot;         
+## [10,] &quot;dangerous&quot;     &quot;practice&quot;     &quot;foreign&quot;     &quot;branch&quot;        
+##       Topic 5      Topic 6        Topic 7    Topic 8         Topic 9         
+##  [1,] &quot;state&quot;      &quot;state&quot;        &quot;interest&quot; &quot;convention&quot;    &quot;department&quot;    
+##  [2,] &quot;will&quot;       &quot;power&quot;        &quot;party&quot;    &quot;congress&quot;      &quot;executive&quot;     
+##  [3,] &quot;may&quot;        &quot;authority&quot;    &quot;great&quot;    &quot;power&quot;         &quot;power&quot;         
+##  [4,] &quot;government&quot; &quot;article&quot;      &quot;right&quot;    &quot;make&quot;          &quot;legislative&quot;   
+##  [5,] &quot;federal&quot;    &quot;law&quot;          &quot;find&quot;     &quot;new&quot;           &quot;constitution&quot;  
+##  [6,] &quot;must&quot;       &quot;shall&quot;        &quot;public&quot;   &quot;propose&quot;       &quot;judiciary&quot;     
+##  [7,] &quot;little&quot;     &quot;constitution&quot; &quot;citizen&quot;  &quot;confederation&quot; &quot;member&quot;        
+##  [8,] &quot;one&quot;        &quot;foreign&quot;      &quot;man&quot;      &quot;effect&quot;        &quot;one&quot;           
+##  [9,] &quot;good&quot;       &quot;public&quot;       &quot;two&quot;      &quot;purpose&quot;       &quot;constitutional&quot;
+## [10,] &quot;case&quot;       &quot;general&quot;      &quot;nature&quot;   &quot;constitution&quot;  &quot;branch&quot;        
+##       Topic 10    
+##  [1,] &quot;people&quot;    
+##  [2,] &quot;government&quot;
+##  [3,] &quot;national&quot;  
+##  [4,] &quot;body&quot;      
+##  [5,] &quot;senate&quot;    
+##  [6,] &quot;character&quot; 
+##  [7,] &quot;first&quot;     
+##  [8,] &quot;authority&quot; 
+##  [9,] &quot;example&quot;   
+## [10,] &quot;derive&quot;</code></pre>
 
 
 
