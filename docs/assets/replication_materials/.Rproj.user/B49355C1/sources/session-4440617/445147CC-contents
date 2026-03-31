@@ -84,7 +84,8 @@ imdb <- bind_rows(get(load('../../class_7/data/imdb_train_pos.rdata')),
 
 ### Class 8 Problem Set
 \begin{itemize}
-\item Notes...
+\item \textbf{GRS} seem to simplify MI to \emph{reduction in uncertainty given that word appears} versus what ChatGPT gives you. \par \vspace{2.5mm}
+\item Remember: log() $\neq$ log2()... 
 \end{itemize}
 
 # Distributed Representations of Words

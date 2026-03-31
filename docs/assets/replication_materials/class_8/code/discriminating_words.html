@@ -430,15 +430,26 @@ is no uncertainty!</p>
 P(Red|Tree) = 3/4 = 0.75 \\
 P(Blue|Tree) = 1/4 = 0.25 \\
 H(K|Tree) = -(0.75\log_20.75+0.25\log_20.25) = 0.811 \\
-MI(k,Tree) = H(k) - H(k|Tree) = 1 - 0.811 \approx 0.189
 \]</span></p>
-<p><br></p>
-<p><span class="math display">\[
-P(Red|Apple) = 4/4 = 1\\
-P(Blue|Apple) = 0/4 = 0 \\
-H(K|Apple) = -(1\log_21+0\log_20) = 0
-\]</span></p>
-<p><br></p>
+<p><br> This represents the reduction in entropy given ONLY the event
+<i>Tree</i> – meaning it is the conditional information gain for a
+specific word. Now we need to weight given how often the word appears
+(and not) across the data. <br> <span class="math display">\[
+p(\text{Tree}) = \frac{4}{10} \text{ (Appears in Docs 1, 3, 9, and 10)}
+\\
+p(\text{Tree})\cdot H(K\mid\text{Tree}) = 0.4\cdot 0.811 = 0.3244 \text{
+(Contribution from Tree)} \\
+P(¬Tree) = 0.6 \text{ (Missing from 60% of Observations)} \\
+p(\text{Red|¬Tree}) = \frac{2}{6} \text{ (Missing from Red Twice)} \\
+p(\text{Blue|¬Tree}) = \frac{4}{6} \text{ (Missing from Blue Four
+Times)} \\
+H(K\mid\text{¬Tree})= -(\frac{2}{6}\log_{2}\frac{2}{6} +
+\frac{4}{6}\log_{2}\frac{4}{6}) \approx 0.918 \\
+\text{Weighted } P(¬Tree) = 0.6 \cdot 0.918 = 0.5508 \\
+H(K\mid J = \text{Tree}) = 0.3244 + 0.5508 = 0.8752 \text{ Full
+Conditional Entropy} \\
+MI(K, \text{ Tree}) = 1 - 0.8752 = 0.1248
+\]</span> <br></p>
 <p>Pretty neat – huh? That being said, there are certainly downsides to
 this approach (as <strong>GRS</strong> note in Chapter 11) – including
 that it doesn’t take into account uncertainty in the estimation of

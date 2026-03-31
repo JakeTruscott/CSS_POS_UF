@@ -1,0 +1,22 @@
+mutual_information_word <- function(word, data) {
+  # Creating a binary indicator for whether the document contains the word or not.
+  present <- sapply(data$term_list, function(x) word %in% x)
+  # created contingency table
+  tab <- table(present, data$Category)
+  n <- sum(tab) # Converting to probabilities
+  joint_prob <- tab / n
+  px <- rowSums(joint_prob)
+  py <- colSums(joint_prob)
+  mi <- 0 # Using mutual information formula
+  for (i in 1:nrow(joint_prob)) {
+    for (j in 1:ncol(joint_prob)) {
+      if (joint_prob[i, j] > 0) {
+        mi <- mi + joint_prob[i, j] * log2(joint_prob[i, j] / (px[i] * py[j]))
+      }
+    }
+  }
+  return(list(word = word, table = tab, mi = mi))
+}
+
+word = 'healthcare'
+data = platforms
