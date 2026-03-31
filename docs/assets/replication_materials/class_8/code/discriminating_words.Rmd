@@ -130,10 +130,12 @@ p(\text{Red|¬Tree}) = \frac{2}{6} \text{ (Missing from Red Twice)} \\
 p(\text{Blue|¬Tree}) = \frac{4}{6} \text{ (Missing from Blue Four Times)} \\ 
 H(K\mid\text{¬Tree})= -(\frac{2}{6}\log_{2}\frac{2}{6} + \frac{4}{6}\log_{2}\frac{4}{6}) \approx 0.918 \\ 
 \text{Weighted } P(¬Tree) = 0.6 \cdot 0.918 = 0.5508 \\ 
-H(K\mid J = \text{Tree}) = 0.3244 + 0.5508 = 0.8752 \text{ Full Conditional Entropy} \\ 
+H(K\mid J = \text{Tree}) = 0.3244 + 0.5508 = 0.8752 \text{ (Full Conditional Entropy)} \\ 
 MI(K, \text{ Tree}) = 1 - 0.8752 = 0.1248
 $$
 <br>
+
+Meaning that, knowing the word <i>Tree</i> appears (or not) reduces the uncertainty about a document's category by $\approx$0.125 bits, on average. So, <i>Tree</i> explains about 12.5% of uncertainty -- given that MI = 0 (tells us nothing) and MI = 1 (perfectly discriminates), <i>Tree</i> is informative, but far from decisive. 
 
 Pretty neat – huh? That being said, there are certainly downsides to this approach (as **GRS** note in Chapter 11) – including that it doesn't take into account uncertainty in the estimation of probabilities, only considers whether a word appears (or not) in a document (rather than the volume of repetition), is sensitive to rare words, is difficult to interpret with more than (2) categories, and ignores co-occurrence and context (e.g., *Not Good* – "Not" "Good" independently). We can account for most of these concerns when we move to a fully probabilistic model.
 

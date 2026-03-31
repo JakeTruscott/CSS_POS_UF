@@ -446,10 +446,15 @@ Times)} \\
 H(K\mid\text{¬Tree})= -(\frac{2}{6}\log_{2}\frac{2}{6} +
 \frac{4}{6}\log_{2}\frac{4}{6}) \approx 0.918 \\
 \text{Weighted } P(¬Tree) = 0.6 \cdot 0.918 = 0.5508 \\
-H(K\mid J = \text{Tree}) = 0.3244 + 0.5508 = 0.8752 \text{ Full
-Conditional Entropy} \\
+H(K\mid J = \text{Tree}) = 0.3244 + 0.5508 = 0.8752 \text{ (Full
+Conditional Entropy)} \\
 MI(K, \text{ Tree}) = 1 - 0.8752 = 0.1248
 \]</span> <br></p>
+<p>Meaning that, knowing the word <i>Tree</i> appears (or not) reduces
+the uncertainty about a document’s category by $$0.125 bits, on average.
+So, <i>Tree</i> explains about 12.5% of uncertainty – given that MI = 0
+(tells us nothing) and MI = 1 (perfectly discriminates), <i>Tree</i> is
+informative, but far from decisive.</p>
 <p>Pretty neat – huh? That being said, there are certainly downsides to
 this approach (as <strong>GRS</strong> note in Chapter 11) – including
 that it doesn’t take into account uncertainty in the estimation of
