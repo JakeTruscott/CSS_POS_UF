@@ -95,10 +95,10 @@ reduce_complexity <- function(text) {
 4/12 & Cui, Lixiao & Meneley, Cory & Sarver, Sarah \\
 4/12 & Giron-Khalil, Jailyn & Mohammed, Suren & Sultana, Abida \\
 4/12 & Hao, Tianshu & Oneil, Connor & Tierman, Hunter \\
-4/12 & Islam, Md Sahidul & Revilla, Valeria & Trenchi, Alejandro \\
 4/12 & Mamun & Sarver, Sarah & Wang, Qianxi \\
 4/12 & Meneley, Cory & Sultana, Abida & Arora, Manya \\
 4/12 & Mohammed, Suren & Tierman, Hunter & Cui, Lixiao \\
+4/19 & Islam, Md Sahidul & Revilla, Valeria & Trenchi, Alejandro \\
 4/19 & Oneil, Connor & Trenchi, Alejandro & Giron-Khalil, Jailyn \\
 4/19 & Revilla, Valeria & Wang, Qianxi & Hao, Tianshu \\
 4/19 & Sarver, Sarah & Arora, Manya & Islam, Md Sahidul \\

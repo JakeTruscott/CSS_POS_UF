@@ -1,0 +1,1 @@
+{"frames":[],"message":"Error: unexpected 'function' in \"ag$title_clean <- sapply(ag$title, reduce_complexity() function\"\n"}

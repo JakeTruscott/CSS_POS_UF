@@ -1,0 +1,41 @@
+"0","wordshoal_dfm <- dfm(tokens(data_corpus_irish30))
+wordshoal_dfm <- dfm(tokens(data_corpus_irish30))
+wordshoal_fit <- textmodel_wordshoal(x = wordshoal_dfm, 
+                                                dir = c(7,1),
+                                                groups = docvars(data_corpus_irish30, ""debateID""), # Group = Debate
+                                                authors = docvars(data_corpus_irish30, ""member.name"")) # Author = Legislator
+"
+"1","
+Scaling "
+"1",""
+"1","10"
+"1",""
+"1"," document groups"
+"1","."
+"1","."
+"1","."
+"1","."
+"1","."
+"1","."
+"1","."
+"1","."
+"1","."
+"1","."
+"1","
+Factor Analysis on Debate-Level Scales"
+"1","."
+"1","."
+"1","."
+"1","."
+"1","."
+"1","."
+"1","."
+"1","."
+"1","."
+"1","
+Elapsed time:"
+"1"," "
+"1","4.08"
+"1"," "
+"1","seconds.
+"

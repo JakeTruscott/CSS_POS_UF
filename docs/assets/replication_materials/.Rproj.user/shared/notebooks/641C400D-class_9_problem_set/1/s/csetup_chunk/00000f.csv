@@ -10,11 +10,32 @@
 "0","library(doParallel)"
 "0","library(parallel)"
 "0","library(snow)"
+"2","
+Attaching package: ‘snow’
+
+"
+"2","The following objects are masked from ‘package:parallel’:
+
+    closeNode, clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
+    clusterExport, clusterMap, clusterSplit, makeCluster, parApply, parCapply,
+    parLapply, parRapply, parSapply, recvData, recvOneData, sendData, splitIndices,
+    stopCluster
+
+"
 "0","library(tm)"
 "0","library(quanteda)"
 "0","library(gutenbergr)"
+"2","Warning:"
+"2"," package ‘gutenbergr’ was built under R version 4.4.3
+"
+"2","gutenbergr: using session (temporary) cache
+  cache directory: C:\Users\JAKETR~1\AppData\Local\Temp\RtmpcHoYSv/gutenbergr_cache
+"
 "0","library(stringr)"
-"0",""
+"0","library(word2vec)"
+"2","Warning:"
+"2"," package ‘word2vec’ was built under R version 4.4.3
+"
 "0","reduce_complexity <- function(text) {"
 "0","  text <- tolower(text)"
 "0","  text <- gsub(""[^a-z\\s]"", "" "", text)"

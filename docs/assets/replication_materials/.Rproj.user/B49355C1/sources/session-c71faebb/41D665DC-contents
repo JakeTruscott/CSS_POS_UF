@@ -95,10 +95,10 @@ reduce_complexity <- function(text) {
 4/12 & Cui, Lixiao & Meneley, Cory & Sarver, Sarah \\
 4/12 & Giron-Khalil, Jailyn & Mohammed, Suren & Sultana, Abida \\
 4/12 & Hao, Tianshu & Oneil, Connor & Tierman, Hunter \\
-4/12 & Islam, Md Sahidul & Revilla, Valeria & Trenchi, Alejandro \\
 4/12 & Mamun & Sarver, Sarah & Wang, Qianxi \\
 4/12 & Meneley, Cory & Sultana, Abida & Arora, Manya \\
 4/12 & Mohammed, Suren & Tierman, Hunter & Cui, Lixiao \\
+4/19 & Islam, Md Sahidul & Revilla, Valeria & Trenchi, Alejandro \\
 4/19 & Oneil, Connor & Trenchi, Alejandro & Giron-Khalil, Jailyn \\
 4/19 & Revilla, Valeria & Wang, Qianxi & Hao, Tianshu \\
 4/19 & Sarver, Sarah & Arora, Manya & Islam, Md Sahidul \\
@@ -112,7 +112,7 @@ reduce_complexity <- function(text) {
 
 ### Class 9 Problem Set Review
 \begin{itemize}
-\item Notes...
+\item All did very well -- Nice! 
 \end{itemize}
 
 
@@ -383,3 +383,307 @@ data.frame(x = c(-1, -0.458, 1)) %>%
   \end{itemize}
 \end{itemize}
 
+### Wordfish Example (Note)
+\begin{itemize}
+\item \emph{Note}: Model uses MLE -- iterative fitting of parameters to maximize a likelihood function \par \vspace{2.5mm}
+\item WE can simplify a lot for small examples like this to demonstrate intuition of model -- We'll substitute values for $\alpha_i$, $\theta_i$, $\psi_j$, and $\beta_j$ \par \vspace{2.5mm}
+\item We'll assume values greater than zero discriminate \text{right-leaning} \par \vspace{2.5mm}
+\end{itemize}
+
+### Wordfish Example
+
+\begin{columns}[T]
+    \footnotesize
+    \begin{column}{0.4\textwidth}
+    \begin{tabular}{lcccc}
+    \toprule
+    Document & welfare & tax & military & TOTAL \\
+    \midrule
+    Doc 1 & 8 & 2 & 1 & 11 \\
+    Doc 2 & 1 & 6 & 7 & 14 \\
+    Doc 3 & 3 & 1 & 0 & 4 \\
+    \bottomrule
+    \end{tabular}
+    \end{column}
+    \begin{column}{0.6\textwidth}
+    \centering
+    \footnotesize
+    \begin{tabular}{lccc}
+\toprule
+Parameter & Doc 1 & Doc 2 & Doc 3 \\
+\midrule
+$\alpha_i$ & 2.4 & 2.7 & 1.2 \\
+$\theta_i$ & 0.5 & 1.0 & -0.3 \\
+\bottomrule
+\end{tabular} \par \vspace{2.5mm}
+\begin{tabular}{lcc}
+\toprule
+Word & $\psi_j$ & $\beta_j$ \\
+\midrule
+welfare & 0.2 & 0.8 \\
+tax & 0.1 & 0.5 \\
+military & 0.3 & 1.2 \\
+\bottomrule
+\end{tabular}
+    \end{column}
+\end{columns}
+
+### Wordfish Example (Cont.)
+Compute the expected counts: $\lambda_{ij} = \exp(\alpha_i + \psi_j + \beta_j\theta_i)$: \par \vspace{2.5mm}
+
+\begin{tabular}{lllc}
+\toprule
+Word & Document & Formula & Expected Count ($\lambda_{ij}$) \\
+\midrule
+welfare  & Doc 1 & $\exp(2.4_{\alpha_i} + 0.2_{\psi_j} + 0.8_{\beta_j}\cdot 0.5_{\theta_i})$ & $\exp(3.0) \approx 20.1$ \\
+tax      & Doc 1 & $\exp(2.4 + 0.1 + 0.5 \times 0.5)$ & $\exp(2.75) \approx 15.6$ \\
+military & Doc 1 & $\exp(2.4 + 0.3 + 1.2 \times 0.5)$ & $\exp(3.3) \approx 27.1$ \\
+\addlinespace
+welfare  & Doc 2 & $\exp(2.7 + 0.2 + 0.8 \times 1)$ & $\exp(3.7) \approx 40.4$ \\
+tax      & Doc 2 & $\exp(2.7 + 0.1 + 0.5 \times 1)$ & $\exp(3.3) \approx 27.1$ \\
+military & Doc 2 & $\exp(2.7 + 0.3 + 1.2 \times 1)$ & $\exp(4.2) \approx 66.7$ \\
+\addlinespace
+welfare  & Doc 3 & $\exp(1.2 + 0.2 + 0.8 \times -0.3)$ & $\exp(1.16) \approx 3.1$ \\
+tax      & Doc 3 & $\exp(1.2 + 0.1 + 0.5 \times -0.3)$ & $\exp(1.15) \approx 3.1$ \\
+military & Doc 3 & $\exp(1.2 + 0.3 + 1.2 \times -0.3)$ & $\exp(1.14) \approx 3.1$ \\
+\bottomrule
+\end{tabular}
+
+### Wordfish Example -- Key Takeaways
+\begin{itemize}
+  \item Doc 2 is the most right leaning ($\theta_i$ = 1), while Doc 1 is moderately right and Doc 3 is moderately left. \par \vspace{2.5mm}
+  \item Doc 3 is the shortest document ($\alpha_i$ = 1.2), while Doc 2 is the longest -- Doc 1 appears to be almost in between.  \par \vspace{2.5mm}
+  \item Military proves to be the most important discriminating word ($\beta_j$ = 1.2), showing strong preference as a word that's important for identifying right-leaning documents -- e.g., Doc 1 and 2, where $x_{Doc2,\text{Military}} = 66.7$ and $x_{Doc1,\text{Military}} = 27.1$, versus $x_{Doc3,\text{Military}} = 3.1$
+\end{itemize}
+
+### Wordfish R Manual Example 
+\scriptsize
+```{r wordfish_manual_1}
+
+docs <- c('Doc1', 'Doc2', 'Doc3') # Documents
+words <- c('welfare', 'tax', 'military') # Discriminating Words
+
+alpha_i <- c(Doc1 = 2.4, Doc2 = 2.7, Doc3 = 1.2) # Verbosity
+theta_i <- c(Doc1 = 0.5, Doc2 = 1.0, Doc3 = -0.3)  # Latent Ideology
+psi_j <- c(welfare = 0.2, tax = 0.1, military = 0.3)  # Baseline Word Freq.
+beta_j <- c(welfare = 0.8, tax = 0.5, military = 1.2) # Word Discrimination
+
+lambda <- matrix(0, nrow = length(docs), ncol = length(words),
+                 dimnames = list(docs, words)) # Matrix to Input Recovered Lambda_ij Values
+
+for (d in docs) {
+  for (w in words) {
+    lambda[d, w] <- exp(alpha_i[d] + psi_j[w] + beta_j[w] * theta_i[d])
+  }
+} # Function -- For Each Doc(i)-Word(j) Pair, Recover Lambda_ij
+
+```
+
+### Wordfish R Manual Example  (Cont.)
+\scriptsize
+```{r wordfish_manual_2}
+
+as.data.frame(lambda) %>%
+  mutate(document = rownames(lambda)) %>%
+  tidyr::pivot_longer(cols = -document,
+               names_to = "word",
+               values_to = "lambda") %>%
+  mutate(lambda = round(lambda, 2))
+
+```
+
+
+### Wordfish R Quanteda Example -- Irish Dail
+\scriptsize
+```{r wordfishquanteda_1}
+
+dail <- quanteda::tokens(quanteda.textmodels::data_corpus_irishbudget2010, remove_punct = TRUE)
+dail_dfm <- quanteda::dfm(dail) # DFM of Tokenized Dail Corpus
+
+quanteda::docnames(dail_dfm) # Legislator Names
+
+dail_wordfish <- quanteda.textmodels::textmodel_wordfish(dail_dfm, 
+                                    dir = c(6, 5)) # Specifying Kenny on Left & Cowen on Right
+```
+
+### Wordfish R Quanteda Example -- Irish Dail (Cont.)
+\scriptsize
+```{r wordfish_quanteda_2, fig.height=2.5, fig.width=4}
+
+quanteda.textplots::textplot_scale1d(dail_wordfish, groups = dail_dfm$party) # 1D Plot by Party
+
+```
+
+### Wordfish R Quanteda Example -- Irish Dail (Cont.)
+\scriptsize
+```{r wordfish_quanteda_3, fig.height=2, fig.width=3}
+quanteda.textplots::textplot_scale1d(dail_wordfish, margin = "features",  highlighted = c("government", "global", "children", "bank", "economy", "the", "citizenship", "productivity", "deficit")) 
+```
+
+
+# Wordshoal
+
+### Wordshoal (Lauderdale and Herzog)
+\begin{itemize}
+\item \texttt{Wordshoal} can be seen as a direct improvement on \texttt{Wordfish}, such that it provides for the recovery of legislator-specific $\theta_i$ pooled across several debates.  \par \vspace{2.5mm} \pause
+\item Rather than using speeches from a single debate or issue, we can use a (psuedo) or fully Bayesian process to recover a shared latent $\theta_i$. \par \vspace{2.5mm} \pause
+\item We could do much of the same work to recover $\lambda_{ij}$ for each author and then subsequently weight these values by the discrimination parameter $\beta_j$. \item We won't... (at least not by hand)
+\end{itemize}
+
+
+### Wordshoal R Manual Example
+\scriptsize
+```{r,  wordshoal_manual}
+
+docs <- data.frame(document = c('Doc1', 'Doc2', 'Doc3', 'Doc4'), 
+                   author   = c(1, 1, 2, 2), 
+                   alpha    = c(2.0, 1.8, 2.2, 2.0)) # Docs - theta_i & alpha_i
+
+words <- data.frame(word = c('welfare', 'tax', 'military'), 
+                    psi  = c(0.2, 0.1, 0.3), 
+                    beta = c(0.8, 0.5, 1.2)) # Words -- Psi_j & beta_j
+
+theta <- data.frame(author = c(1, 2),  
+                    theta  = c(-1, 1)) # Author Ideologies
+
+
+wordshoal_grid <- expand.grid(document = docs$document,
+                  word = words$word) %>%
+  left_join(docs, by="document") %>%
+  left_join(words, by="word") %>%
+  left_join(theta, by="author") %>% # All Document-Word Combos
+  mutate(lambda = exp(alpha + psi + beta*theta), 
+         lambda = round(lambda, 2)) # Calculate lambda_ij
+
+```
+
+### Wordshoal R Manual Example (Cont.)
+\scriptsize
+```{r wordshoal_manual_2}
+head(tibble(wordshoal_grid))
+
+
+```
+
+### Wordshoal R Manual Example (Cont.)
+\scriptsize
+```{r wordshoal_manual_3}
+author_word <- wordshoal_grid %>%
+  group_by(author, word) %>%
+  summarise(lambda_total = sum(lambda),
+            beta = first(beta),
+            signal = lambda_total * beta, .groups="drop") # Calculate Total Lambda x Beta (Signal)
+
+tibble(author_word) 
+
+```
+
+### Wordshoal R Manual Example (Cont.)
+\scriptsize
+```{r wordshoal_manual_4}
+tibble(author_word %>%
+  group_by(author) %>%
+  summarise(theta_signal = sum(signal))) # Theta Signal
+
+```
+
+### Wordshoal Quanteda (Irish Dail -- Multiple Debates)
+\scriptsize
+```{r wordshoal_quanteda_1}
+
+library(wordshoal) # Load Wordshoal Package 
+
+data_corpus_irish30 <- wordshoal::data_corpus_irish30 # Speeches from 30th Irish Dail
+
+names(docvars(data_corpus_irish30)) # Docvars
+head(tibble(docvars(data_corpus_irish30))) # Sample
+
+wordshoal_dfm <- dfm(tokens(data_corpus_irish30))
+
+wordshoal_fit <- textmodel_wordshoal(x = wordshoal_dfm, 
+                                                dir = c(7,1),
+                                                groups = docvars(data_corpus_irish30, "debateID"), # Group = Debate
+                                                authors = docvars(data_corpus_irish30, "member.name")) # Author = Legislator
+
+# Document 7 (Left) = Debate 21, Member = Joe Castello (Irish Labour Party)
+# Document 1 (righ) = Debate 21, Member = Michael Ahern (Fianna Fail Part) 
+
+```
+
+
+### Wordshoal Quanteda (Cont.)
+\scriptsize
+```{r wordshoal_quanteda_2}
+combined_thetas <- merge(as.data.frame(summary(wordshoal_fit)[[2]]),
+               docvars(data_corpus_irish30), 
+               by.x = "row.names", by.y = "member.name") %>%
+  distinct(memberID, .keep_all = T) # Combine Thetas & Associated Meta
+
+head(tibble(combined_thetas)) # Print Head
+
+aggregate_party_thetas <- aggregate(theta ~ party.name, data = combined_thetas, mean) %>%
+  arrange(theta) # Aggregated by Party
+
+```
+
+### Wordshoal Quanteda (Cont.)
+\scriptsize
+```{r wordshoal_quanteda_4, echo=FALSE, fig.height=3, fig.width=4}
+
+party_order <- aggregate_party_thetas %>%
+  arrange(theta) %>%  
+  mutate(party_label = paste0(party.name, " (", round(theta, 3), ")")) %>%
+  pull(party_label)
+
+combined_thetas %>%
+  left_join(aggregate_party_thetas %>%
+              rename(party_theta = theta), by = 'party.name') %>%
+      filter(party.name %in% c('Fianna Fáil')) %>%
+  mutate(party_label = paste0(party.name, ' (', round(party_theta, 3), ')'), 
+         party_label = factor(party_label, levels = party_order))  %>%
+  ggplot(aes(x = theta, y = reorder(Row.names, theta))) +
+  geom_point(size = 1) +
+  geom_segment(aes(x = theta - se, xend = theta + se), size = 0.5, linetype = 2) + 
+  geom_vline(xintercept = 0, color = "black", alpha = 1/3) +  
+  facet_wrap(~party_label, ncol = 1, scales = 'free_y') + 
+  scale_x_continuous(breaks = seq(-1.5, 1.5, 0.5)) + 
+  labs(x = '\nTheta', 
+       y = '') + 
+  default_ggplot_theme + 
+  theme(axis.text.y = element_text(size = 6, colour = 'black'), 
+        axis.text.x = element_text(size = 8, colour = 'black'), 
+        strip.text = element_text(size = 12, colour = 'black'), 
+        panel.grid = element_blank())
+
+```
+
+### Additional Notes Re: Wordshoal
+\begin{itemize}
+\item Intuitive -- Scales well with uncertainty \par \vspace{2.5mm}
+\item Capable of diagnosing both $\theta_i$ but $\beta_j$ across documents (debates) \par \vspace{2.5mm}
+\item Missingness = Random Error 
+\end{itemize}
+
+# Looking Forward
+### Looking Forward (Next Class)
+\begin{itemize}
+\item We're done! 
+\item I'll stick around until 6 \par \vspace{5mm}
+\end{itemize}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{llll}
+\hline
+\textbf{Day} & \textbf{Student} & \textbf{Reviewer 1} & \textbf{Reviewer 2} \\
+\hline
+4/12 & Arora, Manya & Mamun & Revilla, Valeria \\
+4/12 & Cui, Lixiao & Meneley, Cory & Sarver, Sarah \\
+4/12 & Giron-Khalil, Jailyn & Mohammed, Suren & Sultana, Abida \\
+4/12 & Hao, Tianshu & Oneil, Connor & Tierman, Hunter \\
+4/12 & Islam, Md Sahidul & Revilla, Valeria & Trenchi, Alejandro \\
+4/12 & Mamun & Sarver, Sarah & Wang, Qianxi \\
+4/12 & Meneley, Cory & Sultana, Abida & Arora, Manya \\
+4/12 & Mohammed, Suren & Tierman, Hunter & Cui, Lixiao \\
+\hline
+\end{tabular}

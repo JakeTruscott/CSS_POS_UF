@@ -1,0 +1,4 @@
+"0","ag$title_clean <- sapply(ag$title, reduce_complexity() function(x))
+"
+"2","Error: unexpected 'function' in ""ag$title_clean <- sapply(ag$title, reduce_complexity() function""
+"
