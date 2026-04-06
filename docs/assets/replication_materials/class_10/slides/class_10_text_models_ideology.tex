@@ -76,6 +76,46 @@
 \makeatother
 \usepackage{xcolor}
 \newif\ifbibliography
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -168,7 +208,7 @@ University of Florida \newline Spring 2026 \newline \newline \newline
 \begin{frame}{Class 9 Problem Set Review}
 \phantomsection\label{class-9-problem-set-review}
 \begin{itemize}
-\item Notes...
+\item All did very well -- Nice! 
 \end{itemize}
 \end{frame}
 
@@ -392,6 +432,456 @@ University of Florida \newline Spring 2026 \newline \newline \newline
 \item $\theta_i$ = Latent position of document $i$ (\textbf{What we're most interested in}!)
   \end{itemize}
 \end{itemize}
+\end{frame}
+
+\begin{frame}{Wordfish Example (Note)}
+\phantomsection\label{wordfish-example-note}
+\begin{itemize}
+\item \emph{Note}: Model uses MLE -- iterative fitting of parameters to maximize a likelihood function \par \vspace{2.5mm}
+\item WE can simplify a lot for small examples like this to demonstrate intuition of model -- We'll substitute values for $\alpha_i$, $\theta_i$, $\psi_j$, and $\beta_j$ \par \vspace{2.5mm}
+\item We'll assume values greater than zero discriminate \text{right-leaning} \par \vspace{2.5mm}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Wordfish Example}
+\phantomsection\label{wordfish-example}
+\begin{columns}[T]
+    \footnotesize
+    \begin{column}{0.4\textwidth}
+    \begin{tabular}{lcccc}
+    \toprule
+    Document & welfare & tax & military & TOTAL \\
+    \midrule
+    Doc 1 & 8 & 2 & 1 & 11 \\
+    Doc 2 & 1 & 6 & 7 & 14 \\
+    Doc 3 & 3 & 1 & 0 & 4 \\
+    \bottomrule
+    \end{tabular}
+    \end{column}
+    \begin{column}{0.6\textwidth}
+    \centering
+    \footnotesize
+    \begin{tabular}{lccc}
+\toprule
+Parameter & Doc 1 & Doc 2 & Doc 3 \\
+\midrule
+$\alpha_i$ & 2.4 & 2.7 & 1.2 \\
+$\theta_i$ & 0.5 & 1.0 & -0.3 \\
+\bottomrule
+\end{tabular} \par \vspace{2.5mm}
+\begin{tabular}{lcc}
+\toprule
+Word & $\psi_j$ & $\beta_j$ \\
+\midrule
+welfare & 0.2 & 0.8 \\
+tax & 0.1 & 0.5 \\
+military & 0.3 & 1.2 \\
+\bottomrule
+\end{tabular}
+    \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Wordfish Example (Cont.)}
+\phantomsection\label{wordfish-example-cont.}
+Compute the expected counts:
+\(\lambda_{ij} = \exp(\alpha_i + \psi_j + \beta_j\theta_i)\):
+
+\par \vspace{2.5mm}
+
+\begin{tabular}{lllc}
+\toprule
+Word & Document & Formula & Expected Count ($\lambda_{ij}$) \\
+\midrule
+welfare  & Doc 1 & $\exp(2.4_{\alpha_i} + 0.2_{\psi_j} + 0.8_{\beta_j}\cdot 0.5_{\theta_i})$ & $\exp(3.0) \approx 20.1$ \\
+tax      & Doc 1 & $\exp(2.4 + 0.1 + 0.5 \times 0.5)$ & $\exp(2.75) \approx 15.6$ \\
+military & Doc 1 & $\exp(2.4 + 0.3 + 1.2 \times 0.5)$ & $\exp(3.3) \approx 27.1$ \\
+\addlinespace
+welfare  & Doc 2 & $\exp(2.7 + 0.2 + 0.8 \times 1)$ & $\exp(3.7) \approx 40.4$ \\
+tax      & Doc 2 & $\exp(2.7 + 0.1 + 0.5 \times 1)$ & $\exp(3.3) \approx 27.1$ \\
+military & Doc 2 & $\exp(2.7 + 0.3 + 1.2 \times 1)$ & $\exp(4.2) \approx 66.7$ \\
+\addlinespace
+welfare  & Doc 3 & $\exp(1.2 + 0.2 + 0.8 \times -0.3)$ & $\exp(1.16) \approx 3.1$ \\
+tax      & Doc 3 & $\exp(1.2 + 0.1 + 0.5 \times -0.3)$ & $\exp(1.15) \approx 3.1$ \\
+military & Doc 3 & $\exp(1.2 + 0.3 + 1.2 \times -0.3)$ & $\exp(1.14) \approx 3.1$ \\
+\bottomrule
+\end{tabular}
+\end{frame}
+
+\begin{frame}{Wordfish Example -- Key Takeaways}
+\phantomsection\label{wordfish-example-key-takeaways}
+\begin{itemize}
+  \item Doc 2 is the most right leaning ($\theta_i$ = 1), while Doc 1 is moderately right and Doc 3 is moderately left. \par \vspace{2.5mm}
+  \item Doc 3 is the shortest document ($\alpha_i$ = 1.2), while Doc 2 is the longest -- Doc 1 appears to be almost in between.  \par \vspace{2.5mm}
+  \item Military proves to be the most important discriminating word ($\beta_j$ = 1.2), showing strong preference as a word that's important for identifying right-leaning documents -- e.g., Doc 1 and 2, where $x_{Doc2,\text{Military}} = 66.7$ and $x_{Doc1,\text{Military}} = 27.1$, versus $x_{Doc3,\text{Military}} = 3.1$
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Wordfish R Manual Example}
+\phantomsection\label{wordfish-r-manual-example}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{docs }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}Doc1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Doc2\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Doc3\textquotesingle{}}\NormalTok{) }\CommentTok{\# Documents}
+\NormalTok{words }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}welfare\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}tax\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}military\textquotesingle{}}\NormalTok{) }\CommentTok{\# Discriminating Words}
+
+\NormalTok{alpha\_i }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\AttributeTok{Doc1 =} \FloatTok{2.4}\NormalTok{, }\AttributeTok{Doc2 =} \FloatTok{2.7}\NormalTok{, }\AttributeTok{Doc3 =} \FloatTok{1.2}\NormalTok{) }\CommentTok{\# Verbosity}
+\NormalTok{theta\_i }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\AttributeTok{Doc1 =} \FloatTok{0.5}\NormalTok{, }\AttributeTok{Doc2 =} \FloatTok{1.0}\NormalTok{, }\AttributeTok{Doc3 =} \SpecialCharTok{{-}}\FloatTok{0.3}\NormalTok{)  }\CommentTok{\# Latent Ideology}
+\NormalTok{psi\_j }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\AttributeTok{welfare =} \FloatTok{0.2}\NormalTok{, }\AttributeTok{tax =} \FloatTok{0.1}\NormalTok{, }\AttributeTok{military =} \FloatTok{0.3}\NormalTok{)  }\CommentTok{\# Baseline Word Freq.}
+\NormalTok{beta\_j }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\AttributeTok{welfare =} \FloatTok{0.8}\NormalTok{, }\AttributeTok{tax =} \FloatTok{0.5}\NormalTok{, }\AttributeTok{military =} \FloatTok{1.2}\NormalTok{) }\CommentTok{\# Word Discrimination}
+
+\NormalTok{lambda }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\DecValTok{0}\NormalTok{, }\AttributeTok{nrow =} \FunctionTok{length}\NormalTok{(docs), }\AttributeTok{ncol =} \FunctionTok{length}\NormalTok{(words),}
+                 \AttributeTok{dimnames =} \FunctionTok{list}\NormalTok{(docs, words)) }\CommentTok{\# Matrix to Input Recovered Lambda\_ij Values}
+
+\ControlFlowTok{for}\NormalTok{ (d }\ControlFlowTok{in}\NormalTok{ docs) \{}
+  \ControlFlowTok{for}\NormalTok{ (w }\ControlFlowTok{in}\NormalTok{ words) \{}
+\NormalTok{    lambda[d, w] }\OtherTok{\textless{}{-}} \FunctionTok{exp}\NormalTok{(alpha\_i[d] }\SpecialCharTok{+}\NormalTok{ psi\_j[w] }\SpecialCharTok{+}\NormalTok{ beta\_j[w] }\SpecialCharTok{*}\NormalTok{ theta\_i[d])}
+\NormalTok{  \}}
+\NormalTok{\} }\CommentTok{\# Function {-}{-} For Each Doc(i){-}Word(j) Pair, Recover Lambda\_ij}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{Wordfish R Manual Example (Cont.)}
+\phantomsection\label{wordfish-r-manual-example-cont.}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{as.data.frame}\NormalTok{(lambda) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{document =} \FunctionTok{rownames}\NormalTok{(lambda)) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  tidyr}\SpecialCharTok{::}\FunctionTok{pivot\_longer}\NormalTok{(}\AttributeTok{cols =} \SpecialCharTok{{-}}\NormalTok{document,}
+               \AttributeTok{names\_to =} \StringTok{"word"}\NormalTok{,}
+               \AttributeTok{values\_to =} \StringTok{"lambda"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{lambda =} \FunctionTok{round}\NormalTok{(lambda, }\DecValTok{2}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 9 x 3
+  document word     lambda
+  <chr>    <chr>     <dbl>
+1 Doc1     welfare   20.1 
+2 Doc1     tax       15.6 
+3 Doc1     military  27.1 
+4 Doc2     welfare   40.4 
+5 Doc2     tax       27.1 
+6 Doc2     military  66.7 
+7 Doc3     welfare    3.19
+8 Doc3     tax        3.16
+9 Doc3     military   3.13
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Wordfish R Quanteda Example -- Irish Dail}
+\phantomsection\label{wordfish-r-quanteda-example-irish-dail}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dail }\OtherTok{\textless{}{-}}\NormalTok{ quanteda}\SpecialCharTok{::}\FunctionTok{tokens}\NormalTok{(quanteda.textmodels}\SpecialCharTok{::}\NormalTok{data\_corpus\_irishbudget2010, }\AttributeTok{remove\_punct =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{dail\_dfm }\OtherTok{\textless{}{-}}\NormalTok{ quanteda}\SpecialCharTok{::}\FunctionTok{dfm}\NormalTok{(dail) }\CommentTok{\# DFM of Tokenized Dail Corpus}
+
+\NormalTok{quanteda}\SpecialCharTok{::}\FunctionTok{docnames}\NormalTok{(dail\_dfm) }\CommentTok{\# Legislator Names}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+ [1] "Lenihan, Brian (FF)"       "Bruton, Richard (FG)"      "Burton, Joan (LAB)"        "Morgan, Arthur (SF)"      
+ [5] "Cowen, Brian (FF)"         "Kenny, Enda (FG)"          "ODonnell, Kieran (FG)"     "Gilmore, Eamon (LAB)"     
+ [9] "Higgins, Michael (LAB)"    "Quinn, Ruairi (LAB)"       "Gormley, John (Green)"     "Ryan, Eamon (Green)"      
+[13] "Cuffe, Ciaran (Green)"     "OCaolain, Caoimhghin (SF)"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dail\_wordfish }\OtherTok{\textless{}{-}}\NormalTok{ quanteda.textmodels}\SpecialCharTok{::}\FunctionTok{textmodel\_wordfish}\NormalTok{(dail\_dfm, }
+                                    \AttributeTok{dir =} \FunctionTok{c}\NormalTok{(}\DecValTok{6}\NormalTok{, }\DecValTok{5}\NormalTok{)) }\CommentTok{\# Specifying Kenny on Left \& Cowen on Right}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{Wordfish R Quanteda Example -- Irish Dail
+(Cont.)}
+\phantomsection\label{wordfish-r-quanteda-example-irish-dail-cont.}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{quanteda.textplots}\SpecialCharTok{::}\FunctionTok{textplot\_scale1d}\NormalTok{(dail\_wordfish, }\AttributeTok{groups =}\NormalTok{ dail\_dfm}\SpecialCharTok{$}\NormalTok{party) }\CommentTok{\# 1D Plot by Party}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{class_10_text_models_ideology_files/figure-beamer/wordfish_quanteda_2-1} \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Wordfish R Quanteda Example -- Irish Dail
+(Cont.)}
+\phantomsection\label{wordfish-r-quanteda-example-irish-dail-cont.-1}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{quanteda.textplots}\SpecialCharTok{::}\FunctionTok{textplot\_scale1d}\NormalTok{(dail\_wordfish, }\AttributeTok{margin =} \StringTok{"features"}\NormalTok{,  }\AttributeTok{highlighted =} \FunctionTok{c}\NormalTok{(}\StringTok{"government"}\NormalTok{, }\StringTok{"global"}\NormalTok{, }\StringTok{"children"}\NormalTok{, }\StringTok{"bank"}\NormalTok{, }\StringTok{"economy"}\NormalTok{, }\StringTok{"the"}\NormalTok{, }\StringTok{"citizenship"}\NormalTok{, }\StringTok{"productivity"}\NormalTok{, }\StringTok{"deficit"}\NormalTok{)) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{class_10_text_models_ideology_files/figure-beamer/wordfish_quanteda_3-1} \end{center}
+\end{frame}
+
+\section{Wordshoal}\label{wordshoal}
+
+\begin{frame}{Wordshoal (Lauderdale and Herzog)}
+\phantomsection\label{wordshoal-lauderdale-and-herzog}
+\begin{itemize}
+\item \texttt{Wordshoal} can be seen as a direct improvement on \texttt{Wordfish}, such that it provides for the recovery of legislator-specific $\theta_i$ pooled across several debates.  \par \vspace{2.5mm} \pause
+\item Rather than using speeches from a single debate or issue, we can use a (psuedo) or fully Bayesian process to recover a shared latent $\theta_i$. \par \vspace{2.5mm} \pause
+\item We could do much of the same work to recover $\lambda_{ij}$ for each author and then subsequently weight these values by the discrimination parameter $\beta_j$. \item We won't... (at least not by hand)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Wordshoal R Manual Example}
+\phantomsection\label{wordshoal-r-manual-example}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{docs }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{document =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}Doc1\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Doc2\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Doc3\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Doc4\textquotesingle{}}\NormalTok{), }
+                   \AttributeTok{author   =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{), }
+                   \AttributeTok{alpha    =} \FunctionTok{c}\NormalTok{(}\FloatTok{2.0}\NormalTok{, }\FloatTok{1.8}\NormalTok{, }\FloatTok{2.2}\NormalTok{, }\FloatTok{2.0}\NormalTok{)) }\CommentTok{\# Docs {-} theta\_i \& alpha\_i}
+
+\NormalTok{words }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{word =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}welfare\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}tax\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}military\textquotesingle{}}\NormalTok{), }
+                    \AttributeTok{psi  =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.2}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\FloatTok{0.3}\NormalTok{), }
+                    \AttributeTok{beta =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.8}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{1.2}\NormalTok{)) }\CommentTok{\# Words {-}{-} Psi\_j \& beta\_j}
+
+\NormalTok{theta }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{author =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{),  }
+                    \AttributeTok{theta  =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{)) }\CommentTok{\# Author Ideologies}
+
+
+\NormalTok{wordshoal\_grid }\OtherTok{\textless{}{-}} \FunctionTok{expand.grid}\NormalTok{(}\AttributeTok{document =}\NormalTok{ docs}\SpecialCharTok{$}\NormalTok{document,}
+                  \AttributeTok{word =}\NormalTok{ words}\SpecialCharTok{$}\NormalTok{word) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{left\_join}\NormalTok{(docs, }\AttributeTok{by=}\StringTok{"document"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{left\_join}\NormalTok{(words, }\AttributeTok{by=}\StringTok{"word"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{left\_join}\NormalTok{(theta, }\AttributeTok{by=}\StringTok{"author"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# All Document{-}Word Combos}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{lambda =} \FunctionTok{exp}\NormalTok{(alpha }\SpecialCharTok{+}\NormalTok{ psi }\SpecialCharTok{+}\NormalTok{ beta}\SpecialCharTok{*}\NormalTok{theta), }
+         \AttributeTok{lambda =} \FunctionTok{round}\NormalTok{(lambda, }\DecValTok{2}\NormalTok{)) }\CommentTok{\# Calculate lambda\_ij}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{Wordshoal R Manual Example (Cont.)}
+\phantomsection\label{wordshoal-r-manual-example-cont.}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(}\FunctionTok{tibble}\NormalTok{(wordshoal\_grid))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 6 x 8
+  document word    author alpha   psi  beta theta lambda
+  <chr>    <chr>    <dbl> <dbl> <dbl> <dbl> <dbl>  <dbl>
+1 Doc1     welfare      1   2     0.2   0.8    -1   4.06
+2 Doc2     welfare      1   1.8   0.2   0.8    -1   3.32
+3 Doc3     welfare      2   2.2   0.2   0.8     1  24.5 
+4 Doc4     welfare      2   2     0.2   0.8     1  20.1 
+5 Doc1     tax          1   2     0.1   0.5    -1   4.95
+6 Doc2     tax          1   1.8   0.1   0.5    -1   4.06
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Wordshoal R Manual Example (Cont.)}
+\phantomsection\label{wordshoal-r-manual-example-cont.-1}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{author\_word }\OtherTok{\textless{}{-}}\NormalTok{ wordshoal\_grid }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(author, word) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{lambda\_total =} \FunctionTok{sum}\NormalTok{(lambda),}
+            \AttributeTok{beta =} \FunctionTok{first}\NormalTok{(beta),}
+            \AttributeTok{signal =}\NormalTok{ lambda\_total }\SpecialCharTok{*}\NormalTok{ beta, }\AttributeTok{.groups=}\StringTok{"drop"}\NormalTok{) }\CommentTok{\# Calculate Total Lambda x Beta (Signal)}
+
+\FunctionTok{tibble}\NormalTok{(author\_word) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 6 x 5
+  author word     lambda_total  beta signal
+   <dbl> <chr>           <dbl> <dbl>  <dbl>
+1      1 military         5.46   1.2   6.55
+2      1 tax              9.01   0.5   4.50
+3      1 welfare          7.38   0.8   5.90
+4      2 military        73.6    1.2  88.3 
+5      2 tax             29.9    0.5  15.0 
+6      2 welfare         44.6    0.8  35.7 
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Wordshoal R Manual Example (Cont.)}
+\phantomsection\label{wordshoal-r-manual-example-cont.-2}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tibble}\NormalTok{(author\_word }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(author) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{theta\_signal =} \FunctionTok{sum}\NormalTok{(signal))) }\CommentTok{\# Theta Signal}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 2 x 2
+  author theta_signal
+   <dbl>        <dbl>
+1      1         17.0
+2      2        139. 
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Wordshoal Quanteda (Irish Dail -- Multiple
+Debates)}
+\phantomsection\label{wordshoal-quanteda-irish-dail-multiple-debates}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(wordshoal) }\CommentTok{\# Load Wordshoal Package }
+
+\NormalTok{data\_corpus\_irish30 }\OtherTok{\textless{}{-}}\NormalTok{ wordshoal}\SpecialCharTok{::}\NormalTok{data\_corpus\_irish30 }\CommentTok{\# Speeches from 30th Irish Dail}
+
+\FunctionTok{names}\NormalTok{(}\FunctionTok{docvars}\NormalTok{(data\_corpus\_irish30)) }\CommentTok{\# Docvars}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] "debateID"     "memberID"     "member.name"  "party.name"   "party.abbrev" "party.colour" "in.coalition"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(}\FunctionTok{tibble}\NormalTok{(}\FunctionTok{docvars}\NormalTok{(data\_corpus\_irish30))) }\CommentTok{\# Sample}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 6 x 7
+  debateID memberID member.name          party.name  party.abbrev party.colour in.coalition
+     <dbl>    <int> <chr>                <chr>       <chr>        <chr>        <lgl>       
+1       21        9 Mr. Michael Ahern    Fianna Fáil FF           #66BB66      TRUE        
+2       21       26 Mr. Sean Barrett     Fine Gael   FG           #6699FF      FALSE       
+3       21      106 Mr. Tommy Broughan   Labour      LAB          #CC0000      FALSE       
+4       21      119 Mr. Richard Bruton   Fine Gael   FG           #6699FF      FALSE       
+5       21      133 Ms. Joan Burton      Labour      LAB          #CC0000      FALSE       
+6       21      212 Mr. Paul Connaughton Fine Gael   FG           #6699FF      FALSE       
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{wordshoal\_dfm }\OtherTok{\textless{}{-}} \FunctionTok{dfm}\NormalTok{(}\FunctionTok{tokens}\NormalTok{(data\_corpus\_irish30))}
+
+\NormalTok{wordshoal\_fit }\OtherTok{\textless{}{-}} \FunctionTok{textmodel\_wordshoal}\NormalTok{(}\AttributeTok{x =}\NormalTok{ wordshoal\_dfm, }
+                                                \AttributeTok{dir =} \FunctionTok{c}\NormalTok{(}\DecValTok{7}\NormalTok{,}\DecValTok{1}\NormalTok{),}
+                                                \AttributeTok{groups =} \FunctionTok{docvars}\NormalTok{(data\_corpus\_irish30, }\StringTok{"debateID"}\NormalTok{), }\CommentTok{\# Group = Debate}
+                                                \AttributeTok{authors =} \FunctionTok{docvars}\NormalTok{(data\_corpus\_irish30, }\StringTok{"member.name"}\NormalTok{)) }\CommentTok{\# Author = Legislator}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+Scaling 10 document groups..........
+Factor Analysis on Debate-Level Scales.........
+Elapsed time: 6.94 seconds.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Document 7 (Left) = Debate 21, Member = Joe Castello (Irish Labour Party)}
+\CommentTok{\# Document 1 (righ) = Debate 21, Member = Michael Ahern (Fianna Fail Part) }
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{Wordshoal Quanteda (Cont.)}
+\phantomsection\label{wordshoal-quanteda-cont.}
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{combined\_thetas }\OtherTok{\textless{}{-}} \FunctionTok{merge}\NormalTok{(}\FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{summary}\NormalTok{(wordshoal\_fit)[[}\DecValTok{2}\NormalTok{]]),}
+               \FunctionTok{docvars}\NormalTok{(data\_corpus\_irish30), }
+               \AttributeTok{by.x =} \StringTok{"row.names"}\NormalTok{, }\AttributeTok{by.y =} \StringTok{"member.name"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{distinct}\NormalTok{(memberID, }\AttributeTok{.keep\_all =}\NormalTok{ T) }\CommentTok{\# Combine Thetas \& Associated Meta}
+
+\FunctionTok{head}\NormalTok{(}\FunctionTok{tibble}\NormalTok{(combined\_thetas)) }\CommentTok{\# Print Head}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 6 x 9
+  Row.names               theta    se debateID memberID party.name  party.abbrev party.colour in.coalition
+  <I<chr>>                <dbl> <dbl>    <dbl>    <int> <chr>       <chr>        <chr>        <lgl>       
+1 Dr. Leo Varadkar       0.291  0.545       21     2192 Fine Gael   FG           #6699FF      FALSE       
+2 Dr. Martin Mansergh   -1.12   0.903       30     2002 Fianna Fáil FF           #66BB66      TRUE        
+3 Dr. Mary Upton         0.380  0.729       27     1751 Labour      LAB          #CC0000      FALSE       
+4 Mr. Aengus Ó Snodaigh  1.22   1.26        30     1829 Sinn Féin   SF           #008800      FALSE       
+5 Mr. Alan Shatter      -0.0665 0.507       21     1028 Fine Gael   FG           #6699FF      FALSE       
+6 Mr. Arthur Morgan      0.146  0.427       26     1824 Sinn Féin   SF           #008800      FALSE       
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{aggregate\_party\_thetas }\OtherTok{\textless{}{-}} \FunctionTok{aggregate}\NormalTok{(theta }\SpecialCharTok{\textasciitilde{}}\NormalTok{ party.name, }\AttributeTok{data =}\NormalTok{ combined\_thetas, mean) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{arrange}\NormalTok{(theta) }\CommentTok{\# Aggregated by Party}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}{Wordshoal Quanteda (Cont.)}
+\phantomsection\label{wordshoal-quanteda-cont.-1}
+\scriptsize
+
+\begin{center}\includegraphics{class_10_text_models_ideology_files/figure-beamer/wordshoal_quanteda_4-1} \end{center}
+\end{frame}
+
+\begin{frame}{Additional Notes Re: Wordshoal}
+\phantomsection\label{additional-notes-re-wordshoal}
+\begin{itemize}
+\item Intuitive -- Scales well with uncertainty \par \vspace{2.5mm}
+\item Capable of diagnosing both $\theta_i$ but $\beta_j$ across documents (debates) \par \vspace{2.5mm}
+\item Missingness = Random Error 
+\end{itemize}
+\end{frame}
+
+\section{Looking Forward}\label{looking-forward}
+
+\begin{frame}{Looking Forward (Next Class)}
+\phantomsection\label{looking-forward-next-class}
+\begin{itemize}
+\item We're done! 
+\item I'll stick around until 6 \par \vspace{5mm}
+\end{itemize}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{llll}
+\hline
+\textbf{Day} & \textbf{Student} & \textbf{Reviewer 1} & \textbf{Reviewer 2} \\
+\hline
+4/12 & Arora, Manya & Mamun & Revilla, Valeria \\
+4/12 & Cui, Lixiao & Meneley, Cory & Sarver, Sarah \\
+4/12 & Giron-Khalil, Jailyn & Mohammed, Suren & Sultana, Abida \\
+4/12 & Hao, Tianshu & Oneil, Connor & Tierman, Hunter \\
+4/12 & Islam, Md Sahidul & Revilla, Valeria & Trenchi, Alejandro \\
+4/12 & Mamun & Sarver, Sarah & Wang, Qianxi \\
+4/12 & Meneley, Cory & Sultana, Abida & Arora, Manya \\
+4/12 & Mohammed, Suren & Tierman, Hunter & Cui, Lixiao \\
+\hline
+\end{tabular}
 \end{frame}
 
 \end{document}

@@ -370,19 +370,165 @@ explaining your implementation) used to complete each problem
 (10pts).</p>
 <hr />
 <ol style="list-style-type: decimal">
-<li><p>Using the <code>ag_news</code> dataset from the
+<li>Using the <code>ag_news</code> dataset from the
 <code>textdata</code> package in <code>R</code>
 (<code>textdata::dataset_ag_news()</code>), construct a Continuous Bag
 of Words (CBOW) model. With that model, use <code>predict()</code> to
-recove the 5 nearest words for a series of 5 other words that you
-choose.</p></li>
-<li><p>Using <code>SBERT</code> and the <code>ag_news</code> dataset
-from the <code>textdata</code> package in <code>R</code>
+recover the 5 nearest words for a series of 5 other words that you
+choose.</li>
+</ol>
+<pre class="r"><code>ag &lt;- textdata::dataset_ag_news() 
+ag$title_clean &lt;- reduce_complexity(ag$title)
+
+cbow_model = word2vec(x = ag$title, # Ag Title Clean
+                      type = &quot;cbow&quot;, # Cont. Bag of Words 
+                      dim = 15, # 15 Dimensions
+                      iter = 20) # 20 Iterations (max)
+
+cbow_lookslike &lt;- predict(cbow_model, c(&quot;soccer&quot;, &quot;champion&quot;, &quot;war&quot;, &quot;mars&quot;, &quot;river&quot;), type = &quot;nearest&quot;, top_n = 5)
+print(cbow_lookslike)</code></pre>
+<pre><code>## $soccer
+##    term1     term2 similarity rank
+## 1 soccer qualifier  0.9486299    1
+## 2 soccer       duo  0.9404682    2
+## 3 soccer       bat  0.9385203    3
+## 4 soccer      pair  0.9368114    4
+## 5 soccer fightback  0.9358425    5
+## 
+## $champion
+##      term1         term2 similarity rank
+## 1 champion championships  0.9453443    1
+## 2 champion      marathon  0.9427416    2
+## 3 champion       Noguchi  0.9358335    3
+## 4 champion         champ  0.9355156    4
+## 5 champion         event  0.9334339    5
+## 
+## $war
+##   term1    term2 similarity rank
+## 1   war    state  0.9484606    1
+## 2   war   action  0.9481519    2
+## 3   war approach  0.9344004    3
+## 4   war scrutiny  0.9295640    4
+## 5   war   warned  0.9286346    5
+## 
+## $mars
+##   term1      term2 similarity rank
+## 1  mars     resort  0.8943396    1
+## 2  mars Indonesian  0.8812739    2
+## 3  mars   condemns  0.8776684    3
+## 4  mars    exposes  0.8729260    4
+## 5  mars   Belgrade  0.8707607    5
+## 
+## $river
+##   term1    term2 similarity rank
+## 1 river    blaze  0.9279295    1
+## 2 river    havoc  0.9158741    2
+## 3 river    beach  0.9153798    3
+## 4 river reminder  0.9142098    4
+## 5 river    Mahal  0.9059548    5</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Using <code>SBERT</code> and the <code>ag_news</code> dataset from
+the <code>textdata</code> package in <code>R</code>
 (<code>textdata::dataset_ag_news()</code>), recover both the embeddings
 from a sample of 1000 title. Afterwards, recover pairwise cosine
 similariy scores and report the top and bottom-5 most similar using
-<code>stargazer</code> (5pts).</p></li>
+<code>stargazer</code> (5pts).</li>
 </ol>
+<pre class="r"><code>set.seed(1234)
+
+ag &lt;- textdata::dataset_ag_news() %&gt;%
+  dplyr::sample_n(100) %&gt;%
+  mutate(row_id = row_number())
+
+sentences_pairwise &lt;- expand.grid(row_i = ag$row_id,
+              row_j = ag$row_id) %&gt;%
+  filter(row_i != row_j) %&gt;%  # remove self-pairs
+  left_join(ag, by = c(&quot;row_i&quot; = &quot;row_id&quot;)) %&gt;%
+  rename(text_i = title) %&gt;%
+  left_join(ag, by = c(&quot;row_j&quot; = &quot;row_id&quot;)) %&gt;%
+  rename(text_j = title) %&gt;%
+  rename_with(~ gsub(&quot;\\.x$&quot;, &quot;_i&quot;, .x)) %&gt;%
+  rename_with(~ gsub(&quot;\\.y$&quot;, &quot;_j&quot;, .x)) 
+
+
+library(reticulate) # Activate Reticulate</code></pre>
+<pre><code>## Warning: package &#39;reticulate&#39; was built under R version 4.4.3</code></pre>
+<pre class="r"><code>virtualenv_create()# Create  Virtual Environment (If Needed)</code></pre>
+<pre><code>## virtualenv: ~/.virtualenvs/r-reticulate</code></pre>
+<pre class="r"><code>use_virtualenv(required = TRUE) # Activate Environment
+
+required_packages &lt;- c(&quot;torch&quot;, &quot;transformers&quot;, &quot;sentence-transformers&quot;)
+for (pkg in required_packages) {
+  if (!py_module_available(pkg)) {
+    virtualenv_install(packages = pkg)
+  }
+} # Install torch, transformers, and sentence-transformers (if needed)</code></pre>
+<pre><code>## Using virtual environment &quot;~/.virtualenvs/r-reticulate&quot; ...</code></pre>
+<pre><code>## + &quot;C:/Users/jaketruscott/Documents/.virtualenvs/r-reticulate/Scripts/python.exe&quot; -m pip install --upgrade --no-user sentence-transformers</code></pre>
+<pre class="r"><code>sentence_transformers &lt;- import(&quot;sentence_transformers&quot;) # Import sentence-transformers
+util &lt;- import(&quot;sentence_transformers.util&quot;) # Util Package
+
+model_name = &quot;sentence-transformers/all-MiniLM-L6-v2&quot; # SBERT
+model &lt;- sentence_transformers$SentenceTransformer(model_name) # Declare Model (SBERT)
+
+embeddings &lt;- model$encode(ag$title) # Convert Sentences to Embeddings
+cosine_sim &lt;- data.frame() # Output DF
+
+for (i in 1:nrow(sentences_pairwise)){
+
+  temp_row &lt;- sentences_pairwise[i,] # Temp Row
+  i_embeddings &lt;- embeddings[temp_row$row_i,] # i embedding
+  j_embeddings &lt;- embeddings[temp_row$row_j,] # j embedding
+  temp_similarity &lt;- util$cos_sim(i_embeddings, j_embeddings)$item() # Cosine Sim
+
+  cosine_sim &lt;- bind_rows(cosine_sim,
+                          data.frame(temp_row, similarity = temp_similarity)) # Export
+
+  if (i %% 500 == 0){
+    message(&#39;Completed &#39;, i, &#39;/&#39;, nrow(sentences_pairwise))
+  }
+
+}</code></pre>
+<pre><code>## Completed 500/9900</code></pre>
+<pre><code>## Completed 1000/9900</code></pre>
+<pre><code>## Completed 1500/9900</code></pre>
+<pre><code>## Completed 2000/9900</code></pre>
+<pre><code>## Completed 2500/9900</code></pre>
+<pre><code>## Completed 3000/9900</code></pre>
+<pre><code>## Completed 3500/9900</code></pre>
+<pre><code>## Completed 4000/9900</code></pre>
+<pre><code>## Completed 4500/9900</code></pre>
+<pre><code>## Completed 5000/9900</code></pre>
+<pre><code>## Completed 5500/9900</code></pre>
+<pre><code>## Completed 6000/9900</code></pre>
+<pre><code>## Completed 6500/9900</code></pre>
+<pre><code>## Completed 7000/9900</code></pre>
+<pre><code>## Completed 7500/9900</code></pre>
+<pre><code>## Completed 8000/9900</code></pre>
+<pre><code>## Completed 8500/9900</code></pre>
+<pre><code>## Completed 9000/9900</code></pre>
+<pre><code>## Completed 9500/9900</code></pre>
+<pre class="r"><code>top_5 &lt;- cosine_sim %&gt;%
+  arrange(desc(similarity)) %&gt;%
+  slice_head(n = 3) # 5 Most Sim
+
+top_5$text_i[1]</code></pre>
+<pre><code>## [1] &quot;Crude futures rally over \\$53&quot;</code></pre>
+<pre class="r"><code>top_5$text_j[1]</code></pre>
+<pre><code>## [1] &quot;Crude prices make a retreat&quot;</code></pre>
+<pre class="r"><code>top_5$similarity[1]</code></pre>
+<pre><code>## [1] 0.6020842</code></pre>
+<pre class="r"><code>bottom_5 &lt;- cosine_sim %&gt;%
+  arrange(similarity) %&gt;%
+  slice_head(n = 3) %&gt;%
+  arrange(desc(similarity)) # 5 Least Sim
+
+bottom_5$text_i[1]</code></pre>
+<pre><code>## [1] &quot;State of Emergency Declared in Iraq&quot;</code></pre>
+<pre class="r"><code>bottom_5$text_j[1]</code></pre>
+<pre><code>## [1] &quot;Slower Pub Sales Hit Whitbread&quot;</code></pre>
+<pre class="r"><code>bottom_5$similarity[1]</code></pre>
+<pre><code>## [1] -0.1957191</code></pre>
 
 
 

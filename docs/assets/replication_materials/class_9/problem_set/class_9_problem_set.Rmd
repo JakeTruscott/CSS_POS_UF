@@ -22,6 +22,7 @@ library(tm)
 library(quanteda)
 library(gutenbergr)
 library(stringr)
+library(word2vec)
 
 reduce_complexity <- function(text) {
   text <- tolower(text)
@@ -42,11 +43,12 @@ reduce_complexity <- function(text) {
 
 ------------------------------------------------------------------------
 
-1. Using the <code>ag_news</code> dataset from the <code>textdata</code> package in <code>R</code> (<code>textdata::dataset_ag_news()</code>), construct a Continuous Bag of Words (CBOW) model. With that model, use <code>predict()</code> to recove the 5 nearest words for a series of 5 other words that you choose. 
+1. Using the <code>ag_news</code> dataset from the <code>textdata</code> package in <code>R</code> (<code>textdata::dataset_ag_news()</code>), construct a Continuous Bag of Words (CBOW) model. With that model, use <code>predict()</code> to recover the 5 nearest words for a series of 5 other words that you choose. 
 
-```{r question_1, eval=FALSE, include=FALSE}
+```{r question_1}
 
 ag <- textdata::dataset_ag_news() 
+ag$title_clean <- reduce_complexity(ag$title)
 
 cbow_model = word2vec(x = ag$title, # Ag Title Clean
                       type = "cbow", # Cont. Bag of Words 
@@ -60,7 +62,7 @@ print(cbow_lookslike)
 
 2. Using <code>SBERT</code> and the <code>ag_news</code> dataset from the <code>textdata</code> package in <code>R</code> (<code>textdata::dataset_ag_news()</code>), recover both the embeddings from a sample of 1000 title. Afterwards, recover pairwise cosine similariy scores and report the top and bottom-5 most similar using <code>stargazer</code> (5pts). 
 
-```{r question_2, eval=FALSE, include=FALSE}
+```{r question_2}
 
 set.seed(1234)
 
