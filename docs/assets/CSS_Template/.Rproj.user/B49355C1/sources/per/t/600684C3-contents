@@ -1,0 +1,95 @@
+---
+title: "Sample Beamer Presentation Template"
+author: "Your Name"
+subtitle: |
+  POS6933: Computational Social Science
+institute: |
+  \vspace{-5mm} University of Florida \newline
+  Spring 2026 \newline \newline \newline
+  \includegraphics[width=3cm]{../style/UF.png} \quad 
+  \includegraphics[width=3.1cm]{../style/CSS_POLS_UF_Logo.png}
+output: 
+  beamer_presentation:
+    slide_level: 3
+    keep_tex: true
+    toc: false
+classoption: aspectratio=169  
+header-includes:
+  - \PassOptionsToClass{aspectratio=169}{beamer}
+  - \usepackage{../style/beamer_style}
+  - \setbeamersize{text margin left=3.5mm,text margin right=3.5mm}
+---
+
+```{r setup, include=FALSE}
+
+# This is where you'll want to put any packages or functions -- it will load them all quietly. 
+
+library(dplyr); library(ggplot2); library(cowplot); library(formatR); library(stargazer); library(parallel); library(doParallel); library(tm); library(stringr); library(quanteda); library(quanteda.textstats); library(quanteda.textstats); library(dplyr); library(ggplot2); library(stringr);  library(tm); library(quanteda); library(quanteda.textstats); library(quanteda.textstats); library(rvest); library(tibble); library(tidytext); library(Rtsne)
+
+knitr::opts_chunk$set(
+  warning = FALSE, 
+	fig.align = "center",
+	comment = NA,
+	dev = "pdf",
+  tidy.opts=list(width.cutoff=50), 
+  R.options = list(width = 120)
+)
+
+default_ggplot_theme  <- theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12),
+    axis.title = element_text(size = 12, colour = 'black'),
+    axis.text = element_text(size = 10, colour = 'black'),
+    panel.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+    legend.position = 'bottom', 
+    legend.title = element_blank(), 
+    legend.background = element_rect(linewidth = 1, colour = 'black', fill = NA), 
+  )
+
+reduce_complexity <- function(text) {
+  text <- tolower(text)
+  text <- gsub("[^a-z\\s]", " ", text)
+  words <- unlist(str_split(text, "\\s+"))
+  words <- words[words != "" & !words %in% tm::stopwords("english")]
+  words <- textstem::lemmatize_words(words)
+  words <- words[str_detect(words, "^[a-z]+$")]
+  text <- str_squish(paste(words, collapse = " "))
+  return(text)
+}
+
+
+```
+
+# Sample Section
+
+### Sample Slide
+\begin{itemize}
+\item This is a sample item \par \vspace{2.5mm} 
+\item I can use \texttt{\textbackslash pause} to have text appear with clicks similar to \texttt{PowerPoint} \par \vspace{2.5mm} \pause
+\item See what I mean? 
+\end{itemize}
+
+### Sample Slide
+\begin{itemize}
+\item I can also render \texttt{R} Code and plot it
+\end{itemize}
+\scriptsize
+```{r, sample_r_1}
+
+set.seed(1234)
+test <- data.frame(value = rnorm(1000, mean = 5, sd = 1))
+```
+
+```{r sample_r_2, echo=FALSE, fig.height=2, fig.width=3}
+
+test %>%
+  ggplot(aes(x = value)) + 
+  geom_histogram(binwidth = 0.2, fill = "steelblue", color = "black") +
+  labs(x = "Value",
+       y = "Frequency") +
+  geom_hline(yintercept = 0) + 
+  theme_minimal() + 
+  theme(panel.border = element_rect(size = 1, colour = 'black', fill = NA))
+
+
+```

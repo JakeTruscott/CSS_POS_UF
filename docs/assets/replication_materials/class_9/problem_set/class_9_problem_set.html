@@ -388,44 +388,44 @@ cbow_model = word2vec(x = ag$title, # Ag Title Clean
 cbow_lookslike &lt;- predict(cbow_model, c(&quot;soccer&quot;, &quot;champion&quot;, &quot;war&quot;, &quot;mars&quot;, &quot;river&quot;), type = &quot;nearest&quot;, top_n = 5)
 print(cbow_lookslike)</code></pre>
 <pre><code>## $soccer
-##    term1     term2 similarity rank
-## 1 soccer qualifier  0.9486299    1
-## 2 soccer       duo  0.9404682    2
-## 3 soccer       bat  0.9385203    3
-## 4 soccer      pair  0.9368114    4
-## 5 soccer fightback  0.9358425    5
+##    term1      term2 similarity rank
+## 1 soccer     bronze  0.9598973    1
+## 2 soccer      final  0.9452686    2
+## 3 soccer qualifying  0.9443066    3
+## 4 soccer     tennis  0.9433466    4
+## 5 soccer  qualifier  0.9430767    5
 ## 
 ## $champion
-##      term1         term2 similarity rank
-## 1 champion championships  0.9453443    1
-## 2 champion      marathon  0.9427416    2
-## 3 champion       Noguchi  0.9358335    3
-## 4 champion         champ  0.9355156    4
-## 5 champion         event  0.9334339    5
+##      term1     term2 similarity rank
+## 1 champion defending  0.9639828    1
+## 2 champion     champ  0.9475932    2
+## 3 champion   Noguchi  0.9278772    3
+## 4 champion   cycling  0.9270868    4
+## 5 champion  guessing  0.9242694    5
 ## 
 ## $war
-##   term1    term2 similarity rank
-## 1   war    state  0.9484606    1
-## 2   war   action  0.9481519    2
-## 3   war approach  0.9344004    3
-## 4   war scrutiny  0.9295640    4
-## 5   war   warned  0.9286346    5
+##   term1     term2 similarity rank
+## 1   war elections  0.9542273    1
+## 2   war    action  0.9511375    2
+## 3   war       ban  0.9296306    3
+## 4   war     state  0.9282848    4
+## 5   war    warned  0.9273162    5
 ## 
 ## $mars
-##   term1      term2 similarity rank
-## 1  mars     resort  0.8943396    1
-## 2  mars Indonesian  0.8812739    2
-## 3  mars   condemns  0.8776684    3
-## 4  mars    exposes  0.8729260    4
-## 5  mars   Belgrade  0.8707607    5
+##   term1       term2 similarity rank
+## 1  mars      resort  0.8856683    1
+## 2  mars Bangladeshi  0.8798008    2
+## 3  mars    Caucasus  0.8784330    3
+## 4  mars    condemns  0.8760334    4
+## 5  mars    reporter  0.8669539    5
 ## 
 ## $river
-##   term1    term2 similarity rank
-## 1 river    blaze  0.9279295    1
-## 2 river    havoc  0.9158741    2
-## 3 river    beach  0.9153798    3
-## 4 river reminder  0.9142098    4
-## 5 river    Mahal  0.9059548    5</code></pre>
+##   term1      term2 similarity rank
+## 1 river     quakes  0.9323485    1
+## 2 river      train  0.9317452    2
+## 3 river earthquake  0.9278418    3
+## 4 river landslides  0.9272598    4
+## 5 river     trains  0.9270689    5</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>Using <code>SBERT</code> and the <code>ag_news</code> dataset from
 the <code>textdata</code> package in <code>R</code>

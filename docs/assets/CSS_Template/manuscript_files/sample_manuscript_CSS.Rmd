@@ -1,0 +1,92 @@
+---
+title: "Sample Title: *Sample Subtitle*"
+author: |
+  Your Name  
+  University of Florida  
+date: |
+  POS6933: Computational Social Science  
+  (Spring 2026)
+  
+includes:
+  in_header: "../style/manuscript.sty"
+
+output:
+  pdf_document:
+    citation_package: natbib
+  
+biblio-style: apalike
+
+header-includes:
+  - \usepackage{lipsum}
+
+---
+
+\begin{abstract}
+Here is a sample abstract. \lipsum[1]
+
+\vspace{10mm}
+
+\noindent Keywords: Key1, Key2, Key3
+\end{abstract}
+
+
+\newpage
+
+\section{Introduction}
+
+\lipsum[2]
+
+Here is a sample citation \cite{collins_2018}, which can be found in the \texttt{references.bib} file. You can recover bibtex citations to render automatically using commands like \texttt{\textbackslash cite\{\}} and \texttt{\textbackslash citep\{\}} from \texttt{Google Scholar} $\rightarrow$ \texttt{Cite} $\rightarrow$ \texttt{bibtex}. Then just copy + paste into the bib file. 
+
+\subsection{Sample Subsection}
+
+I can also use relative paths to move back one layer and include images (or figures...) from a subfolder repository in the main directory like this: 
+
+\begin{figure}
+\centering
+\caption{The logo of the best professional baseball team on Earth}
+\vspace{5mm}
+\includegraphics[width = 0.15\textwidth]{"../images/mets_logo.png"}
+\end{figure}
+
+\bibliography{references.bib}
+
+\newpage
+\appendix
+\setcounter{page}{1}   
+\setcounter{table}{0}  
+\setcounter{figure}{0}   
+
+\renewcommand{\thetable}{A\arabic{table}}
+\renewcommand{\thefigure}{A\arabic{figure}}
+\renewcommand{\thepage}{A\arabic{page}}
+
+\section{Supplemental Appendix}
+
+\subsection{Replication Materials}
+
+Here you should effectively render all the replication code necessary to conduct your analysis -- including any data pre-processing (normalization), model specification, and subsequent analysis (e.g., graphs and tables). If you are producing this document in \texttt{RMarkdown}, you will be able to follow the process identical to your practice set submissions using code chunks (\emph{See Example Below}):
+
+```{r message=FALSE, warning=FALSE}
+
+library(dplyr); library(ggplot2)
+
+set.seed(1234)
+test <- data.frame(value = rnorm(1000, mean = 5, sd = 1))
+
+test %>%
+  ggplot(aes(x = value)) + 
+  geom_histogram(binwidth = 0.2, fill = "steelblue", color = "black") +
+  labs(x = "Value",
+       y = "Frequency") +
+  geom_hline(yintercept = 0) + 
+  theme_minimal() + 
+  theme(panel.border = element_rect(size = 1, colour = 'black', fill = NA))
+
+```
+
+\subsection{Sample Substantive Appendix Section}
+
+This is a sample appendix section. You are free to include any items identified in the manuscript as requiring additional discussion. For example, you may wish to provide information related to robustness checks, alternative model specifications, etc. 
+
+

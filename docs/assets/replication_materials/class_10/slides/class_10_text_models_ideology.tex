@@ -190,10 +190,10 @@ University of Florida \newline Spring 2026 \newline \newline \newline
 4/12 & Cui, Lixiao & Meneley, Cory & Sarver, Sarah \\
 4/12 & Giron-Khalil, Jailyn & Mohammed, Suren & Sultana, Abida \\
 4/12 & Hao, Tianshu & Oneil, Connor & Tierman, Hunter \\
-4/12 & Islam, Md Sahidul & Revilla, Valeria & Trenchi, Alejandro \\
 4/12 & Mamun & Sarver, Sarah & Wang, Qianxi \\
 4/12 & Meneley, Cory & Sultana, Abida & Arora, Manya \\
 4/12 & Mohammed, Suren & Tierman, Hunter & Cui, Lixiao \\
+4/19 & Islam, Md Sahidul & Revilla, Valeria & Trenchi, Alejandro \\
 4/19 & Oneil, Connor & Trenchi, Alejandro & Giron-Khalil, Jailyn \\
 4/19 & Revilla, Valeria & Wang, Qianxi & Hao, Tianshu \\
 4/19 & Sarver, Sarah & Arora, Manya & Islam, Md Sahidul \\
@@ -216,6 +216,7 @@ University of Florida \newline Spring 2026 \newline \newline \newline
 
 \begin{frame}{Scaling Ideology}
 \phantomsection\label{scaling-ideology}
+\begin{center}\includegraphics{class_10_text_models_ideology_files/figure-beamer/scaling_example-1} \end{center}
 \end{frame}
 
 \begin{frame}{Scaling Ideology (Cont.)}
@@ -266,8 +267,8 @@ University of Florida \newline Spring 2026 \newline \newline \newline
 \item It’s effectively (sort of) Naive Bayes + Value Projection onto a Reference Scale + Rescaling \par \vspace{2.5mm} \pause 
 \item \textit{Recall...} for standard Naive Bayes, we: 
 \begin{enumerate}
-  \item Estimate how likely each word $w$ is to appear in each class $k$ -- $p(w\mid k)$ \pause
-  \item For new document $D_{i}$, we use those learned word probabilities to calculate $\pi_{ik}$ (probability that $D_{i}$ belongs in each possible class -- $p(k|mid D_i)$ \pause
+  \item Estimate how likely each word $w$ is to appear in each class $k$: $p(w\mid k)$ \pause
+  \item For new document $D_{i}$, we use those learned word probabilities to calculate $\pi_{ik}$ (probability that $D_{i}$ belongs in each possible class: $p(k\mid D_i)$ \pause
   \item Classification assigned to the document because it has the highest probability
 \end{enumerate}
 \end{itemize}
@@ -276,7 +277,7 @@ University of Florida \newline Spring 2026 \newline \newline \newline
 \begin{frame}{Wordscores (Laver, Benoit, and Garry) -- Cont.}
 \phantomsection\label{wordscores-laver-benoit-and-garry-cont.}
 \begin{itemize}
-  \item \textbf{What \texttt{Wordscores} does instead}: Estimate how likely it is that each word belongs to a reference document -- $p(w\mid r)$, where $A_{r}$ represents the ideological score of those reference documents. \par \vspace{2.5mm} \pause 
+  \item \textbf{What \texttt{Wordscores} does instead}: Estimate how likely it is that each word belongs to a reference document: $p(w\mid r)$, where $A_{r}$ represents the ideological score of those reference documents. \par \vspace{2.5mm} \pause 
   \item $ S_{w} = \sum_{r}p(r\mid w)A_{r} $ --  the score of some word $S_{w}$ is the sum of the probabilities it belongs to each reference document times the score associated with those documents. \par \vspace{2.5mm} \pause
   \item New documents $v$ are finally rescaled to account for weighted averages of word scores -- such that a document's position is the average ideology of the words it uses (from the reference documents) and weighted by the word frequences: 
   \item[] $$ S_{v} = \sum_{w}p(w\mid v)S_{w} $$
@@ -288,6 +289,7 @@ University of Florida \newline Spring 2026 \newline \newline \newline
 \begin{columns}[T]
     \begin{column}{0.4\textwidth}
     \centering
+    \footnotesize
     \begin{tabular}{lccc}
     \toprule
     Word & Left Ref. & Right Ref. & TOTAL \\
@@ -301,7 +303,7 @@ University of Florida \newline Spring 2026 \newline \newline \newline
     \end{tabular}
     \end{column}
     \begin{column}{0.6\textwidth}
-    \begin{itemize}
+    \hspace{2.5mm} \begin{itemize}
         \item 3 Words (\emph{welfare, tax, military}) \par \vspace{2.5mm}
         \item 2 reference documents: 
         \begin{itemize}
@@ -427,7 +429,7 @@ University of Florida \newline Spring 2026 \newline \newline \newline
   \begin{itemize}
   \item $x_{ij}$ = the count of word $j$ in document $i$ 
 \item $\alpha_{i}$ = Document-specific verbosity (value to control for length of document -- ensures $\theta_i$ reflects content differences, not just document size) 
-\item $\phi_j$ = Word-specific baseline frequency 
+\item $\psi_j$ = Word-specific baseline frequency 
 \item $\beta_j$ = Word-specific discrimination 
 \item $\theta_i$ = Latent position of document $i$ (\textbf{What we're most interested in}!)
   \end{itemize}
@@ -484,6 +486,47 @@ military & 0.3 & 1.2 \\
 
 \begin{frame}{Wordfish Example (Cont.)}
 \phantomsection\label{wordfish-example-cont.}
+Compute the expected counts:
+\(\lambda_{ij} = \exp(\alpha_i + \psi_j + \beta_j\theta_i)\):
+
+\par \vspace{2.5mm}
+
+\begin{tabular}{lllc}
+\toprule
+Word & Document & Formula & Expected Count ($\lambda_{ij}$) \\
+\midrule
+welfare  & Doc 1 & $\exp(2.4_{\alpha_i} + 0.2_{\psi_j} + 0.8_{\beta_j}\cdot 0.5_{\theta_i})$ & $\exp(3.0) \approx 20.1$ \\
+tax      & Doc 1 & $\exp(2.4 + 0.1 + 0.5 \times 0.5)$ & $\exp(2.75) \approx 15.6$ \\
+military & Doc 1 & $\exp(2.4 + 0.3 + 1.2 \times 0.5)$ & $\exp(3.3) \approx 27.1$ \\
+\addlinespace
+\bottomrule
+\end{tabular}
+\end{frame}
+
+\begin{frame}{Wordfish Example (Cont.)}
+\phantomsection\label{wordfish-example-cont.-1}
+Compute the expected counts:
+\(\lambda_{ij} = \exp(\alpha_i + \psi_j + \beta_j\theta_i)\):
+
+\par \vspace{2.5mm}
+
+\begin{tabular}{lllc}
+\toprule
+Word & Document & Formula & Expected Count ($\lambda_{ij}$) \\
+\midrule
+welfare  & Doc 1 & $\exp(2.4_{\alpha_i} + 0.2_{\psi_j} + 0.8_{\beta_j}\cdot 0.5_{\theta_i})$ & $\exp(3.0) \approx 20.1$ \\
+tax      & Doc 1 & $\exp(2.4 + 0.1 + 0.5 \times 0.5)$ & $\exp(2.75) \approx 15.6$ \\
+military & Doc 1 & $\exp(2.4 + 0.3 + 1.2 \times 0.5)$ & $\exp(3.3) \approx 27.1$ \\
+\addlinespace
+welfare  & Doc 2 & $\exp(2.7 + 0.2 + 0.8 \times 1)$ & $\exp(3.7) \approx 40.4$ \\
+tax      & Doc 2 & $\exp(2.7 + 0.1 + 0.5 \times 1)$ & $\exp(3.3) \approx 27.1$ \\
+military & Doc 2 & $\exp(2.7 + 0.3 + 1.2 \times 1)$ & $\exp(4.2) \approx 66.7$ \\
+\bottomrule
+\end{tabular}
+\end{frame}
+
+\begin{frame}{Wordfish Example (Cont.)}
+\phantomsection\label{wordfish-example-cont.-2}
 Compute the expected counts:
 \(\lambda_{ij} = \exp(\alpha_i + \psi_j + \beta_j\theta_i)\):
 
@@ -795,7 +838,7 @@ Debates)}
 
 Scaling 10 document groups..........
 Factor Analysis on Debate-Level Scales.........
-Elapsed time: 6.94 seconds.
+Elapsed time: 4.11 seconds.
 \end{verbatim}
 
 \begin{Shaded}

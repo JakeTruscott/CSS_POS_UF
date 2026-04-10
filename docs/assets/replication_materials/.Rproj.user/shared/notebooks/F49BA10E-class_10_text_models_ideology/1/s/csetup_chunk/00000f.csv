@@ -13,8 +13,6 @@ Attaching package: ‘dplyr’
     intersect, setdiff, setequal, union
 
 "
-"2","RStudio Community is a great place to get help: https://community.rstudio.com/c/tidyverse
-"
 "2","Warning:"
 "2"," package ‘formatR’ was built under R version 4.4.3
 "
